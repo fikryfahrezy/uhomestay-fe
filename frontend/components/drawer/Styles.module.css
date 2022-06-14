@@ -1,0 +1,67 @@
+.open {
+}
+
+.drawer {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  max-width: 300px;
+  top: 0;
+  right: 0;
+  transition: none;
+  z-index: 99;
+}
+
+.drawer:not(.open) {
+  width: 0;
+  transition: width 0s ease 1s, height 0s ease 1s;
+}
+
+.backdrop {
+  position: fixed;
+}
+
+.drawerContent {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  overflow: auto;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 1s;
+}
+
+.drawerContent.open {
+  transform: translateX(0);
+}
+
+@media screen and (max-width: 768px) {
+  .drawerContent {
+    width: 100%;
+  }
+}
+
+.drawerBody {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding: 0 1em;
+  overflow: auto;
+  flex-direction: column;
+}
+
+.btnContainer {
+  display: flex;
+  padding: 0 1em;
+  background-color: #fff;
+}
+
+.closeBtn {
+  color: #c6d8e4;
+  background-color: transparent;
+}
+
+.closeBtn:hover {
+  background-color: transparent;
+}

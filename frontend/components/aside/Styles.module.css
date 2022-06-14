@@ -1,0 +1,92 @@
+.open {
+}
+
+.aside {
+  position: relative;
+  height: 100%;
+}
+
+.aside {
+  display: flex;
+  width: 250px;
+  transition: all 1s ease-in-out;
+}
+
+.aside:not(.open) {
+  width: 0%;
+}
+
+@media screen and (max-width: 768px) {
+  .aside {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+  }
+
+  .aside.open {
+    width: 100%;
+  }
+}
+
+.asideContent {
+  --bcolor: #2a6877;
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bcolor);
+  overflow: auto;
+  /* transition: padding 1s; */
+  flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+  .asideContent {
+    width: 75%;
+  }
+}
+
+.aside:not(.open) .asideContent {
+  overflow: visible;
+  padding: 0;
+}
+
+.btnContainer {
+  display: flex;
+  background-color: var(--bcolor);
+}
+
+.aside:not(.open) .btnContainer {
+  position: unset;
+}
+
+.asideBtn {
+  color: #c6d8e4;
+  margin-left: auto;
+  border-radius: unset;
+}
+
+.asideBtn,
+.asideBtn:hover,
+.asideBtn:active {
+  background-color: var(--bcolor);
+}
+
+.aside:not(.open) .linkTree {
+  padding: 0;
+  overflow: hidden;
+  transition: all 1s;
+}
+
+@media screen and (min-width: 768px) {
+  .backdrop {
+    width: 0;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .backdrop {
+    position: unset;
+  }
+}

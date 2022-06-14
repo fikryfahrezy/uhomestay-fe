@@ -1,0 +1,98 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @flow strict
+ */
+
+@import "https://fonts.googleapis.com/css?family=Reenie+Beanie";
+
+.header {
+  max-width: 580px;
+  margin: auto;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.header a {
+  max-width: 220px;
+  margin: 20px 0 0 0;
+  display: block;
+}
+
+.header img {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.header h1 {
+  text-align: left;
+  color: #333;
+  display: inline-block;
+  margin: 20px 0 0 0;
+}
+
+.editor-shell {
+  margin: 20px auto;
+  border-radius: 2px;
+  max-width: 1000px;
+  color: #000;
+  position: relative;
+  line-height: 20px;
+  font-weight: 400;
+}
+
+.editor-shell * {
+  box-sizing: unset;
+}
+
+.editor-shell pre {
+  line-height: 1.1;
+  background: #222;
+  color: #fff;
+  margin: 0;
+  padding: 10px;
+  font-size: 12px;
+  overflow: auto;
+  white-space: pre-wrap;
+  max-height: 180px;
+}
+
+.editor-shell pre::-webkit-scrollbar {
+  background: transparent;
+  width: 10px;
+}
+
+.editor-shell pre::-webkit-scrollbar-thumb {
+  background: #999;
+}
+
+.github-corner:hover .octo-arm {
+  animation: octocat-wave 560ms ease-in-out;
+}
+@keyframes octocat-wave {
+  0%,
+  100% {
+    transform: rotate(0);
+  }
+  20%,
+  60% {
+    transform: rotate(-25deg);
+  }
+  40%,
+  80% {
+    transform: rotate(10deg);
+  }
+}
+@media (max-width: 500px) {
+  .github-corner:hover .octo-arm {
+    animation: none;
+  }
+  .github-corner .octo-arm {
+    animation: octocat-wave 560ms ease-in-out;
+  }
+}

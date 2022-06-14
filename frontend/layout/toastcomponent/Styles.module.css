@@ -1,0 +1,11 @@
+.toastTitle {
+  font-weight: 600;
+  margin-block-start: 0;
+  margin-block-end: 5px;
+}
+
+.toastBody {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  word-break: break-word;
+}

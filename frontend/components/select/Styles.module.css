@@ -1,0 +1,51 @@
+.label {
+  display: inline-block;
+  margin-left: 7px;
+  margin-bottom: 10px;
+}
+
+.selectContainer {
+  position: relative;
+  display: flex;
+  border-radius: 6px;
+  border: solid 1px #c6d8e4;
+}
+
+.invalidInput {
+  border: solid 3px #ff7474;
+}
+
+.readOnlySelect {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: unset;
+}
+
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 20px;
+  padding-inline-end: 44px;
+  background-color: transparent;
+  border-color: transparent;
+  font-size: 18px;
+  outline: none;
+  appearance: none;
+}
+
+.readOnlySelect .select {
+  padding-inline-end: 20px;
+}
+
+.iconContainer {
+  position: absolute;
+  display: grid;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  place-items: center;
+  width: 44px;
+  font-size: 25px;
+  pointer-events: none;
+}

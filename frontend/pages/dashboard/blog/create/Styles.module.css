@@ -1,0 +1,22 @@
+.editableButtons {
+  display: grid;
+  width: fit-content;
+  margin-left: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 500px) {
+  .editableButtons {
+    grid-template-columns: auto;
+  }
+}
+
+.actionBtn {
+  font-size: 24px !important;
+}
+
+.editorContainer {
+  margin-top: 25px;
+  padding-left: 15px;
+}

@@ -1,0 +1,65 @@
+.addBtn {
+  margin-left: auto;
+  width: fit-content;
+  font-size: 24px !important;
+}
+
+.pageTitle {
+  margin: 25px 0;
+}
+
+.contentContainer {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.cardContainer {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+}
+
+.addBtnOptions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.addBtnOption {
+  display: flex;
+  min-height: 25px;
+  padding: 0;
+  margin-top: 7.5px;
+  margin-bottom: 7.5px;
+  color: #50ac97;
+  font-size: 18px;
+  align-items: center;
+  gap: 1ch;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.optionLink {
+  color: #50ac97;
+  text-decoration: none;
+}
+
+.danger {
+  color: #ff7474;
+}
+
+.popup {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  z-index: 1;
+}
+
+.cardBtn {
+  color: #fff;
+  background: rgba(80, 172, 151, 0.5);
+}

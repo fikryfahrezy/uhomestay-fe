@@ -1,0 +1,132 @@
+.green {
+  color: #50ac97;
+}
+
+.red {
+  color: #ff7474;
+}
+
+.contentLayout {
+  background-color: transparent;
+}
+
+.addBtn {
+  margin-left: auto;
+  width: fit-content;
+  font-size: 24px !important;
+}
+
+@media screen and (max-width: 500px) {
+  .addBtn {
+    font-size: 20px !important;
+  }
+}
+
+.contentHeadSection {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.contentBodySection {
+  margin-bottom: 25px;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.contentContainer {
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  flex-wrap: wrap;
+  grid-gap: 15px;
+  gap: 15px;
+}
+
+.buttonTabs {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.buttonTab {
+  height: 44px;
+  border: 0;
+  background-color: #c6d8e4;
+  font-size: 18px;
+  flex: 1;
+}
+
+.tabActive {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.listIcon {
+  display: flex;
+  color: #777777;
+  font-size: 28px;
+  align-items: center;
+  justify-content: center;
+}
+
+.listItem {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: solid 2px #e5e5e5;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1ch;
+}
+
+.listContent {
+  display: flex;
+  gap: 2ch;
+  flex: 1;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 500px) {
+  .listContent {
+    flex-direction: column;
+  }
+}
+
+.listBody {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listText {
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listCurrency {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 18px;
+  flex: 1;
+}
+
+@media screen and (max-width: 500px) {
+  .listCurrency {
+    display: block;
+  }
+}
+
+.moreBtn,
+.moreBtn:hover,
+.moreBtn:active {
+  background-color: transparent;
+}

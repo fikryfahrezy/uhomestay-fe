@@ -1,0 +1,79 @@
+.mainContainer {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.drawerTitle {
+  margin-bottom: 25px;
+}
+
+.drawerBody {
+  display: flex;
+  padding: 10px 0;
+  flex: 1;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 768px) {
+  .drawerBody {
+    flex-direction: column;
+  }
+}
+
+.avatarContainer {
+  flex: 0.3;
+}
+
+.avatarPicker {
+  margin: 0 auto;
+}
+
+.drawerContent {
+  flex: 1;
+}
+
+.inputGroups {
+  display: flex;
+  align-items: flex-end;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 500px) {
+  .inputGroups {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.inputGroup {
+  margin-bottom: 15px;
+  flex: 1;
+}
+
+.editableButtons {
+  display: grid;
+  width: fit-content;
+  margin-left: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 500px) {
+  .editableButtons {
+    width: 100%;
+    gap: 0;
+    grid-template-columns: auto;
+  }
+}
+
+.formBtn {
+  margin-bottom: 10px;
+}
+
+@media screen and (max-width: 500px) {
+  .formBtn {
+    width: 100%;
+  }
+}

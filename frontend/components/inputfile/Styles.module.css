@@ -1,0 +1,50 @@
+.mr7 {
+  margin-right: 7px;
+}
+
+.inputContainer {
+  display: flex;
+  width: 100%;
+  min-height: 44px;
+  padding-left: 20px;
+  color: #111;
+  background-color: transparent;
+  border: solid 1px #c6d8e4;
+  border-radius: 6px;
+  font-size: 18px;
+  align-items: center;
+  outline: none;
+  gap: 10px;
+}
+
+.invalidInput {
+  border: solid 3px #ff7474 !important;
+}
+
+.disabledInput {
+  border: none;
+}
+
+.p {
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 2;
+}
+
+.link {
+  text-decoration: underline;
+}
+
+.btn {
+  color: #666666;
+  font-size: 18px;
+  white-space: nowrap;
+  flex: 0.75;
+}
+
+.inputWrapper {
+  display: none;
+}

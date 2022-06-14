@@ -1,0 +1,112 @@
+.layoutContainer {
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.layoutContainer,
+.layoutContainer * {
+  box-sizing: border-box;
+}
+
+.nav {
+  position: sticky;
+  display: flex;
+  min-height: 60px;
+  padding: 0 10px;
+  top: 0;
+  background-color: #fff;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 99;
+}
+
+.addBtnOptions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.addBtnOption {
+  display: flex;
+  min-height: 25px;
+  padding: 0;
+  margin: 7.5px 0;
+  color: #50ac97;
+  font-size: 18px;
+  align-items: center;
+  gap: 1ch;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.optionLink {
+  color: #50ac97;
+  text-decoration: none;
+}
+
+.danger {
+  color: #ff7474;
+}
+
+.pageContainer {
+  position: relative;
+  display: flex;
+  overflow: inherit;
+  flex: 1;
+}
+
+.main {
+  padding-left: 50px;
+  padding-top: 50px;
+  padding-right: 50px;
+  background-color: #e5e5e5;
+  overflow: auto;
+  flex: 1;
+}
+
+@media screen and (max-width: 767px) {
+  .main {
+    padding: 0;
+  }
+}
+
+.contentContainer {
+  margin: 0 auto;
+  margin-bottom: 50px;
+  padding: 25px;
+  border-radius: 10px;
+  background-color: #ffffff;
+}
+
+@media screen and (max-width: 767px) {
+  .contentContainer {
+    min-height: 100%;
+    padding-top: 50px;
+    border-radius: unset;
+  }
+}
+
+.activeLink {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.activeLink:hover {
+  background-color: #489f8b;
+}
+
+.activeLink:active {
+  background-color: #3f8d7b;
+}
+
+.sideLink {
+  justify-content: normal;
+}
+
+.sideLinkText {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

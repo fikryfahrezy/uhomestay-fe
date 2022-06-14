@@ -1,0 +1,41 @@
+.pageWrapper {
+  display: flex;
+  max-width: 800px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.pageWrapper,
+.pageWrapper * {
+  box-sizing: border-box;
+}
+
+.subTitle {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.subTitle::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 10px;
+  right: 10px;
+  height: 5px;
+  background-color: #2a6877;
+}
+
+.contentContainer {
+  display: flex;
+  width: 100%;
+  padding-left: 10px;
+  padding-right: 10px;
+  flex-wrap: wrap;
+  gap: 1ch;
+}
+
+.documentLink {
+  width: 100%;
+}

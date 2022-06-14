@@ -1,0 +1,9 @@
+.moreLink {
+  display: flex;
+  width: max-content;
+  margin-top: 25px;
+  margin-left: auto;
+  color: #2a6877;
+  justify-content: center;
+  align-items: center;
+}

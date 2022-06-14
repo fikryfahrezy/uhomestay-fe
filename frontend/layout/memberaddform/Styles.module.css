@@ -1,0 +1,27 @@
+.drawerTitle {
+  margin-bottom: 25px;
+}
+
+.drawerBody {
+  display: flex;
+  padding: 10px 0;
+  flex-direction: column;
+  flex: 1;
+}
+
+.drawerContent {
+  flex: 1;
+}
+
+.avatarPicker {
+  margin: 0 auto;
+}
+
+.inputGroup {
+  margin-bottom: 15px;
+}
+
+.formBtn {
+  width: 100%;
+  margin-bottom: 10px;
+}

@@ -1,0 +1,118 @@
+.layoutContainer {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.layoutContainer,
+.layoutContainer * {
+  box-sizing: border-box;
+}
+
+.nav {
+  position: sticky;
+  display: flex;
+  min-height: 60px;
+  padding: 0 10px;
+  top: 0;
+  background-color: #fff;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 99;
+}
+
+.addBtnOptions {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.addBtnOption {
+  display: flex;
+  min-height: 25px;
+  padding: 0;
+  margin: 7.5px 0;
+  color: #50ac97;
+  font-size: 18px;
+  align-items: center;
+  gap: 1ch;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.optionLink {
+  color: #50ac97;
+  text-decoration: none;
+}
+
+.danger {
+  color: #ff7474;
+}
+
+.pageContainer {
+  position: relative;
+  display: flex;
+  overflow: inherit;
+  flex: 1;
+}
+
+.main {
+  padding-left: 50px;
+  padding-top: 50px;
+  padding-right: 50px;
+  background-color: #e5e5e5;
+  overflow: auto;
+  flex: 1;
+}
+
+@media screen and (max-width: 767px) {
+  .main {
+    padding-left: 10px;
+    padding-top: 10px;
+    padding-right: 10px;
+  }
+}
+
+.bottomContainer {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  bottom: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottomSection {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  min-height: 50px;
+  margin-right: 10px;
+  margin-left: 10px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border-radius: 10px;
+}
+
+.buttonNavLink {
+  flex: 1;
+}
+
+.iconContainer {
+  font-size: 24px;
+}
+
+.buttonNav {
+  display: flex;
+  height: 100%;
+  width: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  color: #50ac97;
+  background-color: transparent;
+  font-size: 18px;
+  border: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}

@@ -1,0 +1,5 @@
+.btn,
+.btn:hover,
+.btn:active {
+  background-color: transparent;
+}

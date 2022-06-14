@@ -1,0 +1,45 @@
+.pageWrapper {
+  display: flex;
+  max-width: 800px;
+  margin: 0 auto;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.pageWrapper,
+.pageWrapper * {
+  box-sizing: border-box;
+}
+
+.subTitle {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.subTitle::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 10px;
+  right: 10px;
+  height: 5px;
+  background-color: #2a6877;
+}
+
+.blogsContainer {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+@media screen and (max-width: 768px) {
+  .blogsContainer {
+    justify-content: center;
+  }
+}
+
+.blogCard {
+  min-width: 250px;
+}

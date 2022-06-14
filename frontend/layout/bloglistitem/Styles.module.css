@@ -1,0 +1,6 @@
+.cardContainer {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  min-width: 250px;
+}

@@ -1,0 +1,58 @@
+import type { UseQueryOptions } from "react-query";
+import { useQuery } from "react-query";
+import fetchJson, { FetchError } from "@/lib/fetchJson";
+
+export type HistoryIn = {
+  content: string;
+};
+
+export const addHistory = async (data: HistoryIn) => {
+  const token = window.localStorage.getItem("ajwt");
+  const fetched = fetchJson(
+    "https://polar-badlands-14608.herokuapp.com/api/v1/histories",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: {
+        authorization: `Bearer ${token ? token : ""}`,
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((res) => {
+    return res;
+  });
+
+  return fetched;
+};
+
+export type LatestHistoryRes = {
+  id: string;
+  content: string;
+};
+
+type UseFindLatestHistoryData = {
+  data: LatestHistoryRes;
+};
+
+export const useFindLatestHistory = <
+  D = UseFindLatestHistoryData,
+  E = FetchError
+>(
+  option?: UseQueryOptions<D, E>
+) => {
+  const query = useQuery<D, E>(
+    "findLatestHistory",
+    async () => {
+      const fetched = fetchJson<D>(
+        "https://polar-badlands-14608.herokuapp.com/api/v1/histories"
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};

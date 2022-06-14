@@ -1,0 +1,27 @@
+.logoContainer {
+  position: sticky;
+  width: 100%;
+  top: 0;
+  padding-top: 25px;
+  padding-right: 0;
+  padding-bottom: 5px;
+  padding-left: 30px;
+  background-color: #fff;
+  z-index: 99;
+}
+
+.logoContainer,
+.logoContainer > * {
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 1024px) {
+  .logoContainer {
+    display: grid;
+    padding-top: 25px;
+    padding-right: 10px;
+    padding-bottom: 0;
+    padding-left: 10px;
+    place-items: center;
+  }
+}

@@ -1,0 +1,53 @@
+.span {
+  position: relative;
+  display: flex;
+  padding: 10px;
+  color: #666666;
+  background-color: #c6d8e4;
+  border-radius: 5px;
+  align-items: center;
+  justify-content: center;
+  gap: 1ch;
+  cursor: pointer;
+}
+
+.chipText {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.active {
+  color: #111;
+}
+
+.checkmark {
+  position: absolute;
+  width: 1rem;
+  height: 1rem;
+  top: -3px;
+  right: -5px;
+  background-color: #50ac97;
+  border-radius: 50%;
+  flex: 1;
+}
+
+.checkmarkStem {
+  display: inline-block;
+  width: 3px;
+  height: 6px;
+  border-color: #fff;
+  background-color: #fff;
+  transform: rotateZ(-45deg) translate(6px, 0px);
+}
+
+.checkmarkKick {
+  display: inline-block;
+  width: 3px;
+  height: 9px;
+  border-color: #fff;
+  background-color: #fff;
+  transform: rotateZ(45deg) translate(1px, -6px);
+  transition: height 1s;
+}

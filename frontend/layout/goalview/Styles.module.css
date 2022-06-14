@@ -1,0 +1,43 @@
+.missionsContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 768px) {
+  .missionsContainer {
+    flex-direction: column;
+  }
+}
+
+.missionContainer {
+  margin: 0 25px;
+}
+
+@media screen and (max-width: 768px) {
+  .missionContainer {
+    margin: 0;
+  }
+}
+
+.heading3 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.richTextPlaceholder {
+  font-size: 15px;
+  color: #999;
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+  pointer-events: none;
+}

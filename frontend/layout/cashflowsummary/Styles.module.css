@@ -1,0 +1,36 @@
+.green {
+  color: #50ac97;
+}
+
+.red {
+  color: #ff7474;
+}
+
+.pageTitle {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.overallCurrency {
+  font-size: 24px;
+}
+
+.currencyFlowContainer {
+  display: flex;
+  gap: 2ch;
+}
+
+@media screen and (max-width: 500px) {
+  .currencyFlowContainer {
+    flex-direction: column;
+  }
+}
+
+.currencyFlowTitle {
+  margin-top: 0;
+}
+
+.currency {
+  margin-bottom: 0;
+  font-size: 20px;
+}

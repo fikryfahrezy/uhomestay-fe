@@ -1,0 +1,69 @@
+.pageTitle {
+  margin-bottom: 25px;
+}
+
+.addBtn {
+  margin-left: auto;
+  width: fit-content;
+  font-size: 24px !important;
+}
+
+.tableContainer {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.groupTitle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.groupTitleBody {
+  display: flex;
+  gap: 3ch;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 500px) {
+  .groupTitleBody {
+    flex-direction: column;
+  }
+}
+
+.groupSubtitle {
+  margin-top: 0;
+  margin-bottom: 5px;
+  font-size: 18px;
+}
+
+.groupSubvalue {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 18px;
+  font-weight: bold;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.select {
+  color: #777777;
+  background-color: #f2f2f2;
+}
+
+.select > * {
+  color: #777777;
+}
+
+.moreBtn {
+  color: #111;
+  font-size: 28px;
+}
+
+.moreBtn,
+.moreBtn:hover,
+.moreBtn:active {
+  background-color: transparent;
+}

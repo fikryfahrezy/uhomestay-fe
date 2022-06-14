@@ -1,0 +1,73 @@
+.container {
+  display: inline-flex;
+  align-items: center;
+  gap: 1ch;
+}
+
+.checkbox {
+  display: none;
+}
+
+.checkmarkContainer {
+  display: flex;
+  width: 1rem;
+  height: 1rem;
+  box-shadow: inset 1px 1px #c6d8e4, inset -1px 1px #c6d8e4,
+    inset -1px -1px #c6d8e4, inset 1px -1px #c6d8e4;
+  border-radius: 0.2rem;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+.checkbox:checked + .checkmarkContainer {
+  border-color: #50ac97;
+}
+
+.checkbox:checked + .checkmarkContainer > * {
+  opacity: 1;
+}
+
+.invalidInput {
+  border: solid 3px #ff7474 !important;
+}
+
+.checkmark {
+  display: flex;
+  position: relative;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.checkmarkMask {
+  position: absolute;
+  inset: 0 0 0 0;
+  transition: left 1s;
+  z-index: 1;
+}
+
+.checkbox:checked + .checkmarkContainer .checkmarkMask {
+  left: 100%;
+}
+
+.defaultScheme {
+  color: #111;
+  background-color: #c6d8e4;
+}
+
+.greenScheme {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.redScheme {
+  color: #fff;
+  background-color: #ff7474;
+}
+
+.yellowScheme {
+  color: #fff;
+  background-color: #d46b08;
+}

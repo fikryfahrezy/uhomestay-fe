@@ -1,0 +1,22 @@
+.mapOuter {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.mapContainer {
+  width: 100%;
+  height: 100%;
+  min-width: 200px;
+  min-height: 250px;
+}
+
+.mapMarkerBtn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 5px;
+  color: #111;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  border-radius: 50%;
+  z-index: 1;
+}

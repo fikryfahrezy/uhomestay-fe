@@ -1,0 +1,44 @@
+.pageTitle {
+  margin-bottom: 25px;
+}
+
+.headerContainer {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 768px) {
+  .headerContainer {
+    flex-direction: column;
+  }
+
+  .headerContainer > button {
+    align-self: flex-start;
+  }
+}
+
+.contentContainer {
+  margin-top: 25px;
+  margin-bottom: 25px;
+}
+
+.moreBtn,
+.moreBtn:hover,
+.moreBtn:active {
+  background-color: transparent;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 2fr fit-content(100%);
+  gap: 1ch;
+}
+
+.form input {
+  color: #777777;
+  background-color: #f2f2f2;
+}

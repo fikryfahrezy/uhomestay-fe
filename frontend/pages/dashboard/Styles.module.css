@@ -1,0 +1,56 @@
+.contentLayout {
+  background-color: transparent;
+}
+
+.topSection {
+  display: flex;
+  width: 100%;
+  gap: 3ch;
+}
+
+@media screen and (max-width: 500px) {
+  .topSection {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.contentSection {
+  margin-bottom: 25px;
+  padding: 15px;
+  background-color: #fff;
+  border-radius: 10px;
+  flex: 1;
+}
+
+.periodDate {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 30px;
+  font-weight: bold;
+}
+
+.periodEndDate {
+  margin-left: 35px;
+}
+
+.positionSection {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.documentLink {
+  width: 100%;
+  color: #111;
+  text-decoration: none;
+}
+
+.blogSection {
+  display: flex;
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+}
