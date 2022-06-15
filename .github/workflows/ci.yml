@@ -1,8 +1,8 @@
-name: GitHub Actions Demo at CI BE
+name: GitHub Actions Demo at CI FE
 on:
   push:
-    paths:
-      - "src/**"
+    branches:
+      - main
 jobs:
   Explore-GitHub-Actions:
     runs-on: ubuntu-latest
