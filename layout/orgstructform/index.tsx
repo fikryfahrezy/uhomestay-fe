@@ -125,10 +125,10 @@ const OrgStructAddForm = ({
             "Loading..."
           ) : positionsQuery.error ? (
             <ErrMsg />
-          ) : positionsQuery.data?.data.length === 0 ? (
+          ) : positionsQuery.data?.data.positions.length === 0 ? (
             <EmptyMsg />
           ) : (
-            positionsQuery.data?.data
+            positionsQuery.data?.data.positions
               .sort((a, b) => a.level - b.level)
               .map(({ id, name }) => (
                 <div className={styles.inputGroup} key={id}>
@@ -154,7 +154,7 @@ const OrgStructAddForm = ({
                           }))}
                       >
                         <option value="">Pilih Anggota</option>
-                        {membersQuery.data?.data.map(({ id, name }) => (
+                        {membersQuery.data?.data.members.map(({ id, name }) => (
                           <option
                             key={id}
                             value={id}

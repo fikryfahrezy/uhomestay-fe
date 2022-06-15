@@ -1,17 +1,10 @@
 import type { ReactElement } from "react";
 import type { DuesOut } from "@/services/dues";
-import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
+import dynamic from "next/dynamic";
 import { idrCurrency } from "@/lib/fmt";
-import { useCashflowsQuery } from "@/services/cashflow";
-import { useMembersQuery } from "@/services/member";
-import { useDocumentsQuery, DOC_TYPE } from "@/services/document";
-import { useDuesQuery } from "@/services/dues";
-import { useMembersDuesQuery } from "@/services/member-dues";
-import { useBlogsQuery } from "@/services/blog";
-import { usePositionsQuery } from "@/services/position";
-import { useFindActivePeriod, useFindPeriodGoal } from "@/services/period";
-import { useFindLatestHistory } from "@/services/history";
+import { DOC_TYPE } from "@/services/document";
+import { usePrivateDashboardQuery } from "@/services/dashboard";
 import MoreLink from "@/layout/morelink";
 import AdminLayout from "@/layout/adminpage";
 import CashflowSummary from "@/layout/cashflowsummary";
@@ -28,60 +21,18 @@ import styles from "./Styles.module.css";
 const RichText = dynamic(() => import("@/layout/richtext/read"));
 
 const Dashboard = () => {
-  const [selectedDues, setSelectedDues] = useState<DuesOut | null>(null);
-  const [activePeriod, setActivePeriod] = useState(0);
-
-  const cashflowsQuery = useCashflowsQuery({
-    retry: false,
-  });
-  const membersQuery = useMembersQuery({
-    retry: false,
-  });
-  const documentsQuery = useDocumentsQuery({
-    retry: false,
-  });
-  const duesQuery = useDuesQuery({
-    retry: false,
-  });
-  const blogsQuery = useBlogsQuery({
-    retry: false,
-  });
-  const positionsQuery = usePositionsQuery({
-    retry: false,
-  });
-  const findActivePeriod = useFindActivePeriod({
-    retry: false,
-  });
-  const latestHistory = useFindLatestHistory({
-    retry: false,
-  });
-  const membersDuesQuery = useMembersDuesQuery(
-    selectedDues ? selectedDues.id : 0,
-    {
-      retry: false,
-      enabled: !!selectedDues,
-    }
-  );
-  const periodGoal = useFindPeriodGoal(activePeriod, {
-    retry: false,
-    enabled: !!activePeriod,
+  const [token, setToken] = useState("");
+  const dashboardQuery = usePrivateDashboardQuery(token, {
+    enabled: !!token,
   });
 
   useEffect(() => {
-    const duesData = duesQuery.data;
-    if (duesData !== undefined && duesData.data.length != 0) {
-      setSelectedDues(duesData.data[0]);
-    }
-  }, [duesQuery.data]);
+    const token = window.localStorage.getItem("ajwt");
 
-  useEffect(() => {
-    if (findActivePeriod.data !== undefined) {
-      setActivePeriod(findActivePeriod.data.data.id);
-      return;
+    if (token !== null) {
+      setToken(token);
     }
-
-    setActivePeriod(9999);
-  }, [findActivePeriod.data]);
+  }, []);
 
   return (
     <main>
@@ -89,17 +40,17 @@ const Dashboard = () => {
         <div className={styles.contentSection}>
           <h2>Periode Aktif Saat Ini</h2>
           <div>
-            {findActivePeriod.isLoading ? (
+            {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
               "Loading..."
-            ) : findActivePeriod.error ? (
+            ) : dashboardQuery.error ? (
               <ErrMsg />
             ) : (
               <>
                 <p className={styles.periodDate}>
-                  {findActivePeriod.data?.data["start_date"]} /
+                  {dashboardQuery.data.data["active_period"]["start_date"]} /
                 </p>
                 <p className={`${styles.periodDate} ${styles.periodEndDate}`}>
-                  {findActivePeriod.data?.data["end_date"]}
+                  {dashboardQuery.data.data["active_period"]["end_date"]}
                 </p>
               </>
             )}
@@ -107,14 +58,14 @@ const Dashboard = () => {
           <MoreLink href="/dashboard/membership/org">Lebih lanjut</MoreLink>
           <h2>Jabatan Tersedia</h2>
           <div className={styles.positionSection}>
-            {positionsQuery.isLoading ? (
+            {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
               "Loading..."
-            ) : positionsQuery.error ? (
+            ) : dashboardQuery.error ? (
               <ErrMsg />
-            ) : positionsQuery.data?.data.length === 0 ? (
+            ) : dashboardQuery.data.data.positions.length === 0 ? (
               <EmptyMsg />
             ) : (
-              positionsQuery.data?.data.slice(0, 5).map((val) => {
+              dashboardQuery.data.data.positions.slice(0, 5).map((val) => {
                 return <PositionListItem key={val.id} position={val} />;
               })
             )}
@@ -124,20 +75,20 @@ const Dashboard = () => {
           </MoreLink>
         </div>
         <div className={styles.contentSection}>
-          {cashflowsQuery.isLoading ? (
+          {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
             "Loading..."
-          ) : cashflowsQuery.error ? (
+          ) : dashboardQuery.error ? (
             <ErrMsg />
           ) : (
             <CashflowSummary
               income={idrCurrency.format(
-                Number(cashflowsQuery.data?.data["income_cash"])
+                Number(dashboardQuery.data.data["cashflow"]["income_cash"])
               )}
               outcome={idrCurrency.format(
-                Number(cashflowsQuery.data?.data["outcome_cash"])
+                Number(dashboardQuery.data.data["cashflow"]["outcome_cash"])
               )}
               total={idrCurrency.format(
-                Number(cashflowsQuery.data?.data["total_cash"])
+                Number(dashboardQuery.data.data["cashflow"]["total_cash"])
               )}
             />
           )}
@@ -145,52 +96,56 @@ const Dashboard = () => {
         </div>
       </section>
       <section className={styles.contentSection}>
-        <h2>
-          Iuran Anggota -{" "}
-          {selectedDues !== null && selectedDues !== undefined
-            ? selectedDues["date"]
-            : ""}{" "}
-          -{" "}
-          {selectedDues !== null && selectedDues !== undefined
-            ? idrCurrency.format(Number(selectedDues["idr_amount"]))
-            : ""}
-        </h2>
-        {membersDuesQuery.isLoading || membersDuesQuery.isIdle ? (
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
-        ) : membersDuesQuery.error ? (
+        ) : dashboardQuery.error ? (
           <ErrMsg />
-        ) : membersDuesQuery.data.data.length === 0 ? (
+        ) : dashboardQuery.data.data["member_dues"].length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersDuesQuery.data.data.slice(0, 5).map((val) => {
-            return <MemberDuesItem key={val.id} member={val} />;
-          })
+          <>
+            <h2>
+              Iuran Anggota - {dashboardQuery.data.data.dues["date"]} -{" "}
+              {idrCurrency.format(
+                Number(dashboardQuery.data.data.dues["idr_amount"])
+              )}
+            </h2>
+            {dashboardQuery.data.data["member_dues"].map((val) => {
+              return <MemberDuesItem key={val.id} member={val} />;
+            })}
+          </>
         )}
         <MoreLink href="/dashboard/finance/dues">Lebih lanjut</MoreLink>
       </section>
       <section className={styles.contentSection}>
         <h2>Visi &amp; Misi</h2>
-        {periodGoal.isIdle || periodGoal.isLoading ? (
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
-        ) : periodGoal.error ? (
+        ) : dashboardQuery.error ? (
           <ErrMsg />
         ) : (
-          <GoalView orgPeriodGoal={periodGoal.data.data} />
+          <>
+            <GoalView
+              orgPeriodGoal={dashboardQuery.data.data["org_period_goal"]}
+            />
+            <MoreLink
+              href={`/dashboard/organization/mission/view/${dashboardQuery.data.data["active_period"].id}`}
+            >
+              Lebih lanjut
+            </MoreLink>
+          </>
         )}
-        <MoreLink href={`/dashboard/organization/mission/view/${activePeriod}`}>
-          Lebih lanjut
-        </MoreLink>
       </section>
       <section className={styles.contentSection}>
         <h2>Anggota</h2>
-        {membersQuery.isLoading ? (
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
-        ) : membersQuery.error ? (
+        ) : dashboardQuery.error ? (
           <ErrMsg />
-        ) : membersQuery.data?.data.length === 0 ? (
+        ) : dashboardQuery.data.data.members.length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersQuery.data?.data.slice(0, 5).map((member) => {
+          dashboardQuery.data.data.members.map((member) => {
             return <MemberListItem key={member.id} member={member} />;
           })
         )}
@@ -198,43 +153,40 @@ const Dashboard = () => {
       </section>
       <section className={styles.contentSection}>
         <h2>Dokumen</h2>
-        {documentsQuery.isLoading ? (
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
-        ) : documentsQuery.error ? (
+        ) : dashboardQuery.error ? (
           <ErrMsg />
-        ) : documentsQuery.data?.data.length === 0 ? (
+        ) : dashboardQuery.data.data.documents.length === 0 ? (
           <EmptyMsg />
         ) : (
-          documentsQuery.data?.data
-            .filter(({ type }) => type === DOC_TYPE.FILE)
-            .slice(0, 5)
-            .map((val) => {
-              return (
-                <a
-                  key={val.id}
-                  target="_blank"
-                  rel="noreferrer"
-                  href={val.url}
-                  className={styles.documentLink}
-                >
-                  <DocListItem document={val} />
-                </a>
-              );
-            })
+          dashboardQuery.data.data.documents.map((val) => {
+            return (
+              <a
+                key={val.id}
+                target="_blank"
+                rel="noreferrer"
+                href={val.url}
+                className={styles.documentLink}
+              >
+                <DocListItem document={val} />
+              </a>
+            );
+          })
         )}
         <MoreLink href="/dashboard/organization">Lebih lanjut</MoreLink>
       </section>
       <section className={styles.contentSection}>
         <h2>Blog</h2>
         <div className={styles.blogSection}>
-          {blogsQuery.isLoading ? (
+          {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
             "Loading..."
-          ) : blogsQuery.error ? (
+          ) : dashboardQuery.error ? (
             <ErrMsg />
-          ) : blogsQuery.data?.data.length === 0 ? (
+          ) : dashboardQuery.data.data.blogs.length === 0 ? (
             <EmptyMsg />
           ) : (
-            blogsQuery.data?.data.slice(0, 5).map((blog) => {
+            dashboardQuery.data.data.blogs.map((blog) => {
               return <BlogListItem key={blog.id} blog={blog} />;
             })
           )}
@@ -243,15 +195,13 @@ const Dashboard = () => {
       </section>
       <section className={styles.contentSection}>
         <h2>Sejarah</h2>
-        {latestHistory.isLoading ? (
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
-        ) : latestHistory.error ? (
+        ) : dashboardQuery.error ? (
           <ErrMsg />
         ) : (
           <RichText
-            editorStateJSON={
-              latestHistory.data ? latestHistory.data.data.content : null
-            }
+            editorStateJSON={dashboardQuery.data.data["latest_history"].content}
           />
         )}
         <MoreLink href="/dashboard/organization/history">Lebih lanjut</MoreLink>

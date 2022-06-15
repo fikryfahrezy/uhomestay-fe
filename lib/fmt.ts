@@ -3,10 +3,18 @@ export const idrCurrency = new Intl.NumberFormat("id-ID", {
   currency: "IDR",
 });
 
-export const idDate = new Intl.DateTimeFormat("id-ID", {
-  year: "numeric",
-  month: "long",
-});
+export const idDate = (date: Date) => {
+  if (date.toString() === "Invalid Date") {
+    return "";
+  }
+
+  const formater = new Intl.DateTimeFormat("id-ID", {
+    year: "numeric",
+    month: "long",
+  });
+
+  return formater.format(date);
+};
 
 /**
  * Ref: Format JavaScript date as yyyy-mm-dd
@@ -14,6 +22,10 @@ export const idDate = new Intl.DateTimeFormat("id-ID", {
  *
  */
 export const yyyyMm = (currentDate: Date) => {
+  if (currentDate.toString() === "Invalid Date") {
+    return "";
+  }
+
   const offset = currentDate.getTimezoneOffset();
 
   currentDate = new Date(currentDate.getTime() - offset * 60 * 1000);

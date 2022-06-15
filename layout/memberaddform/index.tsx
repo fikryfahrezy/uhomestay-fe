@@ -2,7 +2,6 @@ import type { MapMouseEvent, EventData } from "mapbox-gl";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import { idDate } from "@/lib/fmt";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
@@ -122,7 +121,6 @@ const MemberAddForm = ({
                 ? ""
                 : (getValues().profile as File[])[0].name
             }
-            // imgElement={<Image layout="fill" alt="avatar picker" />}
           />
           <div className={styles.inputGroup}>
             <Input
@@ -229,7 +227,7 @@ const MemberAddForm = ({
                   isInvalid={errors["position_id"] !== undefined}
                 >
                   <option value="">Pilih Jabatan</option>
-                  {positionsQuery.data?.data
+                  {positionsQuery.data?.data.positions
                     .sort((a, b) => a.level - b.level)
                     .map(({ id, name }) => (
                       <option key={id} value={id}>
@@ -284,11 +282,11 @@ const MemberAddForm = ({
                     key={periodQuery.data?.data.id}
                     value={periodQuery.data?.data.id}
                   >
-                    {idDate.format(
+                    {idDate(
                       new Date(periodQuery.data?.data["start_date"] as string)
                     )}{" "}
                     /{" "}
-                    {idDate.format(
+                    {idDate(
                       new Date(periodQuery.data?.data["end_date"] as string)
                     )}
                   </option>

@@ -7,7 +7,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import jwt from "jsonwebtoken";
 import User from "@/model/user";
 import { sessionOptions } from "@/lib/session";
-import fetchJson, { FetchError } from "@/lib/fetchJson";
+import fetchJson from "@/lib/fetchJson";
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
@@ -38,7 +38,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
 
     const decoded = jwt.verify(
       token,
-      process.env.SECRET_COOKIE_PASSWORD ?? ""
+      process.env.JWT_SECRET_KEY ?? ""
     ) as JwtPayload;
     const member = { token, uid: decoded.uid, isLoggedIn: true };
 

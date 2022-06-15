@@ -67,9 +67,7 @@ const OrgEditForm = ({
     isLoading: periodLoading,
     error: periodError,
     isIdle: periodIdle,
-    // data: ps,
   } = periodStructureQuery;
-  //   const periodData = ps ? ps.data : {};
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -301,7 +299,6 @@ const OrgEditForm = ({
               </Button>
               <Button
                 colorScheme="red"
-                // type="Button"
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
@@ -345,7 +342,6 @@ const OrgEditForm = ({
             isEditable={isEditable}
             isPositionSaved={positions !== null && positions.length !== 0}
             onSave={(positions) => onStructFormModified(positions)}
-            // prevData={periodData.positions}
             prevData={periodStructureQuery.data.data.positions}
           />
         )}
@@ -361,8 +357,6 @@ const OrgEditForm = ({
             goal !== null
               ? goal
               : {
-                  //   mission: periodData.mission,
-                  //   vision: periodData.vision,
                   mission: periodStructureQuery.data.data.mission,
                   vision: periodStructureQuery.data.data.vision,
                 }
@@ -373,8 +367,6 @@ const OrgEditForm = ({
         <OrgGoalView
           isOpen={goalModalOpen}
           prevData={{
-            // mission: periodData.mission,
-            // vision: periodData.vision,
             mission: periodStructureQuery.data.data.mission,
             vision: periodStructureQuery.data.data.vision,
           }}

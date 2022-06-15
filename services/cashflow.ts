@@ -20,6 +20,7 @@ export type CashflowRes = {
   total_cash: string;
   income_cash: string;
   outcome_cash: string;
+  cursor: number;
   cashflows: CashflowOut[];
 };
 

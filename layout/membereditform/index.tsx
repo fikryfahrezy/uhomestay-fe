@@ -3,7 +3,6 @@ import type { MemberOut } from "@/services/member";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
 import { idDate } from "@/lib/fmt";
 import {
   useMemberDetailQuery,
@@ -210,7 +209,6 @@ const MemberEditForm = ({
             className={styles.avatarPicker}
             disabled={!isEditable}
             src={prevData["profile_pic_url"]}
-            // imgElement={<Image layout="fill" alt="avatar picker" />}
           />
           <div className={styles.inputGroup}>
             <Input
@@ -328,7 +326,7 @@ const MemberEditForm = ({
                       {memberDetailQuery.data?.data.position}
                     </option>
                   )}
-                  {positionsQuery.data?.data
+                  {positionsQuery.data?.data.positions
                     .sort((a, b) => a.level - b.level)
                     .map(({ id, name }) => (
                       <option key={id} value={id}>
@@ -385,7 +383,7 @@ const MemberEditForm = ({
                     <ErrMsg />
                   ) : (
                     <option value={memberDetailQuery.data?.data["period_id"]}>
-                      {idDate.format(
+                      {idDate(
                         new Date(
                           (memberDetailQuery.data?.data.period as string).split(
                             "|"
@@ -393,7 +391,7 @@ const MemberEditForm = ({
                         )
                       )}{" "}
                       /{" "}
-                      {idDate.format(
+                      {idDate(
                         new Date(
                           (memberDetailQuery.data?.data.period as string).split(
                             "|"
@@ -406,11 +404,11 @@ const MemberEditForm = ({
                     key={periodQuery.data?.data.id}
                     value={periodQuery.data?.data.id}
                   >
-                    {idDate.format(
+                    {idDate(
                       new Date(periodQuery.data?.data["start_date"] as string)
                     )}{" "}
                     /{" "}
-                    {idDate.format(
+                    {idDate(
                       new Date(periodQuery.data?.data["end_date"] as string)
                     )}
                   </option>

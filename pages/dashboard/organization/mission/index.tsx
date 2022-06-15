@@ -1,7 +1,6 @@
 import type { ReactElement } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { useRef } from "react";
 import { idDate } from "@/lib/fmt";
 import { usePeriodsQuery } from "@/services/period";
 import Chip from "@/components/chip";
@@ -11,9 +10,6 @@ import ErrMsg from "@/layout/errmsg";
 import styles from "./Styles.module.css";
 
 const Mission = () => {
-  const dateIntl = useRef(
-    new Intl.DateTimeFormat("id-ID", { year: "numeric", month: "long" })
-  );
   const periodsQuery = usePeriodsQuery();
   const router = useRouter();
 
@@ -25,10 +21,10 @@ const Mission = () => {
           "Loading..."
         ) : periodsQuery.error ? (
           <ErrMsg />
-        ) : periodsQuery.data?.data.length === 0 ? (
+        ) : periodsQuery.data?.data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.data.map((val) => {
+          periodsQuery.data?.data.periods.map((val) => {
             const {
               id,
               start_date: startDate,
@@ -45,10 +41,7 @@ const Mission = () => {
               >
                 <a className={styles.chipLink}>
                   <Chip isActive={isActive}>
-                    {/* {dateIntl.current.format(new Date(startDate))} /{" "}
-                    {dateIntl.current.format(new Date(endDate))} */}
-                    {idDate.format(new Date(startDate))} /{" "}
-                    {idDate.format(new Date(endDate))}
+                    {idDate(new Date(startDate))} / {idDate(new Date(endDate))}
                   </Chip>
                 </a>
               </Link>

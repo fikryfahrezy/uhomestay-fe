@@ -20,10 +20,10 @@ const Document = () => {
             "Loading..."
           ) : documentQuery.error ? (
             <ErrMsg />
-          ) : documentQuery.data?.data.length === 0 ? (
+          ) : documentQuery.data?.data.documents.length === 0 ? (
             <EmptyMsg />
           ) : (
-            documentQuery.data?.data
+            documentQuery.data?.data.documents
               .filter(
                 ({ type, is_private: isPrivate }) =>
                   type === DOC_TYPE.FILE && isPrivate === false

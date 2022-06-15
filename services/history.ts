@@ -9,6 +9,7 @@ export type HistoryIn = {
 export const addHistory = async (data: HistoryIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
+    // "http://localhost:5000/api/v1/histories",
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/histories`,
     {
       method: "POST",
@@ -44,6 +45,7 @@ export const useFindLatestHistory = <
     "findLatestHistory",
     async () => {
       const fetched = fetchJson<D>(
+        // "http://localhost:5000/api/v1/histories",
         `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/histories`
       ).then((res) => {
         return res;

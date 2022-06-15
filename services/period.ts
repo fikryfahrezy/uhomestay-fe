@@ -10,7 +10,10 @@ export type PeriodRes = {
 };
 
 type UsePeriodsQueryData = {
-  data: PeriodRes[];
+  data: {
+    cursor: number;
+    periods: PeriodRes[];
+  };
 };
 
 export const usePeriodsQuery = <D = UsePeriodsQueryData, E = FetchError>(
@@ -79,6 +82,7 @@ export type StructureRes = {
   end_date: string;
   positions: StructurePositonOut[];
   vision: string;
+  //   mision: string;
   mission: string;
 };
 
@@ -124,6 +128,7 @@ export type AddPeriodIn = {
   end_date: string;
   positions: PositionIn[];
   vision: string;
+  //   mision: string;
   mission: string;
 };
 
@@ -151,6 +156,7 @@ export type EditPeriodIn = {
   end_date: string;
   positions: PositionIn[];
   vision: string;
+  //   mision: string;
   mission: string;
 };
 
@@ -217,6 +223,7 @@ export const removePeriod = async (id: number) => {
 
 export type GoalIn = {
   vision: string;
+  //   mision: string;
   mission: string;
   org_period_id: number;
 };

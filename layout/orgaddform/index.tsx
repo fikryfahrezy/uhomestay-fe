@@ -160,7 +160,7 @@ const OrgAddForm = ({
               id="end_date"
               type="month"
               min={endDate}
-              isInvalid={errors["end_date"]!== undefined}
+              isInvalid={errors["end_date"] !== undefined}
             />
             {errors["end_date"] ? (
               <InputErrMsg>This field is required</InputErrMsg>
@@ -233,6 +233,7 @@ const OrgAddForm = ({
         withBackdrop={false}
       >
         <OrgStructForm
+          isEditable={true}
           isPositionSaved={positions !== null && positions.length !== 0}
           onSave={(positions) => onStructFormModified(positions)}
         />

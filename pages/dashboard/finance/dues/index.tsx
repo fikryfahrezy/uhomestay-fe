@@ -58,13 +58,7 @@ const Dues = () => {
   const onDuesSelect = (val: string) => {
     const numVal = Number(val);
 
-    // setSelectedDues(
-    //   duesQuery.data.data.find((v) => {
-    //     return v.id === numVal;
-    //   })
-    // );
-
-    const dues = duesQuery.data?.data.find((v) => {
+    const dues = duesQuery.data?.data.dues.find((v) => {
       return v.id === numVal;
     });
 
@@ -75,8 +69,8 @@ const Dues = () => {
 
   useEffect(() => {
     const duesData = duesQuery.data;
-    if (duesData !== undefined && duesData.data.length != 0) {
-      setSelectedDues(duesData.data[0]);
+    if (duesData !== undefined && duesData.data.dues.length != 0) {
+      setSelectedDues(duesData.data.dues[0]);
     }
   }, [duesQuery.data]);
 
@@ -106,7 +100,7 @@ const Dues = () => {
                   onChange={(e) => onDuesSelect(e.currentTarget.value)}
                   value={selectedDues ? selectedDues.id : ""}
                 >
-                  {duesQuery.data.data.map((val) => {
+                  {duesQuery.data.data.dues.map((val) => {
                     const { id, date } = val;
                     return (
                       <option key={id} value={id}>
@@ -123,7 +117,6 @@ const Dues = () => {
               <p className={styles.groupSubtitle}>Jumlah Iuran</p>
               {selectedDues !== null && selectedDues !== undefined ? (
                 <p className={styles.groupSubvalue}>
-                  {/* {idrCurrency.format(selectedDues["idr_amount"])} */}
                   {idrCurrency.format(Number(selectedDues["idr_amount"]))}
                 </p>
               ) : (
@@ -142,10 +135,10 @@ const Dues = () => {
           "Loading..."
         ) : membersDuesQuery.error ? (
           <ErrMsg />
-        ) : membersDuesQuery.data.data.length === 0 ? (
+        ) : membersDuesQuery.data.data["member_dues"].length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersDuesQuery.data.data.map((val) => {
+          membersDuesQuery.data.data["member_dues"].map((val) => {
             return (
               <MemberDuesItem
                 key={val.id}
@@ -154,7 +147,7 @@ const Dues = () => {
                   <Link
                     href={{
                       pathname: `${router.pathname}/member/[id]`,
-                      query: { id: val.id },
+                      query: { id: val["member_id"] },
                     }}
                     passHref
                   >

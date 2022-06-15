@@ -11,16 +11,6 @@ import React, { Children } from "react";
  *
  */
 
-// type ActiveLinkProps = DetailedReactHTMLElement<
-//   {
-//     onMouseEnter?: import("react").MouseEventHandler<Element> | undefined;
-//     onClick: MouseEventHandler;
-//     href?: string | undefined;
-//     ref?: any;
-//   },
-//   HTMLElement
-// >;
-
 type ActiveLinkProps = LinkProps & {
   activeClassName: string;
   children: JSX.Element;

@@ -9,7 +9,10 @@ export type DuesOut = {
 };
 
 type UseDuesQueryData = {
-  data: DuesOut[];
+  data: {
+    cursor: number;
+    dues: DuesOut[];
+  };
 };
 
 export const useDuesQuery = <D = UseDuesQueryData, E = FetchError>(

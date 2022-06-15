@@ -23,10 +23,10 @@ const Blog = () => {
             "Loading..."
           ) : blogsQuery.error ? (
             <ErrMsg />
-          ) : blogsQuery.data?.data.length === 0 ? (
+          ) : blogsQuery.data?.data.blogs.length === 0 ? (
             <EmptyMsg />
           ) : (
-            blogsQuery.data?.data.map((blog) => {
+            blogsQuery.data?.data.blogs.map((blog) => {
               return (
                 <LinkBox key={blog.id}>
                   <BlogListItem blog={blog} />

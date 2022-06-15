@@ -14,7 +14,7 @@ const GoalView = ({ orgPeriodGoal }: GoalViewProps) => {
       <div className={styles.missionContainer}>
         <h3 className={styles.heading3}>Visi</h3>
         <RichText
-          editorStateJSON={orgPeriodGoal.mission}
+          editorStateJSON={orgPeriodGoal.vision}
           placeholder={
             <div className={styles.richTextPlaceholder}>
               Tidak ada konten untuk sekarang...

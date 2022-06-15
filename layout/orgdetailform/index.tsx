@@ -33,9 +33,6 @@ const OrgEditForm = ({
     enabled: !!prevData.id,
   });
 
-  //   const { data: ps } = periodStructureQuery;
-  //   const periodData = ps ? ps.data : {};
-
   const { toast, props } = useToast();
 
   const onDelete = (id: number) => {
@@ -147,7 +144,6 @@ const OrgEditForm = ({
           </>
           <Button
             colorScheme="red"
-            // type="Button"
             type="button"
             className={styles.formBtn}
             onClick={() => onConfirmDelete()}
@@ -172,8 +168,6 @@ const OrgEditForm = ({
         <OrgGoalView
           isOpen={goalModalOpen}
           prevData={{
-            // mission: periodData.mission,
-            // vision: periodData.vision,
             mission: periodStructureQuery.data.data.mission,
             vision: periodStructureQuery.data.data.vision,
           }}

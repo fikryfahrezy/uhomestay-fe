@@ -237,7 +237,6 @@ const Register = () => {
                 }}
                 isInvalid={errors["homestay_longitude"] !== undefined}
               />
-              {/* {errors["homestayhomestay_longitude_latitude"] ? ( */}
               {errors["homestay_longitude"] ? (
                 <InputErrMsg>This field is required</InputErrMsg>
               ) : (

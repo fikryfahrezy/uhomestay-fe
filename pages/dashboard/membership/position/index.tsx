@@ -54,10 +54,10 @@ const Position = () => {
           "Loading..."
         ) : positionsQuery.error ? (
           <ErrMsg />
-        ) : positionsQuery.data?.data.length === 0 ? (
+        ) : positionsQuery.data?.data.positions.length === 0 ? (
           <EmptyMsg />
         ) : (
-          positionsQuery.data?.data.map((val) => {
+          positionsQuery.data?.data.positions.map((val) => {
             return (
               <PositionListItem
                 key={val.id}

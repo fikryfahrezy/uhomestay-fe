@@ -63,10 +63,10 @@ const Member = () => {
           "Loading..."
         ) : membersQuery.error ? (
           <ErrMsg />
-        ) : membersQuery.data?.data.length === 0 ? (
+        ) : membersQuery.data?.data.members.length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersQuery.data?.data.map((member) => {
+          membersQuery.data?.data.members.map((member) => {
             return (
               <MemberListItem
                 key={member.id}

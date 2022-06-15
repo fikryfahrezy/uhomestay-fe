@@ -1021,7 +1021,6 @@ export default function ToolbarPlugin({ uploadImgFunc }: ToolbarPluginProps) {
                   isLink ? styles["button-active"] : ""
                 }`}
                 aria-label="Insert link"
-                // type="Insert link"
                 title="Insert link"
               >
                 <i className={`${styles["format"]} ${styles["icon-link"]}`} />

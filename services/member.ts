@@ -21,7 +21,10 @@ export type MemberOut = {
 };
 
 type UseMembersQueryData = {
-  data: MemberOut[];
+  data: {
+    cursor: string;
+    members: MemberOut[];
+  };
 };
 
 export const useMembersQuery = <D = UseMembersQueryData, E = FetchError>(

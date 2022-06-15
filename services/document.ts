@@ -17,7 +17,10 @@ export type DocumentOut = {
 };
 
 type UseDocumentsQueryData = {
-  data: DocumentOut[];
+  data: {
+    cursor: number;
+    documents: DocumentOut[];
+  };
 };
 
 export const useDocumentsQuery = <D = UseDocumentsQueryData, E = FetchError>(
@@ -41,7 +44,10 @@ export const useDocumentsQuery = <D = UseDocumentsQueryData, E = FetchError>(
 };
 
 type UseDocumentChildsQueryData = {
-  data: DocumentOut[];
+  data: {
+    cursor: number;
+    documents: DocumentOut[];
+  };
 };
 
 export const useDocumentChildsQuery = <

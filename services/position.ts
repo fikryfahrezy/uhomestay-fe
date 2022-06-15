@@ -9,7 +9,10 @@ export type PositionOut = {
 };
 
 type UsePositionsQueryData = {
-  data: PositionOut[];
+  data: {
+    cursor: number;
+    positions: PositionOut[];
+  };
 };
 
 export const usePositionsQuery = <D = UsePositionsQueryData, E = FetchError>(

@@ -21,6 +21,7 @@ export type MemberDuesRes = {
   total_dues: string;
   paid_dues: string;
   unpaid_dues: string;
+  cursor: number;
   dues: MemberDuesOut[];
 };
 
@@ -72,14 +73,18 @@ export const payDues = async (id: number, data: FormData) => {
 };
 
 export type MembersDuesOut = {
-  id: string;
+  id: number;
+  member_id: string;
   status: string;
   name: string;
   profile_pic_url: string;
 };
 
 type UseMembersDuesQueryData = {
-  data: MembersDuesOut[];
+  data: {
+    cursor: number;
+    member_dues: MembersDuesOut[];
+  };
 };
 
 export const useMembersDuesQuery = <

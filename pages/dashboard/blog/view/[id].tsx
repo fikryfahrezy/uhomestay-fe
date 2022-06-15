@@ -42,16 +42,10 @@ const ViewBlog = () => {
       });
   };
 
-  //   const onConfirmDelete = (
-  //     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-  //   ) => {
   const onConfirmDelete = () => {
     setModalOpen(true);
   };
 
-  //   const onCancelDelete = (
-  //     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
-  //   ) => {
   const onCancelDelete = () => {
     setModalOpen(false);
   };

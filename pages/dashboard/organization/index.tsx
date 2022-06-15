@@ -44,7 +44,7 @@ const Organization = () => {
   );
 
   const documentParent = useMemo(() => {
-    const data = documentsQuery.data ? documentsQuery.data.data : [];
+    const data = documentsQuery.data ? documentsQuery.data.data.documents : [];
     const dLen = data.length;
 
     const tree: Map<number, DocumentOut> = new Map();
@@ -121,16 +121,12 @@ const Organization = () => {
     }
   };
 
-  //   const onClose = (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
   const onClose = () => {
     setTempData(null);
     setOpen(false);
     setDocType("");
   };
 
-  //   const onOpen =
-  //     (type: string) =>
-  //     (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
   const onOpen = (type: string) => {
     setDocType(type);
     setOpen(true);
@@ -156,7 +152,6 @@ const Organization = () => {
             <ul className={styles.addBtnOptions}>
               <li
                 className={styles.addBtnOption}
-                // onClick={onOpen(DOC_TYPE.DIR)}
                 onClick={() => onOpen(DOC_TYPE.DIR)}
               >
                 <RiFolderLine />
@@ -164,7 +159,6 @@ const Organization = () => {
               </li>
               <li
                 className={styles.addBtnOption}
-                // onClick={onOpen(DOC_TYPE.FILE)}
                 onClick={() => onOpen(DOC_TYPE.FILE)}
               >
                 <RiFileLine />
@@ -213,10 +207,10 @@ const Organization = () => {
           "Loading..."
         ) : documentChildsQuery.error ? (
           <ErrMsg />
-        ) : documentChildsQuery.data?.data.length === 0 ? (
+        ) : documentChildsQuery.data?.data.documents.length === 0 ? (
           <EmptyMsg />
         ) : (
-          documentChildsQuery.data?.data.map((val) => {
+          documentChildsQuery.data?.data.documents.map((val) => {
             const { id, type, url } = val;
 
             const child = (

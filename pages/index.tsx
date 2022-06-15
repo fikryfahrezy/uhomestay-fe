@@ -3,13 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { yyyyMm } from "@/lib/fmt";
-import {
-  useFindActivePeriod,
-  usePeriodStructureQuery,
-} from "@/services/period";
-import { DOC_TYPE, useDocumentsQuery } from "@/services/document";
-import { useBlogsQuery } from "@/services/blog";
-import { useFindLatestHistory } from "@/services/history";
+import { useDashboardQuery } from "@/services/dashboard";
 import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
 import EmptyMsg from "@/layout/emptymsg";
 import ErrMsg from "@/layout/errmsg";
@@ -23,29 +17,8 @@ const RichText = dynamic(() => import("@/layout/richtext/read"));
 
 const LandingPage = () => {
   const [isNavHiding, setNavHiding] = useState(false);
-  const [activePeriod, setActivePeriod] = useState(0);
-
-  const blogsQuery = useBlogsQuery();
-  const documentQuery = useDocumentsQuery();
-  const latestHistory = useFindLatestHistory();
-  const findActivePeriod = useFindActivePeriod({
-    retry: false,
-  });
-  const periodStructureQuery = usePeriodStructureQuery(activePeriod, {
-    retry: false,
-    enabled: !!activePeriod,
-  });
-
+  const dasboardQuery = useDashboardQuery();
   const prevScrollPos = useRef(0);
-
-  useEffect(() => {
-    if (findActivePeriod.data !== undefined) {
-      setActivePeriod(findActivePeriod.data.data.id);
-      return;
-    }
-
-    setActivePeriod(99999);
-  }, [findActivePeriod.data]);
 
   useEffect(() => {
     prevScrollPos.current = window.scrollY;
@@ -144,27 +117,39 @@ const LandingPage = () => {
             <a id="organization">Struktur Organiasi Periode </a>
           </h2>
           <h2 className={styles.periodSubTitle}>
-            {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
+            {dasboardQuery.isLoading || dasboardQuery.isIdle ? (
               "Loading..."
-            ) : periodStructureQuery.error ? (
+            ) : dasboardQuery.error ? (
               <></>
             ) : (
               <a>
-                {yyyyMm(new Date(periodStructureQuery.data.data["start_date"]))}
-                /{yyyyMm(new Date(periodStructureQuery.data.data["end_date"]))}
+                {yyyyMm(
+                  new Date(
+                    dasboardQuery.data.data["org_period_structures"][
+                      "start_date"
+                    ]
+                  )
+                )}
+                /
+                {yyyyMm(
+                  new Date(
+                    dasboardQuery.data.data["org_period_structures"]["end_date"]
+                  )
+                )}
               </a>
             )}
           </h2>
         </section>
         <section className={styles.section}>
-          {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
+          {dasboardQuery.isLoading || dasboardQuery.isIdle ? (
             "Loading..."
-          ) : periodStructureQuery.error ? (
+          ) : dasboardQuery.error ? (
             <ErrMsg />
-          ) : periodStructureQuery.data.data.positions.length === 0 ? (
+          ) : dasboardQuery.data.data["org_period_structures"].positions
+              .length === 0 ? (
             <EmptyMsg />
           ) : (
-            periodStructureQuery.data.data.positions
+            dasboardQuery.data.data["org_period_structures"].positions
               .sort((a, b) => a.level - b.level)
               .map(({ id, level, name, members }) => {
                 return (
@@ -208,15 +193,16 @@ const LandingPage = () => {
           </h2>
         </section>
         <section className={styles.section}>
-          {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
+          {dasboardQuery.isLoading || dasboardQuery.isIdle ? (
             "Loading..."
-          ) : periodStructureQuery.error ? (
+          ) : dasboardQuery.error ? (
             <ErrMsg />
           ) : (
             <GoalView
               orgPeriodGoal={{
-                mission: periodStructureQuery.data.data.mission,
-                vision: periodStructureQuery.data.data.vision,
+                mission:
+                  dasboardQuery.data.data["org_period_structures"].mission,
+                vision: dasboardQuery.data.data["org_period_structures"].vision,
               }}
             />
           )}
@@ -225,14 +211,14 @@ const LandingPage = () => {
           <h2 className={styles.subTitle}>
             <a id="history">Sejarah</a>
           </h2>
-          {latestHistory.isLoading ? (
+          {dasboardQuery.isLoading ? (
             "Loading..."
-          ) : latestHistory.error ? (
+          ) : dasboardQuery.error ? (
             <ErrMsg />
           ) : (
             <RichText
               editorStateJSON={
-                latestHistory.data ? latestHistory.data.data.content : null
+                dasboardQuery.data?.data["latest_history"].content ?? null
               }
               placeholder={
                 <div className={styles.richTextPlaceholder}>
@@ -247,14 +233,14 @@ const LandingPage = () => {
             <a id="blog">Blog</a>
           </h2>
           <div className={styles.blogsContainer}>
-            {blogsQuery.isLoading ? (
+            {dasboardQuery.isLoading ? (
               "Loading..."
-            ) : blogsQuery.error ? (
+            ) : dasboardQuery.error ? (
               <ErrMsg />
-            ) : blogsQuery.data?.data.length === 0 ? (
+            ) : dasboardQuery.data?.data.blogs.length === 0 ? (
               <EmptyMsg />
             ) : (
-              blogsQuery.data?.data.slice(0, 8).map((blog) => {
+              dasboardQuery.data?.data.blogs.map((blog) => {
                 return (
                   <LinkBox key={blog.id}>
                     <BlogListItem blog={blog} />
@@ -278,34 +264,28 @@ const LandingPage = () => {
           <h2 className={styles.subTitle}>
             <a id="document">Dokumen</a>
           </h2>
-          {documentQuery.isLoading ? (
+          {dasboardQuery.isLoading ? (
             "Loading..."
-          ) : documentQuery.error ? (
+          ) : dasboardQuery.error ? (
             <ErrMsg />
-          ) : documentQuery.data?.data.length === 0 ? (
+          ) : dasboardQuery.data?.data.documents.length === 0 ? (
             <EmptyMsg />
           ) : (
-            documentQuery.data?.data
-              .filter(
-                ({ type, is_private: isPrivate }) =>
-                  type === DOC_TYPE.FILE && isPrivate === false
-              )
-              .slice(0, 5)
-              .map((doc) => {
-                return (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    key={doc.id}
-                    href={doc.url}
-                    className={styles.documentLink}
-                  >
-                    <DocListItem document={doc} />
-                  </a>
-                );
-              })
+            dasboardQuery.data?.data.documents.map((doc) => {
+              return (
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  key={doc.id}
+                  href={doc.url}
+                  className={styles.documentLink}
+                >
+                  <DocListItem document={doc} />
+                </a>
+              );
+            })
           )}
-          <MoreLink href="/blog">Lebih banyak</MoreLink>
+          <MoreLink href="/document">Lebih banyak</MoreLink>
         </section>
         <section className={styles.section}>
           <iframe

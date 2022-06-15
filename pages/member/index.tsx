@@ -28,12 +28,6 @@ const Member = () => {
     enabled: !!muid,
   });
 
-  const { data: m } = memberDetailQuery;
-  const memberData = m ? m.data : {};
-
-  const { data: md } = memberDuesQuery;
-  const memberDues = md ? md.data : {};
-
   const onClose = () => {
     setTempData(null);
     setOpen(false);
@@ -82,8 +76,6 @@ const Member = () => {
                 <div className={styles.profileImgContainer}>
                   <Image
                     src={
-                      //   memberData["profile_pic_url"]
-                      //     ? memberData["profile_pic_url"]
                       memberDetailQuery.data.data["profile_pic_url"]
                         ? memberDetailQuery.data.data["profile_pic_url"]
                         : "/images/image/person.png"
@@ -94,7 +86,6 @@ const Member = () => {
                     alt="Member profile pic"
                   />
                 </div>
-                {/* <h2 className={styles.profileName}>{memberData.name}</h2> */}
                 <h2 className={styles.profileName}>
                   {memberDetailQuery.data.data.name}
                 </h2>
@@ -104,25 +95,21 @@ const Member = () => {
                   <tr>
                     <td>Nomor WA</td>
                     <td>:</td>
-                    {/* <td>{memberData["wa_phone"]}</td> */}
                     <td>{memberDetailQuery.data.data["wa_phone"]}</td>
                   </tr>
                   <tr>
                     <td>Nomor Lainnya</td>
                     <td>:</td>
-                    {/* <td>{memberData["other_phone"]}</td> */}
                     <td>{memberDetailQuery.data.data["other_phone"]}</td>
                   </tr>
                   <tr>
                     <td>Jabatan</td>
                     <td>:</td>
-                    {/* <td>{memberData.position}</td> */}
                     <td>{memberDetailQuery.data.data.position}</td>
                   </tr>
                   <tr>
                     <td>Periode</td>
                     <td>:</td>
-                    {/* <td>{memberData.period.split("|").join(" - ")}</td> */}
                     <td>
                       {memberDetailQuery.data.data.period
                         .split("|")
@@ -132,13 +119,11 @@ const Member = () => {
                   <tr>
                     <td>Nama Homestay</td>
                     <td>:</td>
-                    {/* <td>{memberData["homestay_name"]}</td> */}
                     <td>{memberDetailQuery.data.data["homestay_name"]}</td>
                   </tr>
                   <tr>
                     <td>Alamat Homestay</td>
                     <td>:</td>
-                    {/* <td>{memberData["homestay_address"]}</td> */}
                     <td>{memberDetailQuery.data.data["homestay_address"]}</td>
                   </tr>
                 </tbody>
@@ -153,7 +138,6 @@ const Member = () => {
             <div className={styles.contentHeadPart}>
               <h2 className={styles.subHeadTitle}>Total Uang Iuran</h2>
               <p className={styles.overallCurrency}>
-                {/* {idrCurrency.format(memberDues["total_dues"])} */}
                 {idrCurrency.format(
                   Number(memberDuesQuery.data.data["total_dues"])
                 )}
@@ -162,7 +146,6 @@ const Member = () => {
                 <div>
                   <h3 className={styles.currencyFlowTitle}>Total Terbayar</h3>
                   <p className={`${styles.currency} ${styles.green}`}>
-                    {/* {idrCurrency.format(memberDues["paid_dues"])} */}
                     {idrCurrency.format(
                       Number(memberDuesQuery.data.data["paid_dues"])
                     )}
@@ -173,7 +156,6 @@ const Member = () => {
                     Total Belum Terbayar
                   </h3>
                   <p className={`${styles.currency} ${styles.red}`}>
-                    {/* {idrCurrency.format(memberDues["unpaid_dues"])} */}
                     {idrCurrency.format(
                       Number(memberDuesQuery.data.data["unpaid_dues"])
                     )}
@@ -188,9 +170,11 @@ const Member = () => {
             "Loading..."
           ) : memberDuesQuery.error ? (
             <ErrMsg />
-          ) : memberDuesQuery.data.data.dues?.length === 0 ? (
+          ) : //   ) : memberDues.dues.length === 0 ? (
+          memberDuesQuery.data.data.dues?.length === 0 ? (
             <EmptyMsg />
           ) : (
+            // memberDues.dues.map((val) => {
             memberDuesQuery.data.data.dues?.map((val) => {
               const { date, id, idr_amount: idr, status } = val;
               const { badge, color } = (() => {
@@ -226,7 +210,6 @@ const Member = () => {
                       <p className={styles.listText}>{date}</p>
                     </div>
                     <span className={`${styles.listCurrency} ${color}`}>
-                      {/* {idrCurrency.format(idr)} */}
                       {idrCurrency.format(Number(idr))}
                     </span>
                   </div>

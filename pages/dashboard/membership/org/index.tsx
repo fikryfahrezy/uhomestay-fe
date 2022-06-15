@@ -1,8 +1,7 @@
 import type { ReactElement } from "react";
 import type { PeriodRes } from "@/services/period";
-import { useState } from "react";
+import { useState /* useRef */ } from "react";
 import { RiAddLine } from "react-icons/ri";
-// import { idDate } from "@/lib/fmt";
 import { idDate } from "@/lib/fmt";
 import { usePeriodsQuery } from "@/services/period";
 import Button from "@/components/button";
@@ -19,9 +18,6 @@ import styles from "./Styles.module.css";
 const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
   const [open, setOpen] = useState(false);
-  //   const dateIntl = useRef(
-  //     new Intl.DateTimeFormat("id-ID", { year: "numeric", month: "long" })
-  //   );
   const periodsQuery = usePeriodsQuery();
 
   const onChipClick = (val: PeriodRes) => {
@@ -60,10 +56,10 @@ const Organization = () => {
           "Loading..."
         ) : periodsQuery.error ? (
           <ErrMsg />
-        ) : periodsQuery.data?.data.length === 0 ? (
+        ) : periodsQuery.data?.data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.data.map((val) => {
+          periodsQuery.data?.data.periods.map((val) => {
             const {
               id,
               start_date: startDate,
@@ -78,8 +74,8 @@ const Organization = () => {
               >
                 {/* {dateIntl.current.format(new Date(startDate))} /{" "}
                 {dateIntl.current.format(new Date(endDate))} */}
-                {idDate.format(new Date(startDate))} /{" "}
-                {idDate.format(new Date(endDate))}
+                {idDate(new Date(startDate))} /{" "}
+                {idDate(new Date(endDate))}
               </Chip>
             );
           })

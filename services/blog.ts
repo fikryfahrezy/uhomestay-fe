@@ -13,7 +13,10 @@ export type BlogOut = {
 };
 
 type UseBlogsQueryData = {
-  data: BlogOut[];
+  data: {
+    cursor: string;
+    blogs: BlogOut[];
+  };
 };
 
 export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
