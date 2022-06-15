@@ -27,7 +27,7 @@ export const useDocumentsQuery = <D = UseDocumentsQueryData, E = FetchError>(
     "documentsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/documents"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents`
       ).then((res) => {
         return res;
       });
@@ -55,7 +55,7 @@ export const useDocumentChildsQuery = <
     ["documentChildQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/documents/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/${id}`
       ).then((res) => {
         return res;
       });
@@ -77,7 +77,7 @@ export type AddDirDocumentIn = {
 export const addDirDocument = async (data: AddDirDocumentIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/documents/dir",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/dir`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -102,7 +102,7 @@ export type AddFileDocumentIn = {
 export const addFileDocument = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/documents/file",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/file`,
     {
       method: "POST",
       body: data,
@@ -125,7 +125,7 @@ export type EditDirDocumentIn = {
 export const editDirDocument = async (id: number, data: EditDirDocumentIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/documents/dir/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/dir/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -149,7 +149,7 @@ export type EditFileDocumentIn = {
 export const editFileDocument = async (id: number, data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/documents/file/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/file/${id}`,
     {
       method: "PUT",
       body: data,
@@ -167,7 +167,7 @@ export const editFileDocument = async (id: number, data: FormData) => {
 export const removeDocument = async (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/documents/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/${id}`,
     {
       method: "DELETE",
       headers: {

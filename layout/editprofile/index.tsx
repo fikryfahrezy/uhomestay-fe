@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import Image from "next/image";
+// import Image from "next/image";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMemberDetailQuery, updateProfile } from "@/services/member";
 import AvatarPicker from "@/components/avatarpicker";
@@ -150,6 +150,7 @@ const UpdateProfile = () => {
               defaultSrc={"/images/image/grey.png"}
               className={styles.avatarPicker}
               src={memberDetailQuery.data.data["profile_pic_url"]}
+              //   imgElement={<Image layout="fill" alt="avatar picker" />}
             />
           )}
         </div>

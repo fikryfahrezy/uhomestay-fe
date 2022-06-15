@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { ReactElement, MouseEvent } from "react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
@@ -42,10 +42,16 @@ const ViewBlog = () => {
       });
   };
 
+  //   const onConfirmDelete = (
+  //     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+  //   ) => {
   const onConfirmDelete = () => {
     setModalOpen(true);
   };
 
+  //   const onCancelDelete = (
+  //     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
+  //   ) => {
   const onCancelDelete = () => {
     setModalOpen(false);
   };

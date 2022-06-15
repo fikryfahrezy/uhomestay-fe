@@ -9,7 +9,7 @@ export type HistoryIn = {
 export const addHistory = async (data: HistoryIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/histories",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/histories`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -44,7 +44,7 @@ export const useFindLatestHistory = <
     "findLatestHistory",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/histories"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/histories`
       ).then((res) => {
         return res;
       });

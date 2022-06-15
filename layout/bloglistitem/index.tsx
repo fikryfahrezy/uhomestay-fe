@@ -22,6 +22,7 @@ const BlogListItem = ({ blog, popUp }: BlogListItem) => {
           blog["short_desc"].slice(0, 55) +
           (blog["short_desc"].length > 54 ? "..." : "")
         }
+        // title={
         cardTitle={
           blog.title ? (
             blog.title.slice(0, 45) + (blog.title.length > 44 ? "..." : "")

@@ -121,12 +121,16 @@ const Organization = () => {
     }
   };
 
+  //   const onClose = (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
   const onClose = () => {
     setTempData(null);
     setOpen(false);
     setDocType("");
   };
 
+  //   const onOpen =
+  //     (type: string) =>
+  //     (e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>) => {
   const onOpen = (type: string) => {
     setDocType(type);
     setOpen(true);
@@ -152,6 +156,7 @@ const Organization = () => {
             <ul className={styles.addBtnOptions}>
               <li
                 className={styles.addBtnOption}
+                // onClick={onOpen(DOC_TYPE.DIR)}
                 onClick={() => onOpen(DOC_TYPE.DIR)}
               >
                 <RiFolderLine />
@@ -159,6 +164,7 @@ const Organization = () => {
               </li>
               <li
                 className={styles.addBtnOption}
+                // onClick={onOpen(DOC_TYPE.FILE)}
                 onClick={() => onOpen(DOC_TYPE.FILE)}
               >
                 <RiFileLine />

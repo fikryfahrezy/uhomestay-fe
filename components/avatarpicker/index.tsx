@@ -19,6 +19,7 @@ const AvatarPicker = (
     value,
     src = "",
     text = "",
+    //  imgElement = <img alt="avatar image" />,
     ...restProps
   }: AvatarPickerProps,
   ref: ForwardedRef<HTMLInputElement>
@@ -132,6 +133,14 @@ const AvatarPicker = (
           <span className={styles.btnText}>{text}</span>
         </Button>
       )}
+      {/* {cloneElement(
+        imgElement,
+        {
+          src: imgUrl ? imgUrl : defaultSrc,
+          className: styles.img,
+        },
+        null
+      )} */}
       <img
         src={imgUrl ? imgUrl : defaultSrc}
         className={styles.img}

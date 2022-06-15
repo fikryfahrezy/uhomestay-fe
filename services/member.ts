@@ -31,7 +31,7 @@ export const useMembersQuery = <D = UseMembersQueryData, E = FetchError>(
     "membersQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/members"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members`
       ).then((res) => {
         return res;
       });
@@ -78,7 +78,7 @@ export const useMemberDetailQuery = <
     ["memberDetailQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/members/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members/${id}`
       ).then((res) => {
         return res;
       });
@@ -110,7 +110,7 @@ export type AddMemberIn = {
 export const addMember = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/members",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members`,
     {
       method: "POST",
       body: data,
@@ -140,7 +140,7 @@ export type RegisterIn = {
 export const registerMember = async (data: RegisterIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson<{ data: { token: string } }>(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/register",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/register`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -175,7 +175,7 @@ export type EditMemberIn = {
 export const editMember = async (id: string, data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/members/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members/${id}`,
     {
       method: "PUT",
       body: data,
@@ -193,7 +193,7 @@ export const editMember = async (id: string, data: FormData) => {
 export const removeMember = async (id: string) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/members/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -210,7 +210,7 @@ export const removeMember = async (id: string) => {
 export const approveMember = async (id: string) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/members/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members/${id}`,
     {
       method: "PATCH",
       headers: {
@@ -367,7 +367,7 @@ export type UpdateMemberIn = {
 export const updateProfile = async (data: FormData) => {
   const token = window.localStorage.getItem("mjwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/members`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members`,
     {
       method: "PUT",
       body: data,

@@ -19,7 +19,7 @@ export const usePositionsQuery = <D = UsePositionsQueryData, E = FetchError>(
     "positionsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/positions"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions`
       ).then((res) => {
         return res;
       });
@@ -50,7 +50,7 @@ export const usePositionLevelsQuery = <
     "positionLevelsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/positions/levels"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions/levels`
       ).then((res) => {
         return res;
       });
@@ -71,7 +71,7 @@ export type AddPositionIn = {
 export const addPosition = async (data: AddPositionIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/positions",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -95,7 +95,7 @@ export type EditPositionIn = {
 export const editPosition = async (id: number, data: EditPositionIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/positions/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -114,7 +114,7 @@ export const editPosition = async (id: number, data: EditPositionIn) => {
 export const removePosition = (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/positions/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions/${id}`,
     {
       method: "DELETE",
       headers: {

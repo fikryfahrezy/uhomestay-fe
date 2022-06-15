@@ -3,6 +3,7 @@ import type { MemberOut } from "@/services/member";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import { idDate } from "@/lib/fmt";
 import {
   useMemberDetailQuery,
@@ -209,6 +210,7 @@ const MemberEditForm = ({
             className={styles.avatarPicker}
             disabled={!isEditable}
             src={prevData["profile_pic_url"]}
+            // imgElement={<Image layout="fill" alt="avatar picker" />}
           />
           <div className={styles.inputGroup}>
             <Input

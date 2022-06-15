@@ -29,8 +29,11 @@ const MemberDues = () => {
     enabled: !!id,
   });
 
-  const { data: md } = memberDuesQuery;
-  const memberDues = md ? md.data : {};
+  //   const { data: m } = memberDetailQuery;
+  //   const memberData = m ? m.data : {};
+
+  //   const { data: md } = memberDuesQuery;
+  //   const memberDues = md ? md.data : {};
 
   const onClose = () => {
     setTempData(null);
@@ -124,6 +127,7 @@ const MemberDues = () => {
           <div className={styles.contentHeadPart}>
             <h2 className={styles.subHeadTitle}>Total Uang Iuran</h2>
             <p className={styles.overallCurrency}>
+              {/* {idrCurrency.format(memberDues["total_dues"])} */}
               {idrCurrency.format(
                 Number(memberDuesQuery.data.data["total_dues"])
               )}
@@ -132,6 +136,7 @@ const MemberDues = () => {
               <div>
                 <h3 className={styles.currencyFlowTitle}>Total Terbayar</h3>
                 <p className={`${styles.currency} ${styles.green}`}>
+                  {/* {idrCurrency.format(memberDues["paid_dues"])} */}
                   {idrCurrency.format(
                     Number(memberDuesQuery.data.data["paid_dues"])
                   )}
@@ -142,6 +147,7 @@ const MemberDues = () => {
                   Total Belum Terbayar
                 </h3>
                 <p className={`${styles.currency} ${styles.red}`}>
+                  {/* {idrCurrency.format(memberDues["unpaid_dues"])} */}
                   {idrCurrency.format(
                     Number(memberDuesQuery.data.data["unpaid_dues"])
                   )}
@@ -194,6 +200,7 @@ const MemberDues = () => {
                     <p className={styles.listText}>{date}</p>
                   </div>
                   <span className={`${styles.listCurrency} ${color}`}>
+                    {/* {idrCurrency.format(idr)} */}
                     {idrCurrency.format(Number(idr))}
                   </span>
                 </div>

@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import type { PeriodRes } from "@/services/period";
 import { useState } from "react";
 import { RiAddLine } from "react-icons/ri";
+// import { idDate } from "@/lib/fmt";
 import { idDate } from "@/lib/fmt";
 import { usePeriodsQuery } from "@/services/period";
 import Button from "@/components/button";
@@ -18,6 +19,9 @@ import styles from "./Styles.module.css";
 const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
   const [open, setOpen] = useState(false);
+  //   const dateIntl = useRef(
+  //     new Intl.DateTimeFormat("id-ID", { year: "numeric", month: "long" })
+  //   );
   const periodsQuery = usePeriodsQuery();
 
   const onChipClick = (val: PeriodRes) => {
@@ -72,6 +76,8 @@ const Organization = () => {
                 isActive={isActive}
                 onClick={() => onChipClick(val)}
               >
+                {/* {dateIntl.current.format(new Date(startDate))} /{" "}
+                {dateIntl.current.format(new Date(endDate))} */}
                 {idDate.format(new Date(startDate))} /{" "}
                 {idDate.format(new Date(endDate))}
               </Chip>

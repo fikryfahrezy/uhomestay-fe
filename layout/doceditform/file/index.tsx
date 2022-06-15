@@ -160,6 +160,7 @@ const DocFileEditForm = ({
               </Button>
               <Button
                 colorScheme="red"
+                // type="Button"
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}

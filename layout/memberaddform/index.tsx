@@ -2,6 +2,7 @@ import type { MapMouseEvent, EventData } from "mapbox-gl";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import Image from "next/image";
 import { idDate } from "@/lib/fmt";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
@@ -121,6 +122,7 @@ const MemberAddForm = ({
                 ? ""
                 : (getValues().profile as File[])[0].name
             }
+            // imgElement={<Image layout="fill" alt="avatar picker" />}
           />
           <div className={styles.inputGroup}>
             <Input

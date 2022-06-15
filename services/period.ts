@@ -20,7 +20,7 @@ export const usePeriodsQuery = <D = UsePeriodsQueryData, E = FetchError>(
     "periodsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/periods"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods`
       ).then((res) => {
         return res;
       });
@@ -47,7 +47,7 @@ export const useFindActivePeriod = <
     "findActivePeriod",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/periods/active"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/active`
       ).then((res) => {
         return res;
       });
@@ -97,7 +97,7 @@ export const usePeriodStructureQuery = <
     ["periodStructureQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/periods/${id}/structures`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/${id}/structures`
       ).then((res) => {
         return res;
       });
@@ -130,7 +130,7 @@ export type AddPeriodIn = {
 export const addPeriod = async (data: AddPeriodIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/periods",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -157,7 +157,7 @@ export type EditPeriodIn = {
 export const editPeriod = (id: number, data: EditPeriodIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/periods/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -183,7 +183,7 @@ export const changePeriodStatus = async (
 ) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/periods/${id}/status`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/${id}/status`,
     {
       method: "PATCH",
       body: JSON.stringify(data),
@@ -201,7 +201,7 @@ export const changePeriodStatus = async (
 export const removePeriod = async (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/periods/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -224,7 +224,7 @@ export type GoalIn = {
 export const addGoal = async (data: GoalIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/periods/goals",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/goals`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -258,7 +258,7 @@ export const useFindPeriodGoal = <D = UseFindPeriodGoalData, E = FetchError>(
     ["findPeriodGoal", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/periods/${id}/goal`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/${id}/goal`
       ).then((res) => {
         return res;
       });

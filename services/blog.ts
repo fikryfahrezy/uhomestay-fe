@@ -23,7 +23,7 @@ export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
     "blogsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/blogs"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`
       ).then((res) => {
         return res;
       });
@@ -58,7 +58,7 @@ export const useFindBlog = <D = UseFindBlobData, E = FetchError>(
     ["findBlog", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/blogs/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`
       ).then((res) => {
         return res;
       });
@@ -78,7 +78,7 @@ export type UploadImgIn = {
 export const uploadImage = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson<{ data: { url: string } }>(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/blogs/image",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/image`,
     {
       method: "POST",
       body: data,
@@ -104,7 +104,7 @@ export type AddBlogIn = {
 export const addBlog = async (data: AddBlogIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/blogs",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -130,7 +130,7 @@ export type EditBlogIn = {
 export const editBlog = async (id: string, data: EditBlogIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/blogs/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -149,7 +149,7 @@ export const editBlog = async (id: string, data: EditBlogIn) => {
 export const removeBlog = (id: string) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/blogs/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,
     {
       method: "DELETE",
       headers: {

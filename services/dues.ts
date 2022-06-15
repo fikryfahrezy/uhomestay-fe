@@ -19,7 +19,7 @@ export const useDuesQuery = <D = UseDuesQueryData, E = FetchError>(
     "duesQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/dues"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues`
       ).then((res) => {
         return res;
       });
@@ -40,7 +40,7 @@ export type AddDuesIn = {
 export const addDues = async (data: AddDuesIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/dues",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -64,7 +64,7 @@ export type EditDuesIn = {
 export const editDues = async (id: number, data: EditDuesIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/dues/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -82,7 +82,7 @@ export const editDues = async (id: number, data: EditDuesIn) => {
 export const removeDues = async (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/dues/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}`,
     {
       method: "DELETE",
       headers: {
@@ -115,7 +115,7 @@ export const useCheckPaidDuesQuery = <
     ["checkPaidDuesQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `https://polar-badlands-14608.herokuapp.com/api/v1/dues/${id}/check`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/check`
       ).then((res) => {
         return res;
       });

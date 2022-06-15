@@ -23,7 +23,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const {
       data: { token },
     } = await fetchJson<{ data: { token: string } }>(
-      "https://polar-badlands-14608.herokuapp.com/api/v1/login/members",
+      `${process.env.MAIN_API_HOST_URL}/api/v1/login/members`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -46,6 +46,6 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     await req.session.save();
     res.json(member);
   } catch (error) {
-    res.status(500).json({ message: (error as FetchError).data.message });
+    res.status(500).json({ message: error });
   }
 }

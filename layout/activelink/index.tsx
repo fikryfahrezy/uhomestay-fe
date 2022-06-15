@@ -1,3 +1,4 @@
+// import type { DetailedReactHTMLElement, MouseEventHandler } from "react";
 import type { LinkProps } from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
@@ -10,14 +11,24 @@ import React, { Children } from "react";
  *
  */
 
+// type ActiveLinkProps = DetailedReactHTMLElement<
+//   {
+//     onMouseEnter?: import("react").MouseEventHandler<Element> | undefined;
+//     onClick: MouseEventHandler;
+//     href?: string | undefined;
+//     ref?: any;
+//   },
+//   HTMLElement
+// >;
+
 type ActiveLinkProps = LinkProps & {
   activeClassName: string;
   children: JSX.Element;
 };
 
 const ActiveLink = ({
-  activeClassName,
   children,
+  activeClassName,
   ...props
 }: ActiveLinkProps) => {
   const { asPath, isReady } = useRouter();

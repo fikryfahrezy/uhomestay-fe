@@ -58,6 +58,12 @@ const Dues = () => {
   const onDuesSelect = (val: string) => {
     const numVal = Number(val);
 
+    // setSelectedDues(
+    //   duesQuery.data.data.find((v) => {
+    //     return v.id === numVal;
+    //   })
+    // );
+
     const dues = duesQuery.data?.data.find((v) => {
       return v.id === numVal;
     });
@@ -117,6 +123,7 @@ const Dues = () => {
               <p className={styles.groupSubtitle}>Jumlah Iuran</p>
               {selectedDues !== null && selectedDues !== undefined ? (
                 <p className={styles.groupSubvalue}>
+                  {/* {idrCurrency.format(selectedDues["idr_amount"])} */}
                   {idrCurrency.format(Number(selectedDues["idr_amount"]))}
                 </p>
               ) : (

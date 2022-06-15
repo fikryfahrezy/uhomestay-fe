@@ -27,6 +27,9 @@ const Finance = () => {
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
   const cashflowsQuery = useCashflowsQuery();
 
+  //   const { data: c } = cashflowsQuery;
+  //   const cashflowsData = c ? c.data : {};
+
   const onClose = () => {
     setTempData(null);
     setOpen(false);
@@ -72,6 +75,9 @@ const Finance = () => {
           <ErrMsg />
         ) : (
           <CashflowSummary
+            // income={idrCurrency.format(cashflowsData["income_cash"])}
+            // outcome={idrCurrency.format(cashflowsData["outcome_cash"])}
+            // total={idrCurrency.format(cashflowsData["total_cash"])}
             income={idrCurrency.format(
               Number(cashflowsQuery.data?.data["income_cash"])
             )}
@@ -132,6 +138,7 @@ const Finance = () => {
                             : styles.red
                         }`}
                       >
+                        {/* {idrCurrency.format(idr_amount)} */}
                         {idrCurrency.format(Number(idr_amount))}
                       </span>
                     </div>

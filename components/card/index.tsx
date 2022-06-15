@@ -2,6 +2,7 @@ import { cloneElement } from "react";
 import styles from "./Styles.module.css";
 
 type CardProps = JSX.IntrinsicElements["div"] & {
+  //   title: JSX.Element;
   cardTitle: string | JSX.Element;
   date: string;
   description: string;
@@ -9,6 +10,7 @@ type CardProps = JSX.IntrinsicElements["div"] & {
 };
 
 const Card = ({
+  //   title,
   cardTitle,
   date,
   description,
@@ -25,6 +27,7 @@ const Card = ({
         )}
       </div>
       <div className={styles.cardBody}>
+        {/* <h3 className={styles.bannerTitle}>{title}</h3> */}
         <h3 className={styles.bannerTitle}>{cardTitle}</h3>
         <p className={styles.bannerDate}>{date}</p>
         <p className={styles.bannerDescription}>{description}</p>

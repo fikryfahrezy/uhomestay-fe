@@ -34,7 +34,7 @@ export const useCashflowsQuery = <D = UseBlogsQueryData, E = FetchError>(
     "cashflowsQuery",
     async () => {
       const fetched = fetchJson<D>(
-        "https://polar-badlands-14608.herokuapp.com/api/v1/cashflows"
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows`
       ).then((res) => {
         return res;
       });
@@ -58,7 +58,7 @@ export type AddCashflowIn = {
 export const addCashflow = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    "https://polar-badlands-14608.herokuapp.com/api/v1/cashflows",
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows`,
     {
       method: "POST",
       body: data,
@@ -84,7 +84,7 @@ export type EditCashflowIn = {
 export const editCashflow = async (id: number, data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/cashflows/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows/${id}`,
     {
       method: "PUT",
       body: data,
@@ -102,7 +102,7 @@ export const editCashflow = async (id: number, data: FormData) => {
 export const removeCashflow = (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `https://polar-badlands-14608.herokuapp.com/api/v1/cashflows/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows/${id}`,
     {
       method: "DELETE",
       headers: {
