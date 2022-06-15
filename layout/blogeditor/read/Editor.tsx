@@ -64,7 +64,8 @@ const Editor = ({ editorStateJSON, placeholder }: EditorProps) => {
             editorStateJSON === "" ? undefined : editorStateJSON
           }
         />
-        <LexicalMarkdownShortcutPlugin transformers={[]} />
+        {/* @ts-ignore: `transformers` is expected but doesn't know what is that for now */}
+        <LexicalMarkdownShortcutPlugin />
         <ListPlugin />
         <LinkPlugin />
         <ClickableLinkPlugin />

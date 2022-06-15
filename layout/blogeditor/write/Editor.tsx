@@ -76,7 +76,8 @@ const Editor = (
             editorStateJSON === "" ? undefined : editorStateJSON
           }
         />
-        <LexicalMarkdownShortcutPlugin transformers={[]} />
+        {/* @ts-ignore: `transformers` is expected but doesn't know what is that for now */}
+        <LexicalMarkdownShortcutPlugin />
         <CodeHighlightPlugin />
         <ListPlugin />
         <ListMaxIndentLevelPlugin maxDepth={7} />
