@@ -108,11 +108,9 @@ const Finance = () => {
             "Loading..."
           ) : cashflowsQuery.error ? (
             <ErrMsg />
-          ) : //   ) : cashflowsData.cashflows.length === 0 ? (
-          cashflowsQuery.data?.data.cashflows.length === 0 ? (
+          ) : cashflowsQuery.data?.data.cashflows.length === 0 ? (
             <EmptyMsg />
           ) : (
-            // cashflowsData.cashflows
             cashflowsQuery.data?.data.cashflows
               .filter(({ type }) => type === cashflowStatus)
               .map((val) => {

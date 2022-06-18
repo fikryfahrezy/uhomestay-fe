@@ -72,8 +72,6 @@ const Organization = () => {
                 isActive={isActive}
                 onClick={() => onChipClick(val)}
               >
-                {/* {dateIntl.current.format(new Date(startDate))} /{" "}
-                {dateIntl.current.format(new Date(endDate))} */}
                 {idDate(new Date(startDate))} /{" "}
                 {idDate(new Date(endDate))}
               </Chip>

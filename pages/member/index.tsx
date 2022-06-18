@@ -170,11 +170,9 @@ const Member = () => {
             "Loading..."
           ) : memberDuesQuery.error ? (
             <ErrMsg />
-          ) : //   ) : memberDues.dues.length === 0 ? (
-          memberDuesQuery.data.data.dues?.length === 0 ? (
+          ) : memberDuesQuery.data.data.dues?.length === 0 ? (
             <EmptyMsg />
           ) : (
-            // memberDues.dues.map((val) => {
             memberDuesQuery.data.data.dues?.map((val) => {
               const { date, id, idr_amount: idr, status } = val;
               const { badge, color } = (() => {

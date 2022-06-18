@@ -61,8 +61,6 @@ const MemberDues = () => {
               <div className={styles.profileImgContainer}>
                 <Image
                   src={
-                    // memberData["profile_pic_url"]
-                    //   ? memberData["profile_pic_url"]
                     memberDetailQuery.data.data["profile_pic_url"]
                       ? memberDetailQuery.data.data["profile_pic_url"]
                       : "/images/image/person.png"
@@ -73,7 +71,6 @@ const MemberDues = () => {
                   alt="Member profile pic"
                 />
               </div>
-              {/* <h2 className={styles.profileName}>{memberData.name}</h2> */}
               <h2 className={styles.profileName}>
                 {memberDetailQuery.data.data.name}
               </h2>
@@ -83,25 +80,21 @@ const MemberDues = () => {
                 <tr>
                   <td>Nomor WA</td>
                   <td>:</td>
-                  {/* <td>{memberData["wa_phone"]}</td> */}
                   <td>{memberDetailQuery.data.data["wa_phone"]}</td>
                 </tr>
                 <tr>
                   <td>Nomor Lainnya</td>
                   <td>:</td>
-                  {/* <td>{memberData["other_phone"]}</td> */}
                   <td>{memberDetailQuery.data.data["other_phone"]}</td>
                 </tr>
                 <tr>
                   <td>Jabatan</td>
                   <td>:</td>
-                  {/* <td>{memberData.position}</td> */}
                   <td>{memberDetailQuery.data.data.position}</td>
                 </tr>
                 <tr>
                   <td>Periode</td>
                   <td>:</td>
-                  {/* <td>{memberData.period.split("|").join(" - ")}</td> */}
                   <td>
                     {memberDetailQuery.data.data.period.split("|").join(" - ")}
                   </td>
@@ -109,13 +102,11 @@ const MemberDues = () => {
                 <tr>
                   <td>Nama Homestay</td>
                   <td>:</td>
-                  {/* <td>{memberData["homestay_name"]}</td> */}
                   <td>{memberDetailQuery.data.data["homestay_name"]}</td>
                 </tr>
                 <tr>
                   <td>Alamat Homestay</td>
                   <td>:</td>
-                  {/* <td>{memberData["homestay_address"]}</td> */}
                   <td>{memberDetailQuery.data.data["homestay_address"]}</td>
                 </tr>
               </tbody>
@@ -162,11 +153,9 @@ const MemberDues = () => {
           "Loading..."
         ) : memberDuesQuery.error ? (
           <ErrMsg />
-        ) : // ) : memberDues.dues.length === 0 ? (
-        memberDuesQuery.data.data?.dues.length === 0 ? (
+        ) : memberDuesQuery.data.data?.dues.length === 0 ? (
           <EmptyMsg />
         ) : (
-          //   memberDues.dues.map((val) => {
           memberDuesQuery.data.data?.dues.map((val) => {
             const { date, id, idr_amount: idr, status } = val;
             const { badge, color } = (() => {
