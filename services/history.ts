@@ -2,11 +2,12 @@ import type { UseQueryOptions } from "react-query";
 import { useQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
-export type HistoryIn = {
+export type AddHistoryIn = {
   content: string;
+  content_text: string;
 };
 
-export const addHistory = async (data: HistoryIn) => {
+export const addHistory = async (data: AddHistoryIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/histories`,
@@ -28,6 +29,7 @@ export const addHistory = async (data: HistoryIn) => {
 export type LatestHistoryRes = {
   id: string;
   content: string;
+  content_text: string;
 };
 
 type UseFindLatestHistoryData = {

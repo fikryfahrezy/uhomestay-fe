@@ -1,8 +1,10 @@
 import type { ReactElement } from "react";
 import type { PositionOut } from "@/services/position";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { RiAddLine } from "react-icons/ri";
-import { usePositionsQuery } from "@/services/position";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
+import { useInfinitePositionsQuery } from "@/services/position";
 import Button from "@/components/button";
 import Drawer from "@/components/drawer";
 import AdminLayout from "@/layout/adminpage";
@@ -16,7 +18,13 @@ import styles from "./Styles.module.css";
 const Position = () => {
   const [open, setOpen] = useState(false);
   const [tempData, setTempData] = useState<PositionOut | null>(null);
-  const positionsQuery = usePositionsQuery();
+  const positionsQuery = useInfinitePositionsQuery();
+
+  const observeCallback = () => {
+    if (positionsQuery.hasNextPage) {
+      positionsQuery.fetchNextPage();
+    }
+  };
 
   const onClose = () => {
     setTempData(null);
@@ -54,20 +62,27 @@ const Position = () => {
           "Loading..."
         ) : positionsQuery.error ? (
           <ErrMsg />
-        ) : positionsQuery.data?.data.positions.length === 0 ? (
+        ) : positionsQuery.data?.pages[0].data.positions.length === 0 ? (
           <EmptyMsg />
         ) : (
-          positionsQuery.data?.data.positions.map((val) => {
+          positionsQuery.data?.pages.map((page) => {
             return (
-              <PositionListItem
-                key={val.id}
-                position={val}
-                onClick={() => onChipClick(val)}
-              />
+              <Fragment key={page.data.cursor}>
+                {page.data.positions.map((val) => {
+                  return (
+                    <PositionListItem
+                      key={val.id}
+                      position={val}
+                      onClick={() => onChipClick(val)}
+                    />
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
         {tempData === null ? (
           <PositionAddForm

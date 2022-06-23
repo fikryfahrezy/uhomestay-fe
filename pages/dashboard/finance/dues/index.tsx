@@ -1,10 +1,12 @@
 import type { ReactElement } from "react";
 import type { DuesOut } from "@/services/dues";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
 import { idrCurrency } from "@/lib/fmt";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
 import { useMembersDuesQuery } from "@/services/member-dues";
 import Drawer from "@/components/drawer";
@@ -33,6 +35,12 @@ const Dues = () => {
       enabled: !!selectedDues,
     }
   );
+
+  const observeCallback = () => {
+    if (membersDuesQuery.hasNextPage) {
+      membersDuesQuery.fetchNextPage();
+    }
+  };
 
   const onOpen = () => {
     setDrawerOpen(true);
@@ -132,37 +140,44 @@ const Dues = () => {
           </IconButton>
         </div>
         {membersDuesQuery.isLoading || membersDuesQuery.isIdle ? (
-          "Loading..."
+          <EmptyMsg />
         ) : membersDuesQuery.error ? (
           <ErrMsg />
-        ) : membersDuesQuery.data.data["member_dues"].length === 0 ? (
+        ) : membersDuesQuery.data?.pages[0].data["member_dues"].length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersDuesQuery.data.data["member_dues"].map((val) => {
+          membersDuesQuery.data?.pages.map((page) => {
             return (
-              <MemberDuesItem
-                key={val.id}
-                member={val}
-                moreBtn={
-                  <Link
-                    href={{
-                      pathname: `${router.pathname}/member/[id]`,
-                      query: { id: val["member_id"] },
-                    }}
-                    passHref
-                  >
-                    <LinkButton
-                      colorScheme="green"
-                      leftIcon={<RiMore2Line />}
-                      className={styles.moreBtn}
+              <Fragment key={page.data.cursor}>
+                {page.data["member_dues"].map((val) => {
+                  return (
+                    <MemberDuesItem
+                      key={val.id}
+                      member={val}
+                      moreBtn={
+                        <Link
+                          href={{
+                            pathname: `${router.pathname}/member/[id]`,
+                            query: { id: val["member_id"] },
+                          }}
+                          passHref
+                        >
+                          <LinkButton
+                            colorScheme="green"
+                            leftIcon={<RiMore2Line />}
+                            className={styles.moreBtn}
+                          />
+                        </Link>
+                      }
                     />
-                  </Link>
-                }
-              />
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={isDrawerOpen} onClose={() => onDrawerClose()}>
         {tempData === null ? (
           <DuesAddForm

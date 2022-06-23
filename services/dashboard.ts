@@ -49,7 +49,7 @@ export type DuesOut = {
 };
 
 export type BlogOut = {
-  id: string;
+  id: number;
   title: string;
   short_desc: string;
   thumbnail_url: string;
@@ -67,6 +67,7 @@ export type PositionOut = {
 export type LatestHistoryRes = {
   id: string;
   content: string;
+  content_text: string;
 };
 
 export type MembersDuesOut = {
@@ -80,7 +81,9 @@ export type MembersDuesOut = {
 export type FindOrgPeriodGoalRes = {
   id: number;
   vision: string;
+  vision_text: string;
   mission: string;
+  mission_text: string;
 };
 
 export type StructureMemberOut = {

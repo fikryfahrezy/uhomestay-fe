@@ -1,7 +1,10 @@
 import type { ReactElement } from "react";
+import { Fragment } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { idDate } from "@/lib/fmt";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
 import Chip from "@/components/chip";
 import AdminLayout from "@/layout/adminpage";
@@ -13,6 +16,12 @@ const Mission = () => {
   const periodsQuery = usePeriodsQuery();
   const router = useRouter();
 
+  const observeCallback = () => {
+    if (periodsQuery.hasNextPage) {
+      periodsQuery.fetchNextPage();
+    }
+  };
+
   return (
     <>
       <h1 className={styles.pageTitle}>Visi &amp; Misi Periode</h1>
@@ -21,34 +30,42 @@ const Mission = () => {
           "Loading..."
         ) : periodsQuery.error ? (
           <ErrMsg />
-        ) : periodsQuery.data?.data.periods.length === 0 ? (
+        ) : periodsQuery.data?.pages[0].data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.data.periods.map((val) => {
-            const {
-              id,
-              start_date: startDate,
-              end_date: endDate,
-              is_active: isActive,
-            } = val;
+          periodsQuery.data?.pages.map((page) => {
             return (
-              <Link
-                key={id}
-                href={{
-                  pathname: `${router.pathname}/view/[id]`,
-                  query: { id },
-                }}
-              >
-                <a className={styles.chipLink}>
-                  <Chip isActive={isActive}>
-                    {idDate(new Date(startDate))} / {idDate(new Date(endDate))}
-                  </Chip>
-                </a>
-              </Link>
+              <Fragment key={page.data.cursor}>
+                {page.data.periods.map((val) => {
+                  const {
+                    id,
+                    start_date: startDate,
+                    end_date: endDate,
+                    is_active: isActive,
+                  } = val;
+                  return (
+                    <Link
+                      key={id}
+                      href={{
+                        pathname: `${router.pathname}/view/[id]`,
+                        query: { id },
+                      }}
+                    >
+                      <a className={styles.chipLink}>
+                        <Chip isActive={isActive}>
+                          {idDate(new Date(startDate))} /{" "}
+                          {idDate(new Date(endDate))}
+                        </Chip>
+                      </a>
+                    </Link>
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
     </>
   );
 };

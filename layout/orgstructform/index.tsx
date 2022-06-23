@@ -31,7 +31,7 @@ const OrgStructAddForm = ({
 }: OrgStructAddFormProps) => {
   const [memberCache, setMemberCache] = useState<Record<string, number>>({});
   const positionsQuery = usePositionsQuery();
-  const membersQuery = useMembersQuery();
+  const membersQuery = useMembersQuery("");
   const formRef = useRef<HTMLFormElement | null>(null);
 
   const onSaveClick = (memberCache: Record<string, number>) => {

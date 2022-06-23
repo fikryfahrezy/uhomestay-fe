@@ -1,5 +1,5 @@
-import type { UseQueryOptions } from "react-query";
-import { useQuery } from "react-query";
+import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export type PositionOut = {
@@ -20,6 +20,29 @@ export const usePositionsQuery = <D = UsePositionsQueryData, E = FetchError>(
 ) => {
   const query = useQuery<D, E>(
     "positionsQuery",
+    async () => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions?limit=999`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
+export const useInfinitePositionsQuery = <
+  D = UsePositionsQueryData,
+  E = FetchError
+>(
+  option?: UseInfiniteQueryOptions<D, E>
+) => {
+  const query = useInfiniteQuery<D, E>(
+    "positionsInfiniteQuery",
     async () => {
       const fetched = fetchJson<D>(
         `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions`

@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useRef } from "react";
 import Link from "next/link";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
+import { getPlainText } from "@/lib/blogmeta";
 import { addHistory, useFindLatestHistory } from "@/services/history";
 import Button from "@/components/button";
 import LinkButton from "@/components/linkbutton";
@@ -22,8 +23,16 @@ const WriteHistory = () => {
 
   const onClick = () => {
     if (editorStateRef.current) {
+      const content = JSON.stringify(editorStateRef.current);
+      let contentText = "";
+
+      if (editorStateRef.current && content !== "") {
+        contentText = getPlainText(editorStateRef.current);
+      }
+
       addHistory({
-        content: JSON.stringify(editorStateRef.current),
+        content,
+        content_text: contentText,
       })
         .then(() => {
           window.location.replace(`${router.pathname}/../`);

@@ -27,6 +27,31 @@
   background-color: #2a6877;
 }
 
+.form {
+  display: flex;
+  width: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-bottom: 25px;
+  gap: 1ch;
+}
+
+.form input {
+  border: none;
+  border-bottom: solid;
+  line-height: 30px;
+  outline: unset;
+  flex: 1;
+}
+
+.form button {
+  min-width: 44px;
+  min-height: 44px;
+  border: none;
+  background: none;
+  font-size: 25px;
+}
+
 .blogsContainer {
   display: flex;
   width: 100%;

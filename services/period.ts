@@ -1,5 +1,5 @@
-import type { UseQueryOptions } from "react-query";
-import { useQuery } from "react-query";
+import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export type PeriodRes = {
@@ -17,9 +17,9 @@ type UsePeriodsQueryData = {
 };
 
 export const usePeriodsQuery = <D = UsePeriodsQueryData, E = FetchError>(
-  option?: UseQueryOptions<D, E>
+  option?: UseInfiniteQueryOptions<D, E>
 ) => {
-  const query = useQuery<D, E>(
+  const query = useInfiniteQuery<D, E>(
     "periodsQuery",
     async () => {
       const fetched = fetchJson<D>(
@@ -127,7 +127,9 @@ export type AddPeriodIn = {
   end_date: string;
   positions: PositionIn[];
   vision: string;
+  vision_text: string;
   mission: string;
+  mission_text: string;
 };
 
 export const addPeriod = async (data: AddPeriodIn) => {
@@ -218,13 +220,15 @@ export const removePeriod = async (id: number) => {
   return fetched;
 };
 
-export type GoalIn = {
+export type AddGoalIn = {
   vision: string;
+  vision_text: string;
   mission: string;
+  mission_text: string;
   org_period_id: number;
 };
 
-export const addGoal = async (data: GoalIn) => {
+export const addGoal = async (data: AddGoalIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/goals`,
@@ -246,7 +250,9 @@ export const addGoal = async (data: GoalIn) => {
 export type FindOrgPeriodGoalRes = {
   id: number;
   vision: string;
+  vision_text: string;
   mission: string;
+  mission_text: string;
 };
 
 type UseFindPeriodGoalData = {

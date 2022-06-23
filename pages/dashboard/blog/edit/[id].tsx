@@ -20,23 +20,25 @@ const Editor = dynamic(() => import("@/layout/blogeditor/write"));
 const EditBlog = () => {
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(id as string, {
+  const blog = useFindBlog(Number(id), {
     enabled: !!id,
     retry: false,
   });
   const { toast, props } = useToast();
   const editorStateRef = useRef<EditorState | null>(null);
 
-  const onSave = (id: string) => {
+  const onSave = (id: number) => {
     if (editorStateRef.current) {
       const blogMeta = getBlogMeta(editorStateRef.current);
-
-      editBlog(id, {
+      const data = {
         short_desc: blogMeta["short_desc"],
         thumbnail_url: blogMeta["thumbnail_url"],
         title: blogMeta.title,
         content: JSON.stringify(editorStateRef.current),
-      })
+        content_text: blogMeta["content_text"],
+      };
+
+      editBlog(id, data)
         .then(() => {
           window.location.replace(`${router.pathname}/../../`);
         })
@@ -59,7 +61,7 @@ const EditBlog = () => {
         <Button
           colorScheme="green"
           leftIcon={<RiCheckFill />}
-          onClick={() => onSave(id as string)}
+          onClick={() => onSave(Number(id))}
           className={styles.actionBtn}
         >
           Ubah

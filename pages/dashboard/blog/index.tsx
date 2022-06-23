@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import {
@@ -9,6 +9,8 @@ import {
   RiDeleteBin6Line,
   RiFileSettingsLine,
 } from "react-icons/ri";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
 import { useBlogsQuery, removeBlog } from "@/services/blog";
 import PopUp from "@/components/popup";
 import LinkButton from "@/components/linkbutton";
@@ -23,16 +25,27 @@ import ErrMsg from "@/layout/errmsg";
 import styles from "./Styles.module.css";
 
 const Blog = () => {
-  const [blogId, setBlogId] = useState("");
+  const [blogId, setBlogId] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
-  const blogsQuery = useBlogsQuery();
+
+  const blogsQuery = useBlogsQuery("", {
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
+
   const router = useRouter();
   const { toast, props } = useToast();
 
-  const onDeleteBlog = (id: string) => {
+  const observeCallback = () => {
+    if (blogsQuery.hasNextPage) {
+      blogsQuery.fetchNextPage();
+    }
+  };
+
+  const onDeleteBlog = (id: number) => {
     removeBlog(id)
       .then(() => {
-        setBlogId("");
+        setBlogId(0);
         setModalOpen(false);
         blogsQuery.refetch();
       })
@@ -44,7 +57,7 @@ const Blog = () => {
       });
   };
 
-  const onConfirmDelete = (id: string) => {
+  const onConfirmDelete = (id: number) => {
     setBlogId(id);
     setModalOpen(true);
   };
@@ -53,7 +66,7 @@ const Blog = () => {
    * @return {void}
    */
   const onCancelDelete = () => {
-    setBlogId("");
+    setBlogId(0);
     setModalOpen(false);
   };
 
@@ -74,70 +87,77 @@ const Blog = () => {
           "Loading..."
         ) : blogsQuery.error ? (
           <ErrMsg />
-        ) : blogsQuery.data?.data.blogs.length === 0 ? (
+        ) : blogsQuery.data?.pages[0].data.blogs.length === 0 ? (
           <EmptyMsg />
         ) : (
-          blogsQuery.data?.data.blogs.map((blog) => {
+          blogsQuery.data?.pages.map((page) => {
             return (
-              <BlogListItem
-                key={blog.id}
-                blog={blog}
-                popUp={
-                  <PopUp
-                    popUpPosition="bottom-right"
-                    className={styles.popup}
-                    popUpContent={
-                      <ul className={styles.addBtnOptions}>
-                        <li>
-                          <Link
-                            href={{
-                              pathname: `${router.pathname}/view/[id]`,
-                              query: { id: blog.id },
-                            }}
-                          >
-                            <a
-                              className={`${styles.addBtnOption} ${styles.optionLink}`}
-                            >
-                              <RiArrowRightLine />
-                              Lihat Detail
-                            </a>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            href={{
-                              pathname: `${router.pathname}/edit/[id]`,
-                              query: { id: blog.id },
-                            }}
-                          >
-                            <a
-                              className={`${styles.addBtnOption} ${styles.optionLink}`}
-                            >
-                              <RiFileSettingsLine />
-                              Ubah
-                            </a>
-                          </Link>
-                        </li>
-                        <li
-                          onClick={() => onConfirmDelete(blog.id)}
-                          className={`${styles.addBtnOption} ${styles.danger}`}
+              <Fragment key={page.data.cursor}>
+                {page.data.blogs.map((blog) => {
+                  return (
+                    <BlogListItem
+                      key={blog.id}
+                      blog={blog}
+                      popUp={
+                        <PopUp
+                          popUpPosition="bottom-right"
+                          className={styles.popup}
+                          popUpContent={
+                            <ul className={styles.addBtnOptions}>
+                              <li>
+                                <Link
+                                  href={{
+                                    pathname: `${router.pathname}/view/[id]`,
+                                    query: { id: blog.id },
+                                  }}
+                                >
+                                  <a
+                                    className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                  >
+                                    <RiArrowRightLine />
+                                    Lihat Detail
+                                  </a>
+                                </Link>
+                              </li>
+                              <li>
+                                <Link
+                                  href={{
+                                    pathname: `${router.pathname}/edit/[id]`,
+                                    query: { id: blog.id },
+                                  }}
+                                >
+                                  <a
+                                    className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                  >
+                                    <RiFileSettingsLine />
+                                    Ubah
+                                  </a>
+                                </Link>
+                              </li>
+                              <li
+                                onClick={() => onConfirmDelete(blog.id)}
+                                className={`${styles.addBtnOption} ${styles.danger}`}
+                              >
+                                <RiDeleteBin6Line />
+                                Hapus
+                              </li>
+                            </ul>
+                          }
                         >
-                          <RiDeleteBin6Line />
-                          Hapus
-                        </li>
-                      </ul>
-                    }
-                  >
-                    <IconButton className={styles.cardBtn}>
-                      <RiArrowDownSLine />
-                    </IconButton>
-                  </PopUp>
-                }
-              />
+                          <IconButton className={styles.cardBtn}>
+                            <RiArrowDownSLine />
+                          </IconButton>
+                        </PopUp>
+                      }
+                    />
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+	  <Observe callback={debounce(observeCallback, 500)} />
       <Modal
         isOpen={isModalOpen}
         heading="Peringatan!"

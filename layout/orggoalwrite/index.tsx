@@ -2,6 +2,7 @@ import type { FindOrgPeriodGoalRes } from "@/services/period";
 import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { RiCheckFill } from "react-icons/ri";
+import { getPlainText } from "@/lib/blogmeta";
 import { UniversalPortal } from "@/lib/react-portal-universal";
 import Button from "@/components/button";
 import styles from "./Styles.module.css";
@@ -28,13 +29,26 @@ const OrgGoalAdd = ({
     const mission = editorMissionStateRef.current
       ? JSON.stringify(editorMissionStateRef.current)
       : "";
+
+    let missionText = "";
+    if (editorMissionStateRef.current) {
+      missionText = getPlainText(editorMissionStateRef.current);
+    }
+
     const vision = editorVisionStateRef.current
       ? JSON.stringify(editorVisionStateRef.current)
       : "";
 
+    let visionText = "";
+    if (editorVisionStateRef.current) {
+      visionText = getPlainText(editorVisionStateRef.current);
+    }
+
     const goal = {
       mission,
       vision,
+      mission_text: missionText,
+      vision_text: visionText,
     };
     onSave(goal);
   };

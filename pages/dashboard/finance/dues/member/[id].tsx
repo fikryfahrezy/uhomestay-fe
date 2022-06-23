@@ -1,9 +1,11 @@
 import type { ReactElement } from "react";
 import type { MemberDuesOut } from "@/services/member-dues";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
+import Observe from "@/lib/use-observer";
+import { debounce } from "@/lib/perf";
 import { idrCurrency } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";
 import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
@@ -28,6 +30,12 @@ const MemberDues = () => {
   const memberDetailQuery = useMemberDetailQuery(id as string, {
     enabled: !!id,
   });
+
+  const observeCallback = () => {
+    if (memberDuesQuery.hasNextPage) {
+      memberDuesQuery.fetchNextPage();
+    }
+  };
 
   const onClose = () => {
     setTempData(null);
@@ -122,7 +130,7 @@ const MemberDues = () => {
             <h2 className={styles.subHeadTitle}>Total Uang Iuran</h2>
             <p className={styles.overallCurrency}>
               {idrCurrency.format(
-                Number(memberDuesQuery.data.data["total_dues"])
+                Number(memberDuesQuery.data?.pages[0].data["total_dues"])
               )}
             </p>
             <div className={styles.currencyFlowContainer}>
@@ -130,7 +138,7 @@ const MemberDues = () => {
                 <h3 className={styles.currencyFlowTitle}>Total Terbayar</h3>
                 <p className={`${styles.currency} ${styles.green}`}>
                   {idrCurrency.format(
-                    Number(memberDuesQuery.data.data["paid_dues"])
+                    Number(memberDuesQuery.data?.pages[0].data["paid_dues"])
                   )}
                 </p>
               </div>
@@ -140,7 +148,7 @@ const MemberDues = () => {
                 </h3>
                 <p className={`${styles.currency} ${styles.red}`}>
                   {idrCurrency.format(
-                    Number(memberDuesQuery.data.data["unpaid_dues"])
+                    Number(memberDuesQuery.data?.pages[0].data["unpaid_dues"])
                   )}
                 </p>
               </div>
@@ -153,58 +161,67 @@ const MemberDues = () => {
           "Loading..."
         ) : memberDuesQuery.error ? (
           <ErrMsg />
-        ) : memberDuesQuery.data.data?.dues.length === 0 ? (
+        ) : memberDuesQuery.data?.pages[0].data.dues.length === 0 ? (
           <EmptyMsg />
         ) : (
-          memberDuesQuery.data.data?.dues.map((val) => {
-            const { date, id, idr_amount: idr, status } = val;
-            const { badge, color } = (() => {
-              switch (status) {
-                case DUES_STATUS.PAID:
-                  return {
-                    badge: <Badge colorScheme="green">Sudah Lunas</Badge>,
-                    color: styles.green,
-                  };
-                case DUES_STATUS.WAITING:
-                  return {
-                    badge: (
-                      <Badge colorScheme="yellow">Menunggu Konfirmasi</Badge>
-                    ),
-                    color: styles.yellow,
-                  };
-                default:
-                  return {
-                    badge: <Badge colorScheme="red">Belum Lunas</Badge>,
-                    color: styles.red,
-                  };
-              }
-            })();
-
+          memberDuesQuery.data?.pages.map((page) => {
             return (
-              <div key={id} className={styles.listItem}>
-                <span className={styles.listIcon}>
-                  <RiMoneyDollarCircleLine />
-                </span>
-                <div className={styles.listContent}>
-                  <div className={styles.listBody}>
-                    {badge}
-                    <p className={styles.listText}>{date}</p>
-                  </div>
-                  <span className={`${styles.listCurrency} ${color}`}>
-                    {idrCurrency.format(Number(idr))}
-                  </span>
-                </div>
-                <IconButton
-                  className={styles.moreBtn}
-                  onClick={() => onOptClick(val)}
-                >
-                  <RiMore2Line />
-                </IconButton>
-              </div>
+              <Fragment key={page.data.cursor}>
+                {page.data.dues.map((val) => {
+                  const { date, id, idr_amount: idr, status } = val;
+                  const { badge, color } = (() => {
+                    switch (status) {
+                      case DUES_STATUS.PAID:
+                        return {
+                          badge: <Badge colorScheme="green">Sudah Lunas</Badge>,
+                          color: styles.green,
+                        };
+                      case DUES_STATUS.WAITING:
+                        return {
+                          badge: (
+                            <Badge colorScheme="yellow">
+                              Menunggu Konfirmasi
+                            </Badge>
+                          ),
+                          color: styles.yellow,
+                        };
+                      default:
+                        return {
+                          badge: <Badge colorScheme="red">Belum Lunas</Badge>,
+                          color: styles.red,
+                        };
+                    }
+                  })();
+
+                  return (
+                    <div key={id} className={styles.listItem}>
+                      <span className={styles.listIcon}>
+                        <RiMoneyDollarCircleLine />
+                      </span>
+                      <div className={styles.listContent}>
+                        <div className={styles.listBody}>
+                          {badge}
+                          <p className={styles.listText}>{date}</p>
+                        </div>
+                        <span className={`${styles.listCurrency} ${color}`}>
+                          {idrCurrency.format(Number(idr))}
+                        </span>
+                      </div>
+                      <IconButton
+                        className={styles.moreBtn}
+                        onClick={() => onOptClick(val)}
+                      >
+                        <RiMore2Line />
+                      </IconButton>
+                    </div>
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
         {tempData !== null ? (
           <MemberDuesEditForm

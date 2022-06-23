@@ -1,5 +1,5 @@
-import type { UseQueryOptions } from "react-query";
-import { useQuery } from "react-query";
+import type { UseInfiniteQueryOptions, UseQueryOptions } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export const DUES_STATUS = Object.freeze({
@@ -31,9 +31,9 @@ type UseMemberDuesQueryData = {
 
 export const useMemberDuesQuery = <D = UseMemberDuesQueryData, E = FetchError>(
   id: string,
-  option: UseQueryOptions<D, E>
+  option: UseInfiniteQueryOptions<D, E>
 ) => {
-  const query = useQuery<D, E>(
+  const query = useInfiniteQuery<D, E>(
     ["memberDeusQuery", id],
     async () => {
       const fetched = fetchJson<D>(
@@ -92,9 +92,9 @@ export const useMembersDuesQuery = <
   E = FetchError
 >(
   id: number,
-  option?: UseQueryOptions<D, E>
+  option?: UseInfiniteQueryOptions<D, E>
 ) => {
-  const query = useQuery<D, E>(
+  const query = useInfiniteQuery<D, E>(
     ["membersDeusQuery", id],
     async () => {
       const fetched = fetchJson<D>(

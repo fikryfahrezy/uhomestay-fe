@@ -1,8 +1,10 @@
 import type { ReactElement } from "react";
 import type { MemberOut } from "@/services/member";
-import { useState } from "react";
+import { useState, useRef, Fragment } from "react";
 import { RiUserAddLine, RiSearch2Line, RiMore2Line } from "react-icons/ri";
-import { useMembersQuery } from "@/services/member";
+import { throttle, debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
+import { useInfiniteMembersQuery } from "@/services/member";
 import Drawer from "@/components/drawer";
 import Input from "@/components/input";
 import Button from "@/components/button";
@@ -18,7 +20,19 @@ import styles from "./Styles.module.css";
 const Member = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [tempData, setTempData] = useState<MemberOut | null>(null);
-  const membersQuery = useMembersQuery();
+  const [q, setQ] = useState("");
+  const membersQuery = useInfiniteMembersQuery(q, {
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const observeCallback = () => {
+    if (membersQuery.hasNextPage) {
+      membersQuery.fetchNextPage();
+    }
+  };
 
   const toggleDrawer = () => {
     setDrawerOpen((prevState) => !prevState);
@@ -40,6 +54,10 @@ const Member = () => {
     membersQuery.refetch();
   };
 
+  const onSearchClick = (q: string) => {
+    setQ(q);
+  };
+
   return (
     <>
       <h1 className={styles.pageTitle}>Anggota</h1>
@@ -51,41 +69,60 @@ const Member = () => {
         >
           Tambah
         </Button>
-        <form className={styles.form}>
-          <Input placeholder="..." />
-          <Button colorScheme="green" leftIcon={<RiSearch2Line />}>
+        <div className={styles.form}>
+          <Input
+            ref={inputRef}
+            placeholder="..."
+            onInput={debounce((e) => {
+              onSearchClick((e.target as HTMLInputElement).value);
+            }, 500)}
+          />
+          <Button
+            colorScheme="green"
+            leftIcon={<RiSearch2Line />}
+            onClick={throttle(() => {
+              onSearchClick(inputRef.current ? inputRef.current.value : "");
+            }, 1000)}
+          >
             Cari
           </Button>
-        </form>
+        </div>
       </div>
       <div className={styles.contentContainer}>
         {membersQuery.isLoading ? (
           "Loading..."
         ) : membersQuery.error ? (
           <ErrMsg />
-        ) : membersQuery.data?.data.members.length === 0 ? (
+        ) : membersQuery.data?.pages[0].data.members.length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersQuery.data?.data.members.map((member) => {
+          membersQuery.data?.pages.map((page) => {
             return (
-              <MemberListItem
-                key={member.id}
-                member={member}
-                moreBtn={
-                  <IconButton
-                    className={styles.moreBtn}
-                    onClick={() => {
-                      openDrawer(member);
-                    }}
-                  >
-                    <RiMore2Line />
-                  </IconButton>
-                }
-              />
+              <Fragment key={page.data.cursor}>
+                {page.data.members.map((member) => {
+                  return (
+                    <MemberListItem
+                      key={member.id}
+                      member={member}
+                      moreBtn={
+                        <IconButton
+                          className={styles.moreBtn}
+                          onClick={() => {
+                            openDrawer(member);
+                          }}
+                        >
+                          <RiMore2Line />
+                        </IconButton>
+                      }
+                    />
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={isDrawerOpen} onClose={() => onDrawerClose()}>
         {tempData === null ? (
           <MemberAddForm

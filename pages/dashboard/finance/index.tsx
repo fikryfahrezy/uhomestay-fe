@@ -1,11 +1,13 @@
 import type { ReactElement } from "react";
 import type { CashflowOut } from "@/services/cashflow";
-import { useState } from "react";
+import { useState, Fragment } from "react";
 import {
   RiAddLine,
   RiMoneyDollarCircleLine,
   RiMore2Line,
 } from "react-icons/ri";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
 import { idrCurrency } from "@/lib/fmt";
 import { useCashflowsQuery } from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
@@ -26,6 +28,12 @@ const Finance = () => {
   const [cashflowStatus, setCashflowStatus] = useState(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
   const cashflowsQuery = useCashflowsQuery();
+
+  const observeCallback = () => {
+    if (cashflowsQuery.hasNextPage) {
+      cashflowsQuery.fetchNextPage();
+    }
+  };
 
   const onClose = () => {
     setTempData(null);
@@ -73,13 +81,13 @@ const Finance = () => {
         ) : (
           <CashflowSummary
             income={idrCurrency.format(
-              Number(cashflowsQuery.data?.data["income_cash"])
+              Number(cashflowsQuery.data?.pages[0].data["income_cash"])
             )}
             outcome={idrCurrency.format(
-              Number(cashflowsQuery.data?.data["outcome_cash"])
+              Number(cashflowsQuery.data?.pages[0].data["outcome_cash"])
             )}
             total={idrCurrency.format(
-              Number(cashflowsQuery.data?.data["total_cash"])
+              Number(cashflowsQuery.data?.pages[0].data["total_cash"])
             )}
           />
         )}
@@ -108,45 +116,52 @@ const Finance = () => {
             "Loading..."
           ) : cashflowsQuery.error ? (
             <ErrMsg />
-          ) : cashflowsQuery.data?.data.cashflows.length === 0 ? (
+          ) : cashflowsQuery.data?.pages[0].data.cashflows.length === 0 ? (
             <EmptyMsg />
           ) : (
-            cashflowsQuery.data?.data.cashflows
-              .filter(({ type }) => type === cashflowStatus)
-              .map((val) => {
-                const { id, date, idr_amount, note } = val;
-                return (
-                  <div key={id} className={styles.listItem}>
-                    <span className={styles.listIcon}>
-                      <RiMoneyDollarCircleLine />
-                    </span>
-                    <div className={styles.listContent}>
-                      <div className={styles.listBody}>
-                        <span className={styles.listText}>{date}</span>
-                        <p className={styles.listText}>{note}</p>
-                      </div>
-                      <span
-                        className={`${styles.listCurrency} ${
-                          cashflowStatus === CASHFLOW_TYPE.INCOME
-                            ? styles.green
-                            : styles.red
-                        }`}
-                      >
-                        {idrCurrency.format(Number(idr_amount))}
-                      </span>
-                    </div>
-                    <IconButton
-                      className={styles.moreBtn}
-                      onClick={() => onOptClick(val)}
-                    >
-                      <RiMore2Line />
-                    </IconButton>
-                  </div>
-                );
-              })
+            cashflowsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.cashflows
+                    .filter(({ type }) => type === cashflowStatus)
+                    .map((val) => {
+                      const { id, date, idr_amount, note } = val;
+                      return (
+                        <div key={id} className={styles.listItem}>
+                          <span className={styles.listIcon}>
+                            <RiMoneyDollarCircleLine />
+                          </span>
+                          <div className={styles.listContent}>
+                            <div className={styles.listBody}>
+                              <span className={styles.listText}>{date}</span>
+                              <p className={styles.listText}>{note}</p>
+                            </div>
+                            <span
+                              className={`${styles.listCurrency} ${
+                                cashflowStatus === CASHFLOW_TYPE.INCOME
+                                  ? styles.green
+                                  : styles.red
+                              }`}
+                            >
+                              {idrCurrency.format(Number(idr_amount))}
+                            </span>
+                          </div>
+                          <IconButton
+                            className={styles.moreBtn}
+                            onClick={() => onOptClick(val)}
+                          >
+                            <RiMore2Line />
+                          </IconButton>
+                        </div>
+                      );
+                    })}
+                </Fragment>
+              );
+            })
           )}
         </div>
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
         {tempData === null ? (
           <CashflowAddForm

@@ -1,5 +1,5 @@
-import type { UseQueryOptions } from "react-query";
-import { useQuery } from "react-query";
+import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export const DOC_TYPE = Object.freeze({
@@ -23,14 +23,39 @@ type UseDocumentsQueryData = {
   };
 };
 
+export const useInfiniteDocumentsQuery = <
+  D = UseDocumentsQueryData,
+  E = FetchError
+>(
+  q: string,
+  option?: UseInfiniteQueryOptions<D, E>
+) => {
+  const query = useInfiniteQuery<D, E>(
+    ["documentsInfiniteQuery", q],
+    async ({ pageParam = 0 }) => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents?q=${q}&cursor=${pageParam}`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
 export const useDocumentsQuery = <D = UseDocumentsQueryData, E = FetchError>(
+  q: string,
   option?: UseQueryOptions<D, E>
 ) => {
   const query = useQuery<D, E>(
-    "documentsQuery",
+    ["documentsQuery", q],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents?q=${q}`
       ).then((res) => {
         return res;
       });
@@ -55,13 +80,14 @@ export const useDocumentChildsQuery = <
   E = FetchError
 >(
   id: number,
-  option?: UseQueryOptions<D, E>
+  q: string,
+  option?: UseInfiniteQueryOptions<D, E>
 ) => {
-  const query = useQuery<D, E>(
-    ["documentChildQuery", id],
-    async () => {
+  const query = useInfiniteQuery<D, E>(
+    ["documentChildQuery", id, q],
+    async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents/${id}?q=${q}&cursor=${pageParam}`
       ).then((res) => {
         return res;
       });

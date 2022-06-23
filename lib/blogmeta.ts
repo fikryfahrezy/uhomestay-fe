@@ -4,6 +4,7 @@ export type GetBlogMetaRet = {
   title: string;
   short_desc: string;
   thumbnail_url: string;
+  content_text: string;
 };
 
 export const getBlogMeta: (editorState: EditorState) => GetBlogMetaRet = (
@@ -17,13 +18,15 @@ export const getBlogMeta: (editorState: EditorState) => GetBlogMetaRet = (
   let title = "";
   let shortDesc = "";
   let thumbnailUrl = "";
+  let contentText = "";
 
-  entries.forEach((node, i) => {
+  entries.forEach((node) => {
     const nodeType = node.getType();
 
     let text = "";
     if (nodeType === "text") {
       text = (node as any)["__text"] as string;
+      contentText += text + " ";
     }
 
     if (title === "" && text !== "") {
@@ -44,7 +47,29 @@ export const getBlogMeta: (editorState: EditorState) => GetBlogMetaRet = (
     title,
     short_desc: shortDesc,
     thumbnail_url: thumbnailUrl,
+    content_text: contentText,
   };
 
   return ret;
+};
+
+export const getPlainText: (editorState: EditorState) => string = (
+  editorState
+) => {
+  const entries: LexicalNode[] = [];
+  editorState._nodeMap.forEach((v) => {
+    entries.push(v);
+  });
+
+  let contentText = "";
+
+  entries.forEach((node) => {
+    const nodeType = node.getType();
+
+    if (nodeType === "text") {
+      contentText += ((node as any)["__text"] as string) + " ";
+    }
+  });
+
+  return contentText;
 };

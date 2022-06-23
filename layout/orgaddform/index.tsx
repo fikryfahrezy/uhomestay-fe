@@ -56,6 +56,8 @@ const OrgAddForm = ({
         start_date: `${data.start_date}-01`,
         end_date: `${data.end_date}-01`,
         mission: "",
+        mission_text: "",
+        vision_text: "",
         vision: "",
         positions: [],
       };
@@ -64,12 +66,22 @@ const OrgAddForm = ({
         newData.positions = positions;
       }
 
-      if (goal !== null && goal.mission !== undefined) {
-        newData.mission = goal.mission;
-      }
+      if (goal !== null) {
+        if (goal.mission !== undefined) {
+          newData.mission = goal.mission;
+        }
 
-      if (goal !== null && goal.vision !== undefined) {
-        newData.vision = goal.vision;
+        if (goal["mission_text"] !== undefined) {
+          newData["mission_text"] = goal["mission_text"];
+        }
+
+        if (goal.vision !== undefined) {
+          newData.vision = goal.vision;
+        }
+
+        if (goal["vision_text"] !== undefined) {
+          newData["vision_text"] = goal["vision_text"];
+        }
       }
 
       addPeriod(newData)

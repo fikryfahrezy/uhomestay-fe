@@ -22,7 +22,7 @@ export const useDuesQuery = <D = UseDuesQueryData, E = FetchError>(
     "duesQuery",
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues?limit=999`
       ).then((res) => {
         return res;
       });

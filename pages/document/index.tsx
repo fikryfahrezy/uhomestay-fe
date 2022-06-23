@@ -1,4 +1,8 @@
-import { DOC_TYPE, useDocumentsQuery } from "@/services/document";
+import { useState, useRef, Fragment } from "react";
+import { RiSearch2Line } from "react-icons/ri";
+import { throttle, debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
+import { DOC_TYPE, useInfiniteDocumentsQuery } from "@/services/document";
 import PageNav from "@/layout/pagenav";
 import EmptyMsg from "@/layout/emptymsg";
 import DocListItem from "@/layout/doclistitem";
@@ -6,7 +10,20 @@ import ErrMsg from "@/layout/errmsg";
 import styles from "./Styles.module.css";
 
 const Document = () => {
-  const documentQuery = useDocumentsQuery();
+  const [q, setQ] = useState("");
+  const documentQuery = useInfiniteDocumentsQuery(q);
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const observeCallback = () => {
+    if (documentQuery.hasNextPage) {
+      documentQuery.fetchNextPage();
+    }
+  };
+
+  const onSearchClick = (q: string) => {
+    setQ(q);
+  };
 
   return (
     <>
@@ -15,35 +32,58 @@ const Document = () => {
         <h2 className={styles.subTitle}>
           <a id="document">Dokumen</a>
         </h2>
+        <div className={styles.form}>
+          <input
+            ref={inputRef}
+            placeholder="..."
+            onInput={debounce((e) => {
+              onSearchClick((e.target as HTMLInputElement).value);
+            }, 500)}
+          />
+          <button
+            onClick={throttle(() => {
+              onSearchClick(inputRef.current ? inputRef.current.value : "");
+            }, 1000)}
+          >
+            <RiSearch2Line />
+          </button>
+        </div>
         <main className={styles.contentContainer}>
           {documentQuery.isLoading ? (
             "Loading..."
           ) : documentQuery.error ? (
             <ErrMsg />
-          ) : documentQuery.data?.data.documents.length === 0 ? (
+          ) : documentQuery.data?.pages[0].data.documents.length === 0 ? (
             <EmptyMsg />
           ) : (
-            documentQuery.data?.data.documents
-              .filter(
-                ({ type, is_private: isPrivate }) =>
-                  type === DOC_TYPE.FILE && isPrivate === false
-              )
-              .map((doc) => {
-                return (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    key={doc.id}
-                    href={doc.url}
-                    className={styles.documentLink}
-                  >
-                    <DocListItem document={doc} />
-                  </a>
-                );
-              })
+            documentQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.documents
+                    .filter(
+                      ({ type, is_private: isPrivate }) =>
+                        type === DOC_TYPE.FILE && isPrivate === false
+                    )
+                    .map((doc) => {
+                      return (
+                        <a
+                          target="_blank"
+                          rel="noreferrer"
+                          key={doc.id}
+                          href={doc.url}
+                          className={styles.documentLink}
+                        >
+                          <DocListItem document={doc} />
+                        </a>
+                      );
+                    })}
+                </Fragment>
+              );
+            })
           )}
         </main>
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
     </>
   );
 };

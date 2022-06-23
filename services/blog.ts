@@ -1,9 +1,9 @@
-import type { UseQueryOptions } from "react-query";
-import { useQuery } from "react-query";
+import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export type BlogOut = {
-  id: string;
+  id: number;
   title: string;
   short_desc: string;
   thumbnail_url: string;
@@ -14,19 +14,20 @@ export type BlogOut = {
 
 type UseBlogsQueryData = {
   data: {
-    cursor: string;
+    cursor: number;
     blogs: BlogOut[];
   };
 };
 
 export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
-  option?: UseQueryOptions<D, E>
+  q: string,
+  option?: UseInfiniteQueryOptions<D, E>
 ) => {
-  const query = useQuery<D, E>(
-    "blogsQuery",
-    async () => {
+  const query = useInfiniteQuery<D, E>(
+    ["blogsQuery", q],
+    async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs?q=${q}&cursor=${pageParam}`
       ).then((res) => {
         return res;
       });
@@ -40,11 +41,12 @@ export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
 };
 
 export type BlogRes = {
-  id: string;
+  id: number;
   title: string;
   short_desc: string;
   thumbnail_url: string;
   content: string;
+  content_text: string;
   slug: string;
   created_at: string;
 };
@@ -54,7 +56,7 @@ type UseFindBlobData = {
 };
 
 export const useFindBlog = <D = UseFindBlobData, E = FetchError>(
-  id: string,
+  id: number,
   option?: UseQueryOptions<D, E>
 ) => {
   const query = useQuery<D, E>(
@@ -102,6 +104,7 @@ export type AddBlogIn = {
   thumbnail_url: string;
   slug: string;
   content: string;
+  content_text: string;
 };
 
 export const addBlog = async (data: AddBlogIn) => {
@@ -128,9 +131,10 @@ export type EditBlogIn = {
   short_desc: string;
   thumbnail_url: string;
   content: string;
+  content_text: string;
 };
 
-export const editBlog = async (id: string, data: EditBlogIn) => {
+export const editBlog = async (id: number, data: EditBlogIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,
@@ -149,7 +153,7 @@ export const editBlog = async (id: string, data: EditBlogIn) => {
   return fetched;
 };
 
-export const removeBlog = (id: string) => {
+export const removeBlog = (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,

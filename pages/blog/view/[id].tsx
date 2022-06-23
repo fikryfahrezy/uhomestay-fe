@@ -10,7 +10,7 @@ const Editor = dynamic(() => import("@/layout/blogeditor/read"));
 const ViewBlog = () => {
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(id as string, {
+  const blog = useFindBlog(Number(id), {
     enabled: !!id,
   });
 

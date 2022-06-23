@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef } from "react";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
+import { getPlainText } from "@/lib/blogmeta";
 import { useFindPeriodGoal } from "@/services/period";
 import { addGoal } from "@/services/period";
 import Button from "@/components/button";
@@ -28,11 +29,29 @@ const CreateMission = () => {
 
   const onClick = (id: string) => {
     if (editorVisionStateRef.current && editorMissionStateRef.current) {
-      addGoal({
-        mission: JSON.stringify(editorMissionStateRef.current),
-        vision: JSON.stringify(editorVisionStateRef.current),
+      const visionContent = JSON.stringify(editorVisionStateRef.current);
+      let visionContentText = "";
+
+      if (editorVisionStateRef.current && visionContent !== "") {
+        visionContentText = getPlainText(editorVisionStateRef.current);
+      }
+
+      const missionContent = JSON.stringify(editorMissionStateRef.current);
+      let missionContentText = "";
+
+      if (editorMissionStateRef.current && missionContent !== "") {
+        missionContentText = getPlainText(editorMissionStateRef.current);
+      }
+
+      const data = {
+        mission: missionContent,
+        mission_text: missionContentText,
+        vision: visionContent,
+        vision_text: visionContentText,
         org_period_id: Number(id),
-      })
+      };
+
+      addGoal(data)
         .then(() => {
           window.location.replace(`${router.pathname}/../../view/${id}`);
         })

@@ -33,6 +33,7 @@ const CreateBlog = () => {
       title: "",
       thumbnail_url: "",
       short_desc: "",
+      content_text: "",
     };
 
     if (editorStateRef.current && content !== "") {
@@ -42,6 +43,7 @@ const CreateBlog = () => {
       data.title = blogMeta.title;
       data["thumbnail_url"] = blogMeta["thumbnail_url"];
       data["short_desc"] = blogMeta["short_desc"];
+      data["content_text"] = blogMeta["content_text"];
     }
 
     addBlog(data)

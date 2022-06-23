@@ -1,7 +1,7 @@
 import type { ReactElement, MouseEvent } from "react";
 import type { DocumentOut } from "@/services/document";
 import { useRouter } from "next/router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, Fragment } from "react";
 import Link from "next/link";
 import {
   RiFileUploadFill,
@@ -11,6 +11,8 @@ import {
   RiMore2Line,
   RiArrowDropRightLine,
 } from "react-icons/ri";
+import Observe from "@/lib/use-observer";
+import { throttle, debounce } from "@/lib/perf";
 import {
   DOC_TYPE,
   useDocumentsQuery,
@@ -35,12 +37,15 @@ const Organization = () => {
   const [open, setOpen] = useState(false);
   const [docType, setDocType] = useState(DOC_TYPE.FILE);
   const [tempData, setTempData] = useState<DocumentOut | null>(null);
+  const [q, setQ] = useState("");
+
   const router = useRouter();
   const { dir_id: dirId } = router.query;
 
-  const documentsQuery = useDocumentsQuery();
+  const documentsQuery = useDocumentsQuery("");
   const documentChildsQuery = useDocumentChildsQuery(
-    typeof dirId === "string" ? Number(dirId) : 0
+    typeof dirId === "string" ? Number(dirId) : 0,
+    q
   );
 
   const documentParent = useMemo(() => {
@@ -101,6 +106,14 @@ const Organization = () => {
     return lastHistory;
   }, [documentsQuery.data, dirId]);
 
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  const observeCallback = () => {
+    if (documentChildsQuery.hasNextPage) {
+      documentChildsQuery.fetchNextPage();
+    }
+  };
+
   const onChipOptClick = (
     val: DocumentOut,
     e: MouseEvent<HTMLSpanElement, globalThis.MouseEvent>
@@ -143,6 +156,10 @@ const Organization = () => {
     documentChildsQuery.refetch();
   };
 
+  const onSearchClick = (q: string) => {
+    setQ(q);
+  };
+
   return (
     <>
       <h1 className={styles.pageTitle}>Dokumen</h1>
@@ -171,12 +188,24 @@ const Organization = () => {
             Tambah
           </Button>
         </PopUp>
-        <form className={styles.form}>
-          <Input placeholder="..." />
-          <Button colorScheme="green" leftIcon={<RiSearch2Line />}>
+        <div className={styles.form}>
+          <Input
+            ref={inputRef}
+            placeholder="..."
+            onInput={debounce((e) => {
+              onSearchClick((e.target as HTMLInputElement).value);
+            }, 500)}
+          />
+          <Button
+            colorScheme="green"
+            leftIcon={<RiSearch2Line />}
+            onClick={throttle(() => {
+              onSearchClick(inputRef.current ? inputRef.current.value : "");
+            }, 1000)}
+          >
             Cari
           </Button>
-        </form>
+        </div>
       </div>
       <div className={styles.histories}>
         <Link href={router.pathname}>
@@ -207,50 +236,57 @@ const Organization = () => {
           "Loading..."
         ) : documentChildsQuery.error ? (
           <ErrMsg />
-        ) : documentChildsQuery.data?.data.documents.length === 0 ? (
+        ) : documentChildsQuery.data?.pages[0].data.documents.length === 0 ? (
           <EmptyMsg />
         ) : (
-          documentChildsQuery.data?.data.documents.map((val) => {
-            const { id, type, url } = val;
+          documentChildsQuery.data?.pages.map((page) => {
+            return (
+              <Fragment key={page.data.cursor}>
+                {page.data.documents.map((val) => {
+                  const { id, type, url } = val;
 
-            const child = (
-              <DocListItem
-                document={val}
-                moreBtn={
-                  <IconButton
-                    className={styles.moreBtn}
-                    onClick={(e) => onChipOptClick(val, e)}
-                  >
-                    <RiMore2Line />
-                  </IconButton>
-                }
-              />
-            );
+                  const child = (
+                    <DocListItem
+                      document={val}
+                      moreBtn={
+                        <IconButton
+                          className={styles.moreBtn}
+                          onClick={(e) => onChipOptClick(val, e)}
+                        >
+                          <RiMore2Line />
+                        </IconButton>
+                      }
+                    />
+                  );
 
-            return type === DOC_TYPE.DIR ? (
-              <Link
-                key={id}
-                href={{
-                  pathname: router.pathname,
-                  query: { dir_id: id },
-                }}
-              >
-                <a className={styles.documentLink}>{child}</a>
-              </Link>
-            ) : (
-              <a
-                key={id}
-                target="_blank"
-                rel="noreferrer"
-                href={url}
-                className={styles.documentLink}
-              >
-                {child}
-              </a>
+                  return type === DOC_TYPE.DIR ? (
+                    <Link
+                      key={id}
+                      href={{
+                        pathname: router.pathname,
+                        query: { dir_id: id },
+                      }}
+                    >
+                      <a className={styles.documentLink}>{child}</a>
+                    </Link>
+                  ) : (
+                    <a
+                      key={id}
+                      target="_blank"
+                      rel="noreferrer"
+                      href={url}
+                      className={styles.documentLink}
+                    >
+                      {child}
+                    </a>
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={onClose}>
         {docType === DOC_TYPE.FILE ? (
           tempData === null ? (

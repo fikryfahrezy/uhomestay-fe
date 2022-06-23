@@ -1,8 +1,10 @@
 import type { ReactElement } from "react";
 import type { PeriodRes } from "@/services/period";
-import { useState /* useRef */ } from "react";
+import { useState, Fragment } from "react";
 import { RiAddLine } from "react-icons/ri";
 import { idDate } from "@/lib/fmt";
+import { debounce } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
 import Button from "@/components/button";
 import Drawer from "@/components/drawer";
@@ -19,6 +21,12 @@ const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
   const [open, setOpen] = useState(false);
   const periodsQuery = usePeriodsQuery();
+
+  const observeCallback = () => {
+    if (periodsQuery.hasNextPage) {
+      periodsQuery.fetchNextPage();
+    }
+  };
 
   const onChipClick = (val: PeriodRes) => {
     setTempData(val);
@@ -56,29 +64,36 @@ const Organization = () => {
           "Loading..."
         ) : periodsQuery.error ? (
           <ErrMsg />
-        ) : periodsQuery.data?.data.periods.length === 0 ? (
+        ) : periodsQuery.data?.pages[0].data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.data.periods.map((val) => {
-            const {
-              id,
-              start_date: startDate,
-              end_date: endDate,
-              is_active: isActive,
-            } = val;
+          periodsQuery.data?.pages.map((page) => {
             return (
-              <Chip
-                key={id}
-                isActive={isActive}
-                onClick={() => onChipClick(val)}
-              >
-                {idDate(new Date(startDate))} /{" "}
-                {idDate(new Date(endDate))}
-              </Chip>
+              <Fragment key={page.data.cursor}>
+                {page.data.periods.map((val) => {
+                  const {
+                    id,
+                    start_date: startDate,
+                    end_date: endDate,
+                    is_active: isActive,
+                  } = val;
+                  return (
+                    <Chip
+                      key={id}
+                      isActive={isActive}
+                      onClick={() => onChipClick(val)}
+                    >
+                      {idDate(new Date(startDate))} /{" "}
+                      {idDate(new Date(endDate))}
+                    </Chip>
+                  );
+                })}
+              </Fragment>
             );
           })
         )}
       </div>
+      <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
         {tempData === null ? (
           <OrgAddForm

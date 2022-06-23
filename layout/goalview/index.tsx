@@ -5,7 +5,7 @@ import styles from "./Styles.module.css";
 const RichText = dynamic(() => import("@/layout/richtext/read"));
 
 type GoalViewProps = {
-  orgPeriodGoal: Omit<FindOrgPeriodGoalRes, "id">;
+  orgPeriodGoal: Pick<FindOrgPeriodGoalRes, "vision" | "mission">;
 };
 
 const GoalView = ({ orgPeriodGoal }: GoalViewProps) => {

@@ -21,7 +21,7 @@ const ViewBlog = () => {
   const { toast, props } = useToast();
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(id as string, {
+  const blog = useFindBlog(Number(id), {
     enabled: !!id,
   });
 
@@ -29,7 +29,7 @@ const ViewBlog = () => {
    *
    * @param {string} id
    */
-  const onDeleteBlog = (id: string) => {
+  const onDeleteBlog = (id: number) => {
     removeBlog(id)
       .then(() => {
         router.replace(`${router.pathname}/../..`);
@@ -90,7 +90,7 @@ const ViewBlog = () => {
         isOpen={isModalOpen}
         heading="Peringatan!"
         onCancel={onCancelDelete}
-        onConfirm={() => onDeleteBlog(id as string)}
+        onConfirm={() => onDeleteBlog(Number(id))}
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>

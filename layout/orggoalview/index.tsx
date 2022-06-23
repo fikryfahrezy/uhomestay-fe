@@ -11,7 +11,7 @@ const defaultFunc = () => {};
 
 type OrgGoalAddProps = {
   isOpen: boolean;
-  prevData: Omit<FindOrgPeriodGoalRes, "id"> | null;
+  prevData: Pick<FindOrgPeriodGoalRes, "mission" | "vision"> | null;
   onClose: () => void;
 };
 

@@ -1,7 +1,7 @@
-import type { UseQueryOptions } from "react-query";
+import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
 import Router from "next/router";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
+import { useQuery, useInfiniteQuery } from "react-query";
 import User from "@/model/user";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
@@ -28,13 +28,38 @@ type UseMembersQueryData = {
 };
 
 export const useMembersQuery = <D = UseMembersQueryData, E = FetchError>(
+  q: string,
   option?: UseQueryOptions<D, E>
 ) => {
   const query = useQuery<D, E>(
-    "membersQuery",
+    ["membersQuery", q],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members?q=${q}&limit=999`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
+export const useInfiniteMembersQuery = <
+  D = UseMembersQueryData,
+  E = FetchError
+>(
+  q: string,
+  option?: UseInfiniteQueryOptions<D, E>
+) => {
+  const query = useInfiniteQuery<D, E>(
+    ["membersInfiniteQuery", q],
+    async ({ pageParam = "" }) => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members?q=${q}&cursor=${pageParam}`
       ).then((res) => {
         return res;
       });
