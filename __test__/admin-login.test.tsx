@@ -1,12 +1,12 @@
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "./test-utils";
-import MemberLogin from "@/pages/login/member";
+import AdminLogin from "@/pages/login/admin";
 
 jest.mock("@/services/member", () => {
   return {
-    memberLogin: async () => {},
-    useMember: () => ({
+    adminLogin: async () => {},
+    useAdmin: () => ({
       refetch: () => {},
     }),
   };
@@ -19,7 +19,7 @@ beforeAll(() => {
 });
 
 test("Render welcome message", () => {
-  render(<MemberLogin />);
+  render(<AdminLogin />);
 
   const heading = screen.getByRole("heading", {
     name: /Selamat Datang/i,
@@ -28,8 +28,8 @@ test("Render welcome message", () => {
   expect(heading).toBeInTheDocument();
 });
 
-test("Member successfully login", async () => {
-  render(<MemberLogin />);
+test("Admin successfully login", async () => {
+  render(<AdminLogin />);
 
   const idInput = screen.getByPlaceholderText("username");
   await user.type(idInput, "username");
@@ -44,8 +44,8 @@ test("Member successfully login", async () => {
   expect(errMsg).not.toBeInTheDocument();
 });
 
-test("Member fail login without credentials", async () => {
-  render(<MemberLogin />);
+test("Admin fail login without credentials", async () => {
+  render(<AdminLogin />);
 
   const logBtn = screen.getByText("Login");
   await user.click(logBtn);
@@ -56,8 +56,8 @@ test("Member fail login without credentials", async () => {
   });
 });
 
-test("Member fail login without username", async () => {
-  render(<MemberLogin />);
+test("Admin fail login without username", async () => {
+  render(<AdminLogin />);
 
   const pwInput = screen.getByPlaceholderText("*****");
   await user.type(pwInput, "password");
@@ -69,8 +69,8 @@ test("Member fail login without username", async () => {
   expect(errMsg).toBeInTheDocument();
 });
 
-test("Member fail login without password", async () => {
-  render(<MemberLogin />);
+test("Admin fail login without password", async () => {
+  render(<AdminLogin />);
 
   const idInput = screen.getByPlaceholderText("username");
   await user.type(idInput, "username");
