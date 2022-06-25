@@ -14,13 +14,21 @@ dotenv.config({ path: "./.env.test.local" });
 
 import { server } from "./__mocks__/server";
 
+// @ts-ignore
+window.IntersectionObserver = jest.fn(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn()
+}));
+
 jest.mock("@/services/member", () => {
+  const originalModule = jest.requireActual("@/services/member");
+
   return {
-    adminLogin: async () => {},
+    ...originalModule,
     useAdmin: () => ({
       refetch: () => {},
     }),
-    memberLogin: async () => {},
     useMember: () => ({
       refetch: () => {},
     }),
