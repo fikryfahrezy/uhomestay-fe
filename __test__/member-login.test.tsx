@@ -3,15 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "./test-utils";
 import MemberLogin from "@/pages/login/member";
 
-jest.mock("@/services/member", () => {
-  return {
-    memberLogin: async () => {},
-    useMember: () => ({
-      refetch: () => {},
-    }),
-  };
-});
-
 let user: ReturnType<typeof userEvent.setup>;
 
 beforeAll(() => {

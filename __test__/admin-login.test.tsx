@@ -3,15 +3,6 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "./test-utils";
 import AdminLogin from "@/pages/login/admin";
 
-jest.mock("@/services/member", () => {
-  return {
-    adminLogin: async () => {},
-    useAdmin: () => ({
-      refetch: () => {},
-    }),
-  };
-});
-
 let user: ReturnType<typeof userEvent.setup>;
 
 beforeAll(() => {

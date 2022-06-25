@@ -14,6 +14,19 @@ dotenv.config({ path: "./.env.test.local" });
 
 import { server } from "./__mocks__/server";
 
+jest.mock("@/services/member", () => {
+  return {
+    adminLogin: async () => {},
+    useAdmin: () => ({
+      refetch: () => {},
+    }),
+    memberLogin: async () => {},
+    useMember: () => ({
+      refetch: () => {},
+    }),
+  };
+});
+
 beforeAll(() => {
   server.listen();
 });
