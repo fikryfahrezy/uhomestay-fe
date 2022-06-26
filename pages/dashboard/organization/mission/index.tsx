@@ -52,7 +52,7 @@ const Mission = () => {
                       }}
                     >
                       <a className={styles.chipLink}>
-                        <Chip isActive={isActive}>
+                        <Chip isActive={isActive} data-testid="period-chip">
                           {idDate(new Date(startDate))} /{" "}
                           {idDate(new Date(endDate))}
                         </Chip>

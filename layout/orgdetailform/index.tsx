@@ -138,6 +138,7 @@ const OrgEditForm = ({
               className={styles.formBtn}
               type="button"
               onClick={() => onChangeStatus(prevData)}
+			  data-testid="activate-org-struct-btn"
             >
               Aktifasi
             </Button>

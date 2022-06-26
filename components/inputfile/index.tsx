@@ -133,6 +133,7 @@ const InputFile = (
               }
             }}
             onChange={onFileChange}
+			data-testid="input-file-field-comp"
           />
         </span>
       </div>

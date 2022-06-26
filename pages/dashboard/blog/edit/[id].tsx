@@ -63,6 +63,7 @@ const EditBlog = () => {
           leftIcon={<RiCheckFill />}
           onClick={() => onSave(Number(id))}
           className={styles.actionBtn}
+          data-testid="blog-edit-btn"
         >
           Ubah
         </Button>

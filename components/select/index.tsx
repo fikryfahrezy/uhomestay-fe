@@ -50,6 +50,7 @@ const Select = (
         required={required}
         disabled={disabled}
         id={id}
+        data-testid="select-comp"
       >
         {children}
       </select>

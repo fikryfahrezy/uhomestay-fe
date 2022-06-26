@@ -31,7 +31,9 @@ const MemberDuesDetail = ({ prevData }: MemberDuesDetailProps) => {
 
   return (
     <>
-      <h2 className={styles.drawerTitle}>Detail Iuran Anggota</h2>
+      <h2 className={styles.drawerTitle} data-testid="detail-dues-title">
+        Detail Iuran Anggota
+      </h2>
       <div className={styles.drawerBody}>
         <div className={styles.drawerContent}>
           <div className={styles.inputGroup}>

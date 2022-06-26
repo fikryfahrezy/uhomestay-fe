@@ -34,7 +34,11 @@ const Modal = ({
             {children}
           </div>
           <div className={styles.buttonContainer}>
-            <Button colorScheme="green" onClick={onConfirm}>
+            <Button
+              colorScheme="green"
+              onClick={onConfirm}
+              data-testid="popup-modal-conf-btn"
+            >
               Iya
             </Button>
             <Button colorScheme="red" onClick={onCancel}>

@@ -70,6 +70,7 @@ const CreateBlog = () => {
           leftIcon={<RiCheckFill />}
           className={styles.actionBtn}
           onClick={onSave}
+          data-testid="create-blog-btn"
         >
           Buat
         </Button>

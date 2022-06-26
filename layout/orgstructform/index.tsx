@@ -119,6 +119,7 @@ const OrgStructAddForm = ({
         ref={formRef}
         className={styles.drawerBody}
         onSubmit={(e) => e.preventDefault()}
+        data-testid="add-struct-form"
       >
         <div className={styles.drawerContent}>
           {positionsQuery.isLoading ? (

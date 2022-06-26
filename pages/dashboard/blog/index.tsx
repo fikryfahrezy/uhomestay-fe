@@ -104,7 +104,7 @@ const Blog = () => {
                           className={styles.popup}
                           popUpContent={
                             <ul className={styles.addBtnOptions}>
-                              <li>
+                              <li data-testid="blog-detail-popup">
                                 <Link
                                   href={{
                                     pathname: `${router.pathname}/view/[id]`,
@@ -119,7 +119,7 @@ const Blog = () => {
                                   </a>
                                 </Link>
                               </li>
-                              <li>
+                              <li data-testid="blog-edit-popup">
                                 <Link
                                   href={{
                                     pathname: `${router.pathname}/edit/[id]`,
@@ -137,6 +137,7 @@ const Blog = () => {
                               <li
                                 onClick={() => onConfirmDelete(blog.id)}
                                 className={`${styles.addBtnOption} ${styles.danger}`}
+                                data-testid="blog-remove-popup"
                               >
                                 <RiDeleteBin6Line />
                                 Hapus
@@ -144,7 +145,10 @@ const Blog = () => {
                             </ul>
                           }
                         >
-                          <IconButton className={styles.cardBtn}>
+                          <IconButton
+                            className={styles.cardBtn}
+                            data-testid="blog-popup-btn"
+                          >
                             <RiArrowDownSLine />
                           </IconButton>
                         </PopUp>
@@ -157,7 +161,7 @@ const Blog = () => {
           })
         )}
       </div>
-	  <Observe callback={debounce(observeCallback, 500)} />
+      <Observe callback={debounce(observeCallback, 500)} />
       <Modal
         isOpen={isModalOpen}
         heading="Peringatan!"

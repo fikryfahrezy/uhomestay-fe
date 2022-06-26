@@ -229,6 +229,7 @@ const Member = () => {
                         <IconButton
                           className={styles.moreBtn}
                           onClick={() => onOptClick(val)}
+                          data-testid="dues-detail-btn"
                         >
                           <RiMore2Line />
                         </IconButton>

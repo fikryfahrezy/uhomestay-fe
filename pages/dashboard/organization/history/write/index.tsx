@@ -54,6 +54,7 @@ const WriteHistory = () => {
           leftIcon={<RiCheckFill />}
           onClick={onClick}
           className={styles.actionBtn}
+		  data-testid="edit-history-btn"
         >
           Ubah
         </Button>

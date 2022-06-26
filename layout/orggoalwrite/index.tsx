@@ -62,6 +62,7 @@ const OrgGoalAdd = ({
             leftIcon={<RiCheckFill />}
             onClick={() => onClick()}
             className={styles.addBtn}
+            data-testid="org-goal-save-btn"
           >
             Simpan
           </Button>
