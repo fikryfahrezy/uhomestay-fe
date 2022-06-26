@@ -55,6 +55,7 @@ const Organization = () => {
         leftIcon={<RiAddLine />}
         onClick={() => onOpen()}
         className={styles.addBtn}
+        data-testid="period-drawer-btn"
       >
         Buat
       </Button>
@@ -82,6 +83,7 @@ const Organization = () => {
                       key={id}
                       isActive={isActive}
                       onClick={() => onChipClick(val)}
+                      data-testid="period-chip"
                     >
                       {idDate(new Date(startDate))} /{" "}
                       {idDate(new Date(endDate))}

@@ -14,7 +14,7 @@ type BlogListItem = {
 
 const BlogListItem = ({ blog, popUp }: BlogListItem) => {
   return (
-    <div className={styles.cardContainer}>
+    <div className={styles.cardContainer} data-testid="blog-container">
       {popUp ? popUp : <></>}
       <Card
         date={blog["created_at"]}

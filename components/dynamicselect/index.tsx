@@ -225,6 +225,7 @@ const DynamicSelect = (
           type="button"
           className={styles.btn}
           onClick={onAddSelection}
+          data-testid="dynamic-select-btn"
         >
           <RiAddLine />
         </IconButton>

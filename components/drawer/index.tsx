@@ -20,9 +20,9 @@ const Drawer = ({
   return (
     <div
       {...restProps}
-      className={`${styles.drawer} ${isOpen ? styles.open : ""} ${
-        className ? className : ""
-      }`}
+      className={`${styles.drawer} ${
+        isOpen ? `${styles.open} test__drawer__open` : ""
+      } ${className ? className : ""}`}
     >
       {withBackdrop ? (
         <ModalBackdrop
@@ -39,6 +39,7 @@ const Drawer = ({
             aria-label="drawer close button"
             className={styles.closeBtn}
             onClick={onClose}
+            data-testid="drawer-close-btn"
           >
             <RiCloseLine />
           </IconButton>

@@ -78,7 +78,9 @@ const MemberDuesPayForm = ({
 
   return (
     <>
-      <h2 className={styles.drawerTitle}>Detail Iuran Anggota</h2>
+      <h2 className={styles.drawerTitle} data-testid="pay-dues-title">
+        Detail Iuran Anggota
+      </h2>
       <form className={styles.drawerBody} onSubmit={onSubmit(prevData.id)}>
         <div className={styles.drawerContent}>
           <div className={styles.inputGroup}>

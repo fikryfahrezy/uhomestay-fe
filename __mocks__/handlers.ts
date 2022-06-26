@@ -88,8 +88,11 @@ const positions = [position];
 
 const member_d = {
   id: 1,
+  dues_id: 1,
+  idr_amount: "0",
+  date: "",
   member_id: "f79e82e8-c34a-4dc7-a49e-9fadc0979fda",
-  status: "PAID",
+  status: "unpaid",
   name: "",
   profile_pic_url: "http://localhost",
 };
@@ -173,25 +176,6 @@ export const handlers = [
   ),
   rest.get(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dashboard/private`,
-    (req, res, ctx) => {
-      return res(
-        ctx.json({
-          documents,
-          blogs,
-          latest_history,
-          members,
-          cashflow,
-          dues,
-          positions,
-          member_dues,
-          org_period_goal,
-          active_period,
-        })
-      );
-    }
-  ),
-  rest.get(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -530,7 +514,7 @@ export const handlers = [
             total_dues: "",
             paid_dues: "",
             unpaid_dues: "",
-            dues,
+            dues: member_dues,
           },
         })
       );
@@ -593,7 +577,7 @@ export const handlers = [
     }
   ),
   rest.get(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/members/:id`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/members/:id`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -676,10 +660,7 @@ export const handlers = [
     (req, res, ctx) => {
       return res(
         ctx.json({
-          data: {
-            cursor: 1,
-            periods,
-          },
+          data: period,
         })
       );
     }
@@ -752,7 +733,7 @@ export const handlers = [
       );
     }
   ),
-  rest.delete(
+  rest.post(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods/goals`,
     (req, res, ctx) => {
       return res(

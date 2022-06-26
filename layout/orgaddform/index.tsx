@@ -197,6 +197,7 @@ const OrgAddForm = ({
                 className={styles.formBtn}
                 type="button"
                 onClick={() => onStructFormOpen()}
+                data-testid="add-orgstruct-btn"
               >
                 Buat
               </Button>
@@ -219,6 +220,7 @@ const OrgAddForm = ({
                 className={styles.formBtn}
                 type="button"
                 onClick={() => onGoalModalOpen()}
+                data-testid="add-goal-btn"
               >
                 Buat
               </Button>
@@ -226,7 +228,12 @@ const OrgAddForm = ({
           </div>
         </div>
         <div>
-          <Button className={styles.formBtn} colorScheme="green" type="submit">
+          <Button
+            className={styles.formBtn}
+            colorScheme="green"
+            type="submit"
+            data-testid="create-period-btn"
+          >
             Buat
           </Button>
           <Button
@@ -243,6 +250,7 @@ const OrgAddForm = ({
         isOpen={structFormOpen}
         onClose={() => onStructFormClose()}
         withBackdrop={false}
+        data-testid="drawer-org-struct"
       >
         <OrgStructForm
           isEditable={true}

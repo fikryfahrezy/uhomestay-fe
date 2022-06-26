@@ -72,6 +72,7 @@ const CreateMission = () => {
           leftIcon={<RiCheckFill />}
           onClick={() => onClick(id as string)}
           className={styles.actionBtn}
+          data-testid="mission-update-btn"
         >
           Ubah
         </Button>

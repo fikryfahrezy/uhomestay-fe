@@ -73,6 +73,7 @@ const ViewBlog = () => {
           leftIcon={<RiDeleteBin6Line />}
           onClick={onConfirmDelete}
           className={styles.actionBtn}
+          data-testid="remove-blog-btn"
         >
           Hapus
         </Button>

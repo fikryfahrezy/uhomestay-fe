@@ -31,6 +31,7 @@ const ViewMission = () => {
           colorScheme="green"
           leftIcon={<RiFileEditLine />}
           className={styles.addBtn}
+          data-testid="mission-edit-btn"
         >
           Ubah
         </LinkButton>

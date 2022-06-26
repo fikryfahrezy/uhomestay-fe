@@ -18,6 +18,7 @@ export default function ContentEditable({ className }: ContentEditableProps) {
   return (
     <LexicalContentEditable
       className={className || styles["ContentEditable__root"]}
+      testid="lexical-editor-blog-read"
     />
   );
 }

@@ -65,6 +65,7 @@ const PopUp = ({
     <div
       {...restProps}
       className={`${styles.popUpContainer} ${className ? className : ""}`}
+      data-testid="popup-container"
     >
       {typeof children !== "number" &&
       typeof children !== "string" &&
@@ -83,7 +84,7 @@ const PopUp = ({
       )}
       <div
         className={`${styles.popUpContent} ${posStyle} ${
-          isCollapse ? styles.hide : ""
+          isCollapse ? `${styles.hide} test__popup__hidden` : ""
         }`}
       >
         <div

@@ -249,6 +249,7 @@ const OrgEditForm = ({
                 className={styles.formBtn}
                 type="button"
                 onClick={() => onStructFormOpen()}
+                data-testid="edit-orgstruct-btn"
               >
                 Ubah
               </Button>
@@ -271,6 +272,7 @@ const OrgEditForm = ({
                 className={styles.formBtn}
                 type="button"
                 onClick={() => onGoalModalOpen()}
+                data-testid="edit-goal-btn"
               >
                 Ubah
               </Button>
@@ -294,6 +296,7 @@ const OrgEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-period-btn"
               >
                 Ubah
               </Button>
@@ -302,6 +305,7 @@ const OrgEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
+                data-testid="remove-period-btn"
               >
                 Hapus
               </Button>
@@ -313,6 +317,7 @@ const OrgEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-period-btn"
               >
                 Ubah
               </Button>
@@ -332,6 +337,7 @@ const OrgEditForm = ({
         isOpen={structFormOpen}
         onClose={() => onStructFormClose()}
         withBackdrop={false}
+        data-testid="drawer-org-struct"
       >
         {periodLoading || periodIdle ? (
           "Loading..."
