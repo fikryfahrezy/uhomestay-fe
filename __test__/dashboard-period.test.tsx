@@ -51,14 +51,13 @@ test("Add new period success", async () => {
   const addStructForm = within(drwOrgStruct).getByTestId("add-struct-form");
   expect(addStructForm).toBeVisible();
 
-  const dynSelectBtn = screen.getByTestId("dynamic-select-btn");
+  const dynSelectBtn = await screen.findByTestId("dynamic-select-btn");
   await user.click(dynSelectBtn);
 
+  await new Promise((r) => setTimeout(r, 300));
+
   const selectComp = screen.getByTestId("select-comp");
-  await userEvent.selectOptions(
-    selectComp,
-    "f79e82e8-c34a-4dc7-a49e-9fadc0979fda"
-  );
+  await user.selectOptions(selectComp, "f79e82e8-c34a-4dc7-a49e-9fadc0979fda");
 
   const drwClose = within(drwOrgStruct).getByTestId("drawer-close-btn");
   await user.click(drwClose);
@@ -100,9 +99,11 @@ test("Edit period success", async () => {
   await user.click(editablePerBtn);
 
   const startPeriod = screen.getByLabelText("Awal Periode:");
+  expect(startPeriod).not.toHaveAttribute("readonly");
   fireEvent.change(startPeriod, { target: { value: "2022-01-02" } });
 
   const endPeriod = screen.getByLabelText("Akhir Periode:");
+  expect(endPeriod).not.toHaveAttribute("readonly");
   fireEvent.change(endPeriod, { target: { value: "2022-01-03" } });
 
   const orgStructBtn = screen.getByTestId("edit-orgstruct-btn");
@@ -114,11 +115,11 @@ test("Edit period success", async () => {
   const addStructForm = within(drwOrgStruct).getByTestId("add-struct-form");
   expect(addStructForm).toBeVisible();
 
+  await new Promise((r) => setTimeout(r, 300));
+
   const selectComp = await screen.findByTestId("select-comp");
-  await userEvent.selectOptions(
-    selectComp,
-    "f79e82e8-c34a-4dc7-a49e-9fadc0979fda"
-  );
+  expect(selectComp).toBeEnabled();
+  await user.selectOptions(selectComp, "f79e82e8-c34a-4dc7-a49e-9fadc0979fda");
 
   const drwClose = within(drwOrgStruct).getByTestId("drawer-close-btn");
   await user.click(drwClose);
@@ -197,8 +198,6 @@ test("Remove period success", async () => {
   await user.click(popupModalConfBtn);
 
   await waitFor(() => {
-    expect(
-      screen.queryByTestId("popup-modal-conf-btn")
-    ).not.toBeInTheDocument();
+    expect(popupModalConfBtn).not.toBeInTheDocument();
   });
 });

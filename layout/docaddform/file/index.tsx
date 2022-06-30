@@ -123,7 +123,12 @@ const DocFileAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="add-file-btn"
+          >
             Tambah
           </Button>
           <Button
@@ -131,6 +136,7 @@ const DocFileAddForm = ({
             type="reset"
             className={styles.formBtn}
             onClick={() => onClose()}
+            data-testid="cancel-add-file-btn"
           >
             Batal
           </Button>

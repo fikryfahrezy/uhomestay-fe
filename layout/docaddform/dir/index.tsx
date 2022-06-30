@@ -103,7 +103,12 @@ const DocDirAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="add-dir-btn"
+          >
             Tambah
           </Button>
           <Button
@@ -111,6 +116,7 @@ const DocDirAddForm = ({
             type="reset"
             className={styles.formBtn}
             onClick={() => onClose()}
+            data-testid="cancel-add-dir-btn"
           >
             Batal
           </Button>

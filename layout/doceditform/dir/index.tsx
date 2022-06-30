@@ -143,6 +143,7 @@ const DocDirEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-dir-btn"
               >
                 Ubah
               </Button>
@@ -151,6 +152,7 @@ const DocDirEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
+                data-testid="remove-dir-btn"
               >
                 Hapus
               </Button>
@@ -162,6 +164,7 @@ const DocDirEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-dir-btn"
               >
                 Ubah
               </Button>

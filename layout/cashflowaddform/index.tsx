@@ -161,7 +161,12 @@ const CashflowAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="add-cashflow-btn"
+          >
             Buat
           </Button>
           <Button

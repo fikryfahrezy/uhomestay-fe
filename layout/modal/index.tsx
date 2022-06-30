@@ -41,7 +41,11 @@ const Modal = ({
             >
               Iya
             </Button>
-            <Button colorScheme="red" onClick={onCancel}>
+            <Button
+              colorScheme="red"
+              onClick={onCancel}
+              data-testid="popup-modal-conf-n-btn"
+            >
               Tidak
             </Button>
           </div>

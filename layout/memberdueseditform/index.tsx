@@ -184,6 +184,7 @@ const MemberDuesEditForm = ({
                 className={styles.formBtn}
                 type="button"
                 onClick={() => onApprove(prevData.id)}
+                data-testid="approve-paid-btn"
               >
                 Lunas
               </Button>
@@ -193,6 +194,7 @@ const MemberDuesEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-member-dues-btn"
               >
                 Ubah
               </Button>
@@ -207,6 +209,7 @@ const MemberDuesEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-member-dues-btn"
               >
                 Ubah
               </Button>

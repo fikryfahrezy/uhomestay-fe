@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { rest } from "msw";
-import { render, screen } from "./test-utils";
+import { render, screen, waitFor } from "./test-utils";
 import Member from "@/pages/member/index";
 import { server } from "../__mocks__/server";
 
@@ -33,14 +33,18 @@ test("Member successfully paydues", async () => {
   expect(formTitle).toBeInTheDocument();
 
   const file = new File(["hello"], "hello.png", { type: "image/png" });
-  const proveInput = screen.getByTestId("input-file-field-comp");
+  const proveInput = await screen.findByTestId("input-file-field-comp");
+  expect(proveInput).toBeInTheDocument();
   await user.upload(proveInput, file);
 
-  const payBtn = screen.getByText("Bayar");
+  const payBtn = screen.getByTestId("pay-dues-btn");
   await user.click(payBtn);
 
-  const errMsg = screen.queryByText("This field is required");
-  expect(errMsg).not.toBeInTheDocument();
+  await waitFor(() => {
+    expect(
+      screen.queryByText("This field is required")
+    ).not.toBeInTheDocument();
+  });
 });
 
 test("View paid dues", async () => {

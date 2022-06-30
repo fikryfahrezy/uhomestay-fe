@@ -62,8 +62,8 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
       <QueryClientProvider client={queryClient}>
         <Hydrate state={pageProps.dehydratedState}>
           {getLayout(<Component {...pageProps} />)}
-          <div id="lexical-portal" />
           <div id="modal" />
+          <div id="lexical-portal" />
         </Hydrate>
       </QueryClientProvider>
     </>

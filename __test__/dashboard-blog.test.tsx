@@ -85,19 +85,11 @@ test("Remove blog", async () => {
   await user.click(popModlConf);
 
   await waitFor(() => {
-    expect(
-      screen.queryByTestId("popup-modal-conf-btn")
-    ).not.toBeInTheDocument();
+    expect(popModlConf).not.toBeInTheDocument();
   });
 });
 
 test("View blog", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-  }));
-
   render(<BlogView />);
 
   const leditorRead = await screen.findByTestId("lexical-editor-blog-read");
@@ -105,13 +97,6 @@ test("View blog", async () => {
 });
 
 test("Remove blog from detail", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-    replace: jest.fn(),
-  }));
-
   render(<BlogView />);
 
   const portalRoot = document.createElement("div");
@@ -131,13 +116,6 @@ test("Remove blog from detail", async () => {
 });
 
 test("Edit blog", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-    replace: jest.fn(),
-  }));
-
   render(<BlogEdit />);
 
   const leditorWrite = await screen.findByTestId("lexical-editor-blog-write");

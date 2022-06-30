@@ -13,7 +13,7 @@ const user = {
 const document = {
   id: 1,
   name: "",
-  type: "",
+  type: "file",
   url: "http://string",
   dir_id: 0,
   is_private: false,
@@ -69,7 +69,24 @@ const cashflow = {
   total_cash: "",
   income_cash: "",
   outcome_cash: "",
-  cashflows: [],
+  cashflows: [
+    {
+      id: 1,
+      date: "",
+      note: "",
+      type: "income",
+      idr_amount: "124",
+      prove_file_url: "https://localhost:5000",
+    },
+    {
+      id: 2,
+      date: "",
+      note: "",
+      type: "outcome",
+      idr_amount: "124",
+      prove_file_url: "https://localhost:5000",
+    },
+  ],
 };
 
 const dues = {
@@ -90,7 +107,7 @@ const member_d = {
   id: 1,
   dues_id: 1,
   idr_amount: "0",
-  date: "",
+  date: "2022-01-02",
   member_id: "f79e82e8-c34a-4dc7-a49e-9fadc0979fda",
   status: "unpaid",
   name: "",
@@ -316,7 +333,10 @@ export const handlers = [
     (req, res, ctx) => {
       return res(
         ctx.json({
-          data: idres,
+          data: {
+            ...cashflow,
+            cursor: 0,
+          },
         })
       );
     }
@@ -436,7 +456,7 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: 0,
-            dues,
+            dues: [dues],
           },
         })
       );
@@ -478,7 +498,7 @@ export const handlers = [
       return res(
         ctx.json({
           data: {
-            is_paid: true,
+            is_paid: false,
           },
         })
       );

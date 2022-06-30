@@ -34,12 +34,6 @@ test("Render organization period list", async () => {
 });
 
 test("View period goal", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-  }));
-
   render(<OrgGoalView />);
 
   await waitFor(() => {
@@ -53,12 +47,6 @@ test("View period goal", async () => {
 });
 
 test("Update period goal", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-  }));
-
   render(<OrgGoalCreate />);
 
   const leditorWrites = await screen.findAllByTestId(
@@ -72,6 +60,5 @@ test("Update period goal", async () => {
   );
 
   const updateBtn = screen.getByTestId("mission-update-btn");
-  await user.click(updateBtn)
+  await user.click(updateBtn);
 });
-

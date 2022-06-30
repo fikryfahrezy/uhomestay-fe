@@ -22,10 +22,17 @@ import CashflowSummary from "@/layout/cashflowsummary";
 import ErrMsg from "@/layout/errmsg";
 import styles from "./Styles.module.css";
 
+const inOutField = Object.freeze({
+  income: "income_cash",
+  outcome: "outcome_cash",
+});
+
 const Finance = () => {
   const [open, setOpen] = useState(false);
 
-  const [cashflowStatus, setCashflowStatus] = useState(CASHFLOW_TYPE.INCOME);
+  const [cashflowStatus, setCashflowStatus] = useState<
+    typeof CASHFLOW_TYPE[keyof typeof CASHFLOW_TYPE]
+  >(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
   const cashflowsQuery = useCashflowsQuery();
 
@@ -71,6 +78,7 @@ const Finance = () => {
           leftIcon={<RiAddLine />}
           onClick={() => onOpen()}
           className={styles.addBtn}
+          data-testid="add-transaction-btn"
         >
           Buat Transaksi
         </Button>
@@ -99,6 +107,7 @@ const Finance = () => {
               cashflowStatus === CASHFLOW_TYPE.INCOME ? styles.tabActive : ""
             }`}
             onClick={() => activateIncomeTab()}
+            data-testid="income-tab-btn"
           >
             Pemasukan
           </button>
@@ -107,6 +116,7 @@ const Finance = () => {
               cashflowStatus === CASHFLOW_TYPE.OUTCOME ? styles.tabActive : ""
             }`}
             onClick={() => activateOutcomeTab()}
+            data-testid="outcome-tab-btn"
           >
             Pengeluaran
           </button>
@@ -116,7 +126,9 @@ const Finance = () => {
             "Loading..."
           ) : cashflowsQuery.error ? (
             <ErrMsg />
-          ) : cashflowsQuery.data?.pages[0].data.cashflows.length === 0 ? (
+          ) : cashflowsQuery.data?.pages[0].data.cashflows.length === 0 ||
+            cashflowsQuery.data?.pages[0].data[inOutField[cashflowStatus]] ===
+              "0" ? (
             <EmptyMsg />
           ) : (
             cashflowsQuery.data?.pages.map((page) => {
@@ -139,9 +151,10 @@ const Finance = () => {
                             <span
                               className={`${styles.listCurrency} ${
                                 cashflowStatus === CASHFLOW_TYPE.INCOME
-                                  ? styles.green
-                                  : styles.red
+                                  ? `${styles.green} test__income__color`
+                                  : `${styles.red} test__outcome__color`
                               }`}
+                              data-testid="cashflow-item"
                             >
                               {idrCurrency.format(Number(idr_amount))}
                             </span>
@@ -149,6 +162,7 @@ const Finance = () => {
                           <IconButton
                             className={styles.moreBtn}
                             onClick={() => onOptClick(val)}
+                            data-testid="cashflow-item-btn"
                           >
                             <RiMore2Line />
                           </IconButton>
@@ -162,7 +176,11 @@ const Finance = () => {
         </div>
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
-      <Drawer isOpen={open} onClose={() => onClose()}>
+      <Drawer
+        isOpen={open}
+        onClose={() => onClose()}
+        data-testid="cashflow-drawer"
+      >
         {tempData === null ? (
           <CashflowAddForm
             onCancel={() => onClose()}

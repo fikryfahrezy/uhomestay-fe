@@ -177,7 +177,7 @@ const LandingPage = () => {
                                   alt="hfisfjs"
                                 />
                               </div>
-                              <span>{name}</span>
+                              <span className={styles.avatarName}>{name}</span>
                             </div>
                           );
                         })}

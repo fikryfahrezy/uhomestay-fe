@@ -155,6 +155,7 @@ const DocFileEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-file-btn"
               >
                 Ubah
               </Button>
@@ -163,6 +164,7 @@ const DocFileEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
+                data-testid="remove-file-btn"
               >
                 Hapus
               </Button>
@@ -174,6 +176,7 @@ const DocFileEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-file-btn"
               >
                 Ubah
               </Button>

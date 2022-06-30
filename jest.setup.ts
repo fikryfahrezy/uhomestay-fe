@@ -14,6 +14,8 @@ dotenv.config({ path: "./.env.test.local" });
 
 import { server } from "./__mocks__/server";
 
+// Ref: How to use Jest for testing a react component with localStorage?
+// https://stackoverflow.com/a/65286435/12976234
 const localStorageMock = (function () {
   let store: Record<string, string> = {};
 
@@ -37,6 +39,8 @@ Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
 });
 
+// Ref: Jest Mock IntersectionObserver
+// https://stackoverflow.com/a/58888349/12976234
 // @ts-ignore
 window.IntersectionObserver = jest.fn(() => ({
   observe: jest.fn(),
@@ -44,13 +48,17 @@ window.IntersectionObserver = jest.fn(() => ({
   disconnect: jest.fn(),
 }));
 
+// https://github.com/vercel/next.js/issues/7479#issuecomment-568431869
 jest.mock("next/router", () => ({
   useRouter() {
     return {
       route: "/",
       pathname: "",
-      query: "",
+      query: {
+        id: 1,
+      },
       asPath: "",
+      replace: jest.fn(),
     };
   },
 }));

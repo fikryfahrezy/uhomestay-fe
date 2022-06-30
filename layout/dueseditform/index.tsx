@@ -171,7 +171,7 @@ const DuesEditForm = ({
                 <ErrMsg />
               ) : paidDuesQuery.data.data["is_paid"] ? (
                 <p>
-                  <em>
+                  <em data-testid="paid-dues-msg">
                     Seseorang telah membayar iurang bulanan, tidak dapat diubah
                     atau hapus
                   </em>
@@ -184,6 +184,7 @@ const DuesEditForm = ({
                     type="button"
                     className={styles.formBtn}
                     onClick={() => onSetEditable()}
+                    data-testid="editable-dues-btn"
                   >
                     Ubah
                   </Button>
@@ -192,6 +193,7 @@ const DuesEditForm = ({
                     type="button"
                     className={styles.formBtn}
                     onClick={() => onConfirmDelete()}
+                    data-testid="remove-dues-btn"
                   >
                     Hapus
                   </Button>
@@ -205,6 +207,7 @@ const DuesEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-dues-btn"
               >
                 Ubah
               </Button>

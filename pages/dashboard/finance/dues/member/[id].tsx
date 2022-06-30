@@ -210,6 +210,7 @@ const MemberDues = () => {
                       <IconButton
                         className={styles.moreBtn}
                         onClick={() => onOptClick(val)}
+                        data-testid="member-dues-item-btn"
                       >
                         <RiMore2Line />
                       </IconButton>
@@ -222,7 +223,11 @@ const MemberDues = () => {
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
-      <Drawer isOpen={open} onClose={() => onClose()}>
+      <Drawer
+        isOpen={open}
+        onClose={() => onClose()}
+        data-testid="member-dues-drawer"
+      >
         {tempData !== null ? (
           <MemberDuesEditForm
             prevData={tempData}

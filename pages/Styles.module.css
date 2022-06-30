@@ -189,6 +189,10 @@
   aspect-ratio: 1;
 }
 
+.avatarName {
+  text-align: center;
+}
+
 .levelOne {
   width: 200px;
   margin-bottom: 25px;

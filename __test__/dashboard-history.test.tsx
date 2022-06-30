@@ -26,12 +26,6 @@ test("Render history text", async () => {
 });
 
 test("Update history", async () => {
-  jest.spyOn(require("next/router"), "useRouter").mockImplementation(() => ({
-    query: {
-      id: "1",
-    },
-  }));
-
   render(<HistoryWrite />);
 
   const leditorWrite = await screen.findByTestId("lexical-editor-rich-write");
@@ -39,5 +33,5 @@ test("Update history", async () => {
   await user.type(leditorWrite, "test");
 
   const updateBtn = screen.getByTestId("edit-history-btn");
-  await user.click(updateBtn)
+  await user.click(updateBtn);
 });

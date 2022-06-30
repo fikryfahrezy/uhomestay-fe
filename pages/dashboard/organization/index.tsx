@@ -170,6 +170,7 @@ const Organization = () => {
               <li
                 className={styles.addBtnOption}
                 onClick={() => onOpen(DOC_TYPE.DIR)}
+                data-testid="popup-dir-btn"
               >
                 <RiFolderLine />
                 Folder
@@ -177,6 +178,7 @@ const Organization = () => {
               <li
                 className={styles.addBtnOption}
                 onClick={() => onOpen(DOC_TYPE.FILE)}
+                data-testid="popup-file-btn"
               >
                 <RiFileLine />
                 File
@@ -184,7 +186,11 @@ const Organization = () => {
             </ul>
           }
         >
-          <Button colorScheme="green" leftIcon={<RiFileUploadFill />}>
+          <Button
+            colorScheme="green"
+            leftIcon={<RiFileUploadFill />}
+            data-testid="add-btn"
+          >
             Tambah
           </Button>
         </PopUp>
@@ -252,6 +258,7 @@ const Organization = () => {
                         <IconButton
                           className={styles.moreBtn}
                           onClick={(e) => onChipOptClick(val, e)}
+                          data-testid="docs-detail-btn"
                         >
                           <RiMore2Line />
                         </IconButton>
@@ -287,7 +294,7 @@ const Organization = () => {
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
-      <Drawer isOpen={open} onClose={onClose}>
+      <Drawer isOpen={open} onClose={onClose} data-testid="doc-drawer">
         {docType === DOC_TYPE.FILE ? (
           tempData === null ? (
             <DocFileAddForm

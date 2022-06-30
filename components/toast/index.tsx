@@ -14,7 +14,7 @@ const Toast = ({
 }: Omit<ToastProps, "duration">) => {
   return isOpen ? (
     <UniversalPortal selector="#modal">
-      <div className={styles.alertContainer}>
+      <div className={styles.alertContainer} data-testid="toast-modal">
         <Alert withIcon={true} status={status} className={styles.alert}>
           <div className={styles.alertBody}>
             {typeof render === "function" ? render() : <></>}

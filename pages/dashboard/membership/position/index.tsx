@@ -53,6 +53,7 @@ const Position = () => {
         leftIcon={<RiAddLine />}
         onClick={() => onOpen()}
         className={styles.addBtn}
+        data-testid="add-btn"
       >
         Buat
       </Button>
@@ -83,7 +84,11 @@ const Position = () => {
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
-      <Drawer isOpen={open} onClose={() => onClose()}>
+      <Drawer
+        isOpen={open}
+        onClose={() => onClose()}
+        data-testid="position-drawer"
+      >
         {tempData === null ? (
           <PositionAddForm
             onCancel={() => onClose()}

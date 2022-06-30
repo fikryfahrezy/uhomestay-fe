@@ -144,7 +144,12 @@ const MemberDuesPayForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="pay-dues-btn"
+          >
             Bayar
           </Button>
         </div>

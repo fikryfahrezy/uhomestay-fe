@@ -124,6 +124,7 @@ const PositionEditForm = ({
               id="name"
               readOnly={!isEditable}
               isInvalid={errors.name !== undefined}
+              data-testid="edit-position-name-field"
             />
             {errors.name ? (
               <InputErrMsg>This field is required</InputErrMsg>
@@ -173,6 +174,7 @@ const PositionEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-position-btn"
               >
                 Ubah
               </Button>
@@ -181,6 +183,7 @@ const PositionEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
+                data-testid="position-remove-btn"
               >
                 Hapus
               </Button>
@@ -192,6 +195,7 @@ const PositionEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-position-btn"
               >
                 Ubah
               </Button>
@@ -200,6 +204,7 @@ const PositionEditForm = ({
                 type="reset"
                 className={styles.formBtn}
                 onClick={() => onClose()}
+                data-testid="cancel-edit-position-btn"
               >
                 Batal
               </Button>

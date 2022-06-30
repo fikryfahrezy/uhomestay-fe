@@ -9,7 +9,11 @@ type PositionListProps = {
 
 const PositionList = ({ position, onClick }: PositionListProps) => {
   return (
-    <Chip className={styles.chip} onClick={onClick}>
+    <Chip
+      className={styles.chip}
+      onClick={onClick}
+      data-testid="position-list-item"
+    >
       {position.name}
     </Chip>
   );

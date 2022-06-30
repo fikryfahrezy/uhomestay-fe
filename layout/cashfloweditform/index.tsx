@@ -224,6 +224,7 @@ const CasflowEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onSetEditable()}
+                data-testid="editable-cashflow-btn"
               >
                 Ubah
               </Button>
@@ -232,6 +233,7 @@ const CasflowEditForm = ({
                 type="button"
                 className={styles.formBtn}
                 onClick={() => onConfirmDelete()}
+                data-testid="remove-cashflow-btn"
               >
                 Hapus
               </Button>
@@ -243,6 +245,7 @@ const CasflowEditForm = ({
                 colorScheme="green"
                 type="submit"
                 className={styles.formBtn}
+                data-testid="edit-cashflow-btn"
               >
                 Ubah
               </Button>

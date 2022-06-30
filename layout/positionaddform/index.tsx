@@ -116,7 +116,12 @@ const PositionAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="save-btn"
+          >
             Buat
           </Button>
           <Button
@@ -124,6 +129,7 @@ const PositionAddForm = ({
             type="reset"
             className={styles.formBtn}
             onClick={() => onClose()}
+            data-testid="cancel-btn"
           >
             Batal
           </Button>

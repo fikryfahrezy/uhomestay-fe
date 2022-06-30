@@ -90,6 +90,7 @@ const Dues = () => {
         leftIcon={<RiMoneyDollarCircleLine />}
         onClick={() => onOpen()}
         className={styles.addBtn}
+        data-testid="add-dues-btn"
       >
         Buat Tagihan
       </Button>
@@ -135,6 +136,7 @@ const Dues = () => {
           <IconButton
             className={styles.moreBtn}
             onClick={() => openDrawer(selectedDues)}
+            data-testid="option-dues-btn"
           >
             <RiMore2Line />
           </IconButton>
@@ -178,7 +180,11 @@ const Dues = () => {
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
-      <Drawer isOpen={isDrawerOpen} onClose={() => onDrawerClose()}>
+      <Drawer
+        isOpen={isDrawerOpen}
+        onClose={() => onDrawerClose()}
+        data-testid="dues-drawer"
+      >
         {tempData === null ? (
           <DuesAddForm
             onCancel={() => onDrawerClose()}

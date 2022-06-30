@@ -99,7 +99,12 @@ const DuesAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="create-dues-btn"
+          >
             Buat
           </Button>
           <Button
