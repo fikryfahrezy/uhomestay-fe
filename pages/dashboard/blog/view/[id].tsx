@@ -1,20 +1,19 @@
-import type { ReactElement, MouseEvent } from "react";
+import type { ReactElement } from "react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiFileSettingsLine, RiDeleteBin6Line } from "react-icons/ri";
 import { useFindBlog, removeBlog } from "@/services/blog";
-import LinkButton from "@/components/linkbutton";
-import Button from "@/components/button";
-import Toast, { useToast } from "@/components/toast";
-import Modal from "@/layout/modal";
-import ToastComponent from "@/layout/toastcomponent";
-import AdminLayout from "@/layout/adminpage";
-import ErrMsg from "@/layout/errmsg";
+import { LinkButton, Button, Toast } from "cmnjg-sb";
+import { useToast } from "@/components/toast";
+import Modal from "@/layouts/modal";
+import ToastComponent from "@/layouts/toastcomponent";
+import AdminLayout from "@/layouts/adminpage";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const Editor = dynamic(() => import("@/layout/blogeditor/read"));
+const Editor = dynamic(() => import("@/layouts/blogeditor/read"));
 
 const ViewBlog = () => {
   const [isModalOpen, setModalOpen] = useState(false);

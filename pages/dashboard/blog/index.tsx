@@ -12,16 +12,14 @@ import {
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useBlogsQuery, removeBlog } from "@/services/blog";
-import PopUp from "@/components/popup";
-import LinkButton from "@/components/linkbutton";
-import IconButton from "@/components/iconbutton";
-import Toast, { useToast } from "@/components/toast";
-import Modal from "@/layout/modal";
-import ToastComponent from "@/layout/toastcomponent";
-import AdminLayout from "@/layout/adminpage";
-import EmptyMsg from "@/layout/emptymsg";
-import BlogListItem from "@/layout/bloglistitem";
-import ErrMsg from "@/layout/errmsg";
+import { Popup, LinkButton, IconButton, Toast } from "cmnjg-sb";
+import { useToast } from "@/components/toast";
+import Modal from "@/layouts/modal";
+import ToastComponent from "@/layouts/toastcomponent";
+import AdminLayout from "@/layouts/adminpage";
+import EmptyMsg from "@/layouts/emptymsg";
+import BlogListItem from "@/layouts/bloglistitem";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Blog = () => {
@@ -99,7 +97,7 @@ const Blog = () => {
                       key={blog.id}
                       blog={blog}
                       popUp={
-                        <PopUp
+                        <Popup
                           popUpPosition="bottom-right"
                           className={styles.popup}
                           popUpContent={
@@ -151,7 +149,7 @@ const Blog = () => {
                           >
                             <RiArrowDownSLine />
                           </IconButton>
-                        </PopUp>
+                        </Popup>
                       }
                     />
                   );

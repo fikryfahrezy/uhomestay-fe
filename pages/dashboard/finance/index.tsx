@@ -11,15 +11,13 @@ import Observe from "@/lib/use-observer";
 import { idrCurrency } from "@/lib/fmt";
 import { useCashflowsQuery } from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import AdminLayout from "@/layout/adminpage";
-import CashflowAddForm from "@/layout/cashflowaddform";
-import CashflowEditForm from "@/layout/cashfloweditform";
-import EmptyMsg from "@/layout/emptymsg";
-import CashflowSummary from "@/layout/cashflowsummary";
-import ErrMsg from "@/layout/errmsg";
+import { Button, IconButton, Drawer } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import CashflowAddForm from "@/layouts/cashflowaddform";
+import CashflowEditForm from "@/layouts/cashfloweditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import CashflowSummary from "@/layouts/cashflowsummary";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const inOutField = Object.freeze({

@@ -18,19 +18,15 @@ import {
   useDocumentsQuery,
   useDocumentChildsQuery,
 } from "@/services/document";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Input from "@/components/input";
-import PopUp from "@/components/popup";
-import AdminLayout from "@/layout/adminpage";
-import DocFileAddForm from "@/layout/docaddform/file";
-import DocFileEditForm from "@/layout/doceditform/file";
-import DocDirAddForm from "@/layout/docaddform/dir";
-import DocDirEditForm from "@/layout/doceditform/dir";
-import EmptyMsg from "@/layout/emptymsg";
-import DocListItem from "@/layout/doclistitem";
-import ErrMsg from "@/layout/errmsg";
+import { Button, IconButton, Drawer, Input, Popup } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import DocFileAddForm from "@/layouts/docaddform/file";
+import DocFileEditForm from "@/layouts/doceditform/file";
+import DocDirAddForm from "@/layouts/docaddform/dir";
+import DocDirEditForm from "@/layouts/doceditform/dir";
+import EmptyMsg from "@/layouts/emptymsg";
+import DocListItem from "@/layouts/doclistitem";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Organization = () => {
@@ -164,7 +160,7 @@ const Organization = () => {
     <>
       <h1 className={styles.pageTitle}>Dokumen</h1>
       <div className={styles.headerContainer}>
-        <PopUp
+        <Popup
           popUpContent={
             <ul className={styles.addBtnOptions}>
               <li
@@ -193,7 +189,7 @@ const Organization = () => {
           >
             Tambah
           </Button>
-        </PopUp>
+        </Popup>
         <div className={styles.form}>
           <Input
             ref={inputRef}

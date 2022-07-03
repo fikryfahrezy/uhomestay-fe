@@ -6,15 +6,13 @@ import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
-import Button from "@/components/button";
-import Drawer from "@/components/drawer";
-import Chip from "@/components/chip";
-import AdminLayout from "@/layout/adminpage";
-import OrgAddForm from "@/layout/orgaddform";
-import OrgEditForm from "@/layout/orgeditform";
-import OrgDetailForm from "@/layout/orgdetailform";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import { Button, Drawer, Chip } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import OrgAddForm from "@/layouts/orgaddform";
+import OrgEditForm from "@/layouts/orgeditform";
+import OrgDetailForm from "@/layouts/orgdetailform";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Organization = () => {

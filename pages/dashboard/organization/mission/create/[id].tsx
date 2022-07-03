@@ -7,14 +7,13 @@ import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
 import { useFindPeriodGoal } from "@/services/period";
 import { addGoal } from "@/services/period";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import Toast, { useToast } from "@/components/toast";
-import AdminLayout from "@/layout/adminpage";
-import ToastComponent from "@/layout/toastcomponent";
+import { Button, LinkButton, Toast } from "cmnjg-sb";
+import { useToast } from "@/components/toast";
+import AdminLayout from "@/layouts/adminpage";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/write"));
+const RichText = dynamic(() => import("@/layouts/richtext/write"));
 
 const CreateMission = () => {
   const router = useRouter();

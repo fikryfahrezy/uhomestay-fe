@@ -8,14 +8,12 @@ import { debounce } from "@/lib/perf";
 import { idrCurrency } from "@/lib/fmt";
 import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
 import { useMemberDetailQuery } from "@/services/member";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Badge from "@/components/badge";
-import MemberDuesPayForm from "@/layout/memberduespayform";
-import MemberDuesDetail from "@/layout/memberduesdetail";
-import MemberLayout from "@/layout/memberpage";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import { IconButton, Drawer, Badge } from "cmnjg-sb";
+import MemberDuesPayForm from "@/layouts/memberduespayform";
+import MemberDuesDetail from "@/layouts/memberduesdetail";
+import MemberLayout from "@/layouts/memberpage";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Member = () => {

@@ -6,10 +6,10 @@ import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
-import Chip from "@/components/chip";
-import AdminLayout from "@/layout/adminpage";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import { Chip } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Mission = () => {

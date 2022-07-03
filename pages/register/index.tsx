@@ -4,16 +4,14 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { registerMember } from "@/services/member";
-import Input from "@/components/input";
-import TextArea from "@/components/textarea";
-import Button from "@/components/button";
-import Toast, { useToast } from "@/components/toast";
-import PageNav from "@/layout/pagenav";
-import InputErrMsg from "@/layout/inputerrmsg";
-import ToastComponent from "@/layout/toastcomponent";
+import { Input, Textarea, Button, Toast } from "cmnjg-sb";
+import { useToast } from "@/components/toast";
+import PageNav from "@/layouts/pagenav";
+import InputErrMsg from "@/layouts/inputerrmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-const Map = dynamic(() => import("@/layout/map"), {
+const Map = dynamic(() => import("@/layouts/map"), {
   loading: () => <p>...</p>,
 });
 
@@ -47,7 +45,9 @@ const Register = () => {
         reset(defaultValues, { keepDefaultValues: true });
         toast({
           status: "success",
-          render: () => <>Registrasi berhasil, menunggu konfirmasi pengelola.</>,
+          render: () => (
+            <>Registrasi berhasil, menunggu konfirmasi pengelola.</>
+          ),
         });
       })
       .catch((e) => {
@@ -200,7 +200,7 @@ const Register = () => {
                 )}
               </div>
               <div className={styles.inputGroup}>
-                <TextArea
+                <Textarea
                   {...register("homestay_address", {
                     required: true,
                   })}

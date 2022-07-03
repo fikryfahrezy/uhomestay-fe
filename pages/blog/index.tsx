@@ -1,15 +1,14 @@
-import type { ReactElement } from "react";
 import { useState, useRef, Fragment } from "react";
 import Link from "next/link";
 import { RiSearch2Line } from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useBlogsQuery } from "@/services/blog";
-import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
-import PageNav from "@/layout/pagenav";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
-import BlogListItem from "@/layout/bloglistitem";
+import { LinkBox, LinkOverlay } from "cmnjg-sb";
+import PageNav from "@/layouts/pagenav";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
+import BlogListItem from "@/layouts/bloglistitem";
 import styles from "./Styles.module.css";
 
 const Blog = () => {

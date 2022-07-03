@@ -8,14 +8,13 @@ import slugify from "@sindresorhus/slugify";
 import { RiCheckFill, RiCloseLine } from "react-icons/ri";
 import { getBlogMeta } from "@/lib/blogmeta";
 import { addBlog, uploadImage } from "@/services/blog";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import AdminLayout from "@/layout/adminpage";
-import Toast, { useToast } from "@/components/toast";
-import ToastComponent from "@/layout/toastcomponent";
+import { Button, LinkButton, Toast } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import { useToast } from "@/components/toast";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-const Editor = dynamic(() => import("@/layout/blogeditor/write"));
+const Editor = dynamic(() => import("@/layouts/blogeditor/write"));
 
 const CreateBlog = () => {
   const router = useRouter();

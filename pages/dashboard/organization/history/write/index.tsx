@@ -6,14 +6,13 @@ import Link from "next/link";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
 import { addHistory, useFindLatestHistory } from "@/services/history";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import Toast, { useToast } from "@/components/toast";
-import ToastComponent from "@/layout/toastcomponent";
-import AdminLayout from "@/layout/adminpage";
+import { Button, LinkButton, Toast } from "cmnjg-sb";
+import { useToast } from "@/components/toast";
+import ToastComponent from "@/layouts/toastcomponent";
+import AdminLayout from "@/layouts/adminpage";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/write"));
+const RichText = dynamic(() => import("@/layouts/richtext/write"));
 
 const WriteHistory = () => {
   const { toast, props } = useToast();
@@ -54,7 +53,7 @@ const WriteHistory = () => {
           leftIcon={<RiCheckFill />}
           onClick={onClick}
           className={styles.actionBtn}
-		  data-testid="edit-history-btn"
+          data-testid="edit-history-btn"
         >
           Ubah
         </Button>

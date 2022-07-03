@@ -9,17 +9,13 @@ import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
 import { useMembersDuesQuery } from "@/services/member-dues";
-import Drawer from "@/components/drawer";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Select from "@/components/select";
-import LinkButton from "@/components/linkbutton";
-import AdminLayout from "@/layout/adminpage";
-import DuesAddForm from "@/layout/duesaddform";
-import DuesEditForm from "@/layout/dueseditform";
-import EmptyMsg from "@/layout/emptymsg";
-import MemberDuesItem from "@/layout/memberduesitem";
-import ErrMsg from "@/layout/errmsg";
+import { Drawer, Button, IconButton, Select, LinkButton } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import DuesAddForm from "@/layouts/duesaddform";
+import DuesEditForm from "@/layouts/dueseditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import MemberDuesItem from "@/layouts/memberduesitem";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Dues = () => {

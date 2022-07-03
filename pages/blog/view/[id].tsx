@@ -1,11 +1,11 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useFindBlog } from "@/services/blog";
-import PageNav from "@/layout/pagenav";
-import ErrMsg from "@/layout/errmsg";
+import PageNav from "@/layouts/pagenav";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const Editor = dynamic(() => import("@/layout/blogeditor/read"));
+const Editor = dynamic(() => import("@/layouts/blogeditor/read"));
 
 const ViewBlog = () => {
   const router = useRouter();

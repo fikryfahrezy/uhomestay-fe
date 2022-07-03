@@ -5,14 +5,13 @@ import { RiAddLine } from "react-icons/ri";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useInfinitePositionsQuery } from "@/services/position";
-import Button from "@/components/button";
-import Drawer from "@/components/drawer";
-import AdminLayout from "@/layout/adminpage";
-import PositionAddForm from "@/layout/positionaddform";
-import PositionEditForm from "@/layout/positioneditform";
-import EmptyMsg from "@/layout/emptymsg";
-import PositionListItem from "@/layout/positionlistitem";
-import ErrMsg from "@/layout/errmsg";
+import { Button, Drawer } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import PositionAddForm from "@/layouts/positionaddform";
+import PositionEditForm from "@/layouts/positioneditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import PositionListItem from "@/layouts/positionlistitem";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Position = () => {

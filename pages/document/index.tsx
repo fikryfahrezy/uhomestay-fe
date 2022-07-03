@@ -3,10 +3,10 @@ import { RiSearch2Line } from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { DOC_TYPE, useInfiniteDocumentsQuery } from "@/services/document";
-import PageNav from "@/layout/pagenav";
-import EmptyMsg from "@/layout/emptymsg";
-import DocListItem from "@/layout/doclistitem";
-import ErrMsg from "@/layout/errmsg";
+import PageNav from "@/layouts/pagenav";
+import EmptyMsg from "@/layouts/emptymsg";
+import DocListItem from "@/layouts/doclistitem";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Document = () => {

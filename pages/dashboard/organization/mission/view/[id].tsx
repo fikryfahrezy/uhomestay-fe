@@ -4,12 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiFileEditLine } from "react-icons/ri";
 import { useFindPeriodGoal } from "@/services/period";
-import LinkButton from "@/components/linkbutton";
-import AdminLayout from "@/layout/adminpage";
-import ErrMsg from "@/layout/errmsg";
+import { LinkButton } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/read"));
+const RichText = dynamic(() => import("@/layouts/richtext/read"));
 
 const ViewMission = () => {
   const router = useRouter();

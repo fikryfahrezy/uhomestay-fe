@@ -9,13 +9,11 @@ import { debounce } from "@/lib/perf";
 import { idrCurrency } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";
 import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import AdminLayout from "@/layout/adminpage";
-import Badge from "@/components/badge";
-import MemberDuesEditForm from "@/layout/memberdueseditform";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import { IconButton, Drawer, Badge } from "cmnjg-sb";
+import AdminLayout from "@/layouts/adminpage";
+import MemberDuesEditForm from "@/layouts/memberdueseditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const MemberDues = () => {
