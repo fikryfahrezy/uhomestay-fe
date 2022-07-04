@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMemberDetailQuery, updateProfile } from "@/services/member";
 import { AvatarPicker, Input, Textarea, Button, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Input, Button, Toast } from "cmnjg-sb";
 import { yyyyMm } from "@/lib/fmt";
 import { editDues, removeDues, useCheckPaidDuesQuery } from "@/services/dues";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";

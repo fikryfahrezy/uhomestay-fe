@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Button, Input, Toast, Checkbox } from "cmnjg-sb";
 import { editDirDocument, removeDocument } from "@/services/document";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";

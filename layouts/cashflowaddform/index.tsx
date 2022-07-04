@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { Toast, Select, InputFile, Button, Input, Textarea } from "cmnjg-sb";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";

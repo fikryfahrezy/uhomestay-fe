@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { adminLogin, useAdmin } from "@/services/member";
 import { Input, Button, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import PageNav from "@/layouts/pagenav";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";

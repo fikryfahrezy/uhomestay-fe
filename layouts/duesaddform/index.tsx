@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { yyyyMm } from "@/lib/fmt";
 import { addDues } from "@/services/dues";
 import { Input, Button, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";

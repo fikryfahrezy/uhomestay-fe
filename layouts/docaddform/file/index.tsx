@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { Button, InputFile, Checkbox, Toast } from "cmnjg-sb";
 import { addFileDocument } from "@/services/document";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";

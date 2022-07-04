@@ -7,7 +7,7 @@ import {
   removePeriod,
   changePeriodStatus,
 } from "@/services/period";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import OrgGoalView from "@/layouts/orggoalview";

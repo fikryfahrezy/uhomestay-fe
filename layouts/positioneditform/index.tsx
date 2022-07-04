@@ -7,7 +7,7 @@ import {
   removePosition,
 } from "@/services/position";
 import { Button, Input, Select, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";

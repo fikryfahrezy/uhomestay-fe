@@ -8,7 +8,7 @@ import { getPlainText } from "@/lib/blogmeta";
 import { useFindPeriodGoal } from "@/services/period";
 import { addGoal } from "@/services/period";
 import { Button, LinkButton, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import AdminLayout from "@/layouts/adminpage";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";

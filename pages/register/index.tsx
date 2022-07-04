@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import Image from "next/image";
 import { registerMember } from "@/services/member";
 import { Input, Textarea, Button, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import PageNav from "@/layouts/pagenav";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import ToastComponent from "@/layouts/toastcomponent";

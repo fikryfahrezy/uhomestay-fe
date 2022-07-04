@@ -7,7 +7,7 @@ import {
   removeCashflow,
   CASHFLOW_TYPE,
 } from "@/services/cashflow";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import Modal from "@/layouts/modal";

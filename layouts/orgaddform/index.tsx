@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { Input, Button, Drawer, Toast, Label } from "cmnjg-sb";
 import { yyyyMm } from "@/lib/fmt";
 import { addPeriod } from "@/services/period";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import OrgStructForm from "@/layouts/orgstructform";
 import OrgGoalWrite from "@/layouts/orggoalwrite";

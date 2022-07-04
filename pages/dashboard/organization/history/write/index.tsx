@@ -7,7 +7,7 @@ import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
 import { addHistory, useFindLatestHistory } from "@/services/history";
 import { Button, LinkButton, Toast } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import AdminLayout from "@/layouts/adminpage";
 import styles from "./Styles.module.css";

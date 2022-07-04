@@ -14,7 +14,7 @@ import {
   removePeriod,
 } from "@/services/period";
 import { Input, Button, Toast, Label, Drawer } from "cmnjg-sb";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import OrgStructForm from "@/layouts/orgstructform";
 import ToastComponent from "@/layouts/toastcomponent";

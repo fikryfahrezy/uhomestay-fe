@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import type { LinkTreeProps } from "@/components/aside/linktree";
+import type { LinkTreeProps } from "cmnjg-sb";
 import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";

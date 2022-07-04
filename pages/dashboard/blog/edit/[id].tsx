@@ -9,7 +9,7 @@ import { getBlogMeta } from "@/lib/blogmeta";
 import { editBlog, useFindBlog, uploadImage } from "@/services/blog";
 import { Button, LinkButton, Toast } from "cmnjg-sb";
 import AdminLayout from "@/layouts/adminpage";
-import { useToast } from "@/components/toast";
+import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
