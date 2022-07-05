@@ -2,6 +2,7 @@ import type { ReactElement } from "react";
 import { useState, Fragment } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import {
   RiDraftLine,
   RiArrowDownSLine,
@@ -12,8 +13,11 @@ import {
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useBlogsQuery, removeBlog } from "@/services/blog";
-import { Popup, LinkButton, IconButton, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import PopUp from "cmnjg-sb/dist/popup";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import IconButton from "cmnjg-sb/dist/iconbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import AdminLayout from "@/layouts/adminpage";
@@ -32,7 +36,15 @@ const Blog = () => {
   });
 
   const router = useRouter();
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const removeBlogMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeBlog>[0]
+  >((id) => {
+    return removeBlog(id);
+  });
 
   const observeCallback = () => {
     if (blogsQuery.hasNextPage) {
@@ -41,16 +53,29 @@ const Blog = () => {
   };
 
   const onDeleteBlog = (id: number) => {
-    removeBlog(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus blog" />,
+    });
+
+    removeBlogMutation
+      .mutateAsync(id)
       .then(() => {
         setBlogId(0);
         setModalOpen(false);
         blogsQuery.refetch();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus blog"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -97,7 +122,7 @@ const Blog = () => {
                       key={blog.id}
                       blog={blog}
                       popUp={
-                        <Popup
+                        <PopUp
                           popUpPosition="bottom-right"
                           className={styles.popup}
                           popUpContent={
@@ -149,7 +174,7 @@ const Blog = () => {
                           >
                             <RiArrowDownSLine />
                           </IconButton>
-                        </Popup>
+                        </PopUp>
                       }
                     />
                   );

@@ -42,7 +42,7 @@ test("Member successfully paydues", async () => {
 
   await waitFor(() => {
     expect(
-      screen.queryByText("This field is required")
+      screen.queryByText("Tidak boleh kosong")
     ).not.toBeInTheDocument();
   });
 });

@@ -7,7 +7,7 @@ import { withIronSessionApiRoute } from "iron-session/next";
 import jwt from "jsonwebtoken";
 import User from "@/model/user";
 import { sessionOptions } from "@/lib/session";
-import fetchJson from "@/lib/fetchJson";
+import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
@@ -47,6 +47,6 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     await req.session.save();
     res.json(admin);
   } catch (error) {
-    res.status(500).json({ message: error });
+    res.status(500).json((error as FetchError).data);
   }
 }

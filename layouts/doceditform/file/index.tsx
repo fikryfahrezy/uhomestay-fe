@@ -1,9 +1,13 @@
 import type { DocumentOut } from "@/services/document";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { editFileDocument, removeDocument } from "@/services/document";
-import { Button, InputFile, Toast, Checkbox } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Checkbox from "cmnjg-sb/dist/checkbox";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
@@ -35,7 +39,26 @@ const DocFileEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const removeDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeDocument>[0]
+  >((id) => {
+    return removeDocument(id);
+  });
+
+  const editFileDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editFileDocument>[0];
+      data: Parameters<typeof editFileDocument>[1];
+    }
+  >(({ id, data }) => {
+    return editFileDocument(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -43,14 +66,27 @@ const DocFileEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    removeDocument(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus file" />,
+    });
+
+    removeDocumentMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus file"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -67,14 +103,27 @@ const DocFileEditForm = ({
         }
       });
 
-      editFileDocument(id, formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah file" />,
+      });
+
+      editFileDocumentMutation
+        .mutateAsync({ id, data: formData })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah file"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -123,7 +172,7 @@ const DocFileEditForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -138,7 +187,7 @@ const DocFileEditForm = ({
               Private
             </Checkbox>
             {errors["is_private"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

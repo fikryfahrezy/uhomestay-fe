@@ -37,7 +37,7 @@ test("Admin successfully add dues", async () => {
   const createBtn = screen.getByTestId("create-dues-btn");
   await user.click(createBtn);
 
-  expect(screen.queryByText("This field is required")).not.toBeInTheDocument();
+  expect(screen.queryByText("Tidak boleh kosong")).not.toBeInTheDocument();
 });
 
 test("Admin successfully edit dues", async () => {
@@ -66,15 +66,11 @@ test("Admin successfully edit dues", async () => {
   const createBtn = screen.getByTestId("edit-dues-btn");
   await user.click(createBtn);
 
-  expect(screen.queryByText("This field is required")).not.toBeInTheDocument();
+  expect(screen.queryByText("Tidak boleh kosong")).not.toBeInTheDocument();
 });
 
 test("Admin successfully remove dues", async () => {
   render(<Dues />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const selectDues = await screen.findByTestId("select-comp");
   expect(selectDues).toBeInTheDocument();

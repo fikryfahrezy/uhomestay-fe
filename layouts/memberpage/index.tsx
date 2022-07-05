@@ -2,6 +2,7 @@ import type { MouseEvent } from "react";
 import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import Image from "next/image";
 import {
   RiLogoutBoxRLine,
@@ -9,13 +10,19 @@ import {
   RiUserSettingsFill,
 } from "react-icons/ri";
 import { useMember, memberLogout } from "@/services/member";
-import { Avatar, Popup, LinkBox, LinkOverlay } from "cmnjg-sb";
+import Avatar from "cmnjg-sb/dist/avatar";
+import PopUp from "cmnjg-sb/dist/popup";
+import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
 import styles from "./Styles.module.css";
 
 const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
   const router = useRouter();
   const memberQuery = useMember({
     redirectTo: "/login/member",
+  });
+
+  const memberLogoutMutation = useMutation(() => {
+    return memberLogout();
   });
 
   const linkList = useMemo(() => {
@@ -35,7 +42,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
 
   const onLogout = (e: MouseEvent) => {
     e.preventDefault();
-    memberLogout().then(() => {
+    memberLogoutMutation.mutateAsync().then(() => {
       memberQuery.refetch();
       router.push("/login/member");
     });
@@ -54,7 +61,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
             />
           </a>
         </Link>
-        <Popup
+        <PopUp
           popUpPosition="bottom-right"
           popUpContent={
             <ul className={styles.addBtnOptions}>
@@ -77,7 +84,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
           }
         >
           <Avatar />
-        </Popup>
+        </PopUp>
       </nav>
       <div className={styles.pageContainer}>
         <main className={`${className ? className : ""} ${styles.main}`}>

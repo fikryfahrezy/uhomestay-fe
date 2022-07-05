@@ -1,9 +1,10 @@
 import type { MouseEvent } from "react";
-import type { LinkTreeProps } from "cmnjg-sb";
+import type { LinkTreeProps } from "cmnjg-sb/dist/aside";
 import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import {
   RiHome3Line,
   RiUser3Line,
@@ -18,7 +19,10 @@ import {
   RiCurrencyLine,
 } from "react-icons/ri";
 import { useAdmin, memberLogout } from "@/services/member";
-import { Avatar, Popup, Aside, LinkButton } from "cmnjg-sb";
+import Avatar from "cmnjg-sb/dist/avatar";
+import PopUp from "cmnjg-sb/dist/popup";
+import Aside from "cmnjg-sb/dist/aside";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
 import ActiveLink from "@/layouts/activelink";
 import styles from "./Styles.module.css";
 
@@ -26,6 +30,10 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
   const router = useRouter();
   const adminQuery = useAdmin({
     redirectTo: "/login/admin",
+  });
+
+  const memberLogoutMutation = useMutation(() => {
+    return memberLogout();
   });
 
   const linkList = useMemo(() => {
@@ -258,7 +266,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
 
   const onLogout = (e: MouseEvent) => {
     e.preventDefault();
-    memberLogout().then(() => {
+    memberLogoutMutation.mutateAsync().then(() => {
       adminQuery.refetch();
       router.push("/login/admin");
     });
@@ -277,7 +285,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
             />
           </a>
         </Link>
-        <Popup
+        <PopUp
           popUpPosition="bottom-right"
           popUpContent={
             <ul className={styles.addBtnOptions}>
@@ -300,7 +308,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
           }
         >
           <Avatar />
-        </Popup>
+        </PopUp>
       </nav>
       <div className={styles.pageContainer}>
         <Aside linkList={linkList} />

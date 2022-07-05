@@ -1,13 +1,17 @@
 import type { PositionOut } from "@/services/position";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import {
   usePositionLevelsQuery,
   editPosition,
   removePosition,
 } from "@/services/position";
-import { Button, Input, Select, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import Select from "cmnjg-sb/dist/select";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
@@ -44,7 +48,26 @@ const PositionEditForm = ({
   });
 
   const positionLevelsQuery = usePositionLevelsQuery();
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const removePositionMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removePosition>[0]
+  >((id) => {
+    return removePosition(id);
+  });
+
+  const editPositionMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editPosition>[0];
+      data: Parameters<typeof editPosition>[1];
+    }
+  >(({ id, data }) => {
+    return editPosition(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -53,27 +76,53 @@ const PositionEditForm = ({
 
   const onSubmit = (id: number) =>
     handleSubmit((data) => {
-      editPosition(id, data)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah jabatan" />,
+      });
+
+      editPositionMutation
+        .mutateAsync({ id, data })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah jabatan"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
 
   const onDelete = (id: number) => {
-    removePosition(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus jabatan" />,
+    });
+
+    removePositionMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus jabatan"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -125,7 +174,7 @@ const PositionEditForm = ({
               data-testid="edit-position-name-field"
             />
             {errors.name ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -155,7 +204,7 @@ const PositionEditForm = ({
                   ))}
                 </Select>
                 {errors.level ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}

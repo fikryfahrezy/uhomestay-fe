@@ -1,8 +1,11 @@
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { yyyyMm } from "@/lib/fmt";
 import { addDues } from "@/services/dues";
-import { Input, Button, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -28,7 +31,15 @@ const DuesAddForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const addDuesMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addDues>[0]
+  >((data) => {
+    return addDues(data);
+  });
 
   const onSubmit = handleSubmit((data) => {
     const newData = {
@@ -36,15 +47,28 @@ const DuesAddForm = ({
       date: `${data.date}-01`,
     };
 
-    addDues(newData)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading membuat tagihan" />,
+    });
+
+    addDuesMutation
+      .mutateAsync(newData)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
         onSubmited();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error membuat tagihan"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   });
@@ -73,7 +97,7 @@ const DuesAddForm = ({
               isInvalid={errors.date !== undefined}
             />
             {errors.date ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -91,7 +115,7 @@ const DuesAddForm = ({
               isInvalid={errors["idr_amount"] !== undefined}
             />
             {errors["idr_amount"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

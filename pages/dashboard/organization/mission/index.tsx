@@ -6,7 +6,7 @@ import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
-import { Chip } from "cmnjg-sb";
+import Chip from "cmnjg-sb/dist/chip";
 import AdminLayout from "@/layouts/adminpage";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";

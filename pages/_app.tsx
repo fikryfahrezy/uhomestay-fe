@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "cmnjg-sb/dist/index.css";
 import type { ReactElement, ReactNode } from "react";
 import type { NextPage } from "next";
 import type { AppProps } from "next/app";

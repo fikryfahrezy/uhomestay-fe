@@ -1,13 +1,17 @@
 import type { PeriodRes } from "@/services/period";
 import { useState } from "react";
-import { Input, Button, Toast, Label } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Label from "cmnjg-sb/dist/label";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { yyyyMm } from "@/lib/fmt";
 import {
   usePeriodStructureQuery,
   removePeriod,
   changePeriodStatus,
 } from "@/services/period";
-import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import OrgGoalView from "@/layouts/orggoalview";
@@ -31,17 +35,49 @@ const OrgEditForm = ({
     enabled: !!prevData.id,
   });
 
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const changePeriodStatusMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof changePeriodStatus>[0];
+      data: Parameters<typeof changePeriodStatus>[1];
+    }
+  >(({ id, data }) => {
+    return changePeriodStatus(id, data);
+  });
+
+  const removePeriodMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removePeriod>[0]
+  >((id) => {
+    return removePeriod(id);
+  });
 
   const onDelete = (id: number) => {
-    removePeriod(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus periode" />,
+    });
+
+    removePeriodMutation
+      .mutateAsync(id)
       .then(() => {
         onEdited();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus periode"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -51,14 +87,27 @@ const OrgEditForm = ({
       is_active: !prevData["is_active"],
     };
 
-    changePeriodStatus(prevData.id, data)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading mengubah status periode" />,
+    });
+
+    changePeriodStatusMutation
+      .mutateAsync({ data, id: prevData.id })
       .then(() => {
         onEdited();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error mengubah status periode"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };

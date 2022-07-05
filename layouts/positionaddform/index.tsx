@@ -1,7 +1,11 @@
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { usePositionLevelsQuery, addPosition } from "@/services/position";
-import { Button, Input, Select, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import Select from "cmnjg-sb/dist/select";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
@@ -34,18 +38,39 @@ const PositionAddForm = ({
   } = useForm({ defaultValues });
 
   const positionLevelsQuery = usePositionLevelsQuery();
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const addPositionMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addPosition>[0]
+  >((data) => {
+    return addPosition(data);
+  });
 
   const onSubmit = handleSubmit((data) => {
-    addPosition(data)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menambahkan jabatan" />,
+    });
+
+    addPositionMutation
+      .mutateAsync(data)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
         onSubmited();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menambahkan jabatan"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   });
@@ -72,7 +97,7 @@ const PositionAddForm = ({
               isInvalid={errors.name !== undefined}
             />
             {errors.name ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -105,7 +130,7 @@ const PositionAddForm = ({
                   ))}
                 </Select>
                 {errors.level ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}

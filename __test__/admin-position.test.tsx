@@ -37,7 +37,7 @@ test("Admin successfully add position", async () => {
   const svBtn = screen.getByTestId("save-btn");
   await user.click(svBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -80,10 +80,6 @@ test("Admin successfully cancel add position", async () => {
 
 test("Admin successfully remove position", async () => {
   render(<Position />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const listBtn = await screen.findByTestId("position-list-item");
   await user.click(listBtn);
@@ -129,10 +125,6 @@ test("Admin cancel remove position", async () => {
 test("Admin successfully edit position", async () => {
   render(<Position />);
 
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
-
   const listBtn = await screen.findByTestId("position-list-item");
   await user.click(listBtn);
 
@@ -153,7 +145,7 @@ test("Admin successfully edit position", async () => {
   const editButtn = screen.getByTestId("edit-position-btn");
   await user.click(editButtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 

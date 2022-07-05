@@ -1,13 +1,19 @@
 import type { CashflowOut } from "@/services/cashflow";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Textarea, InputFile, Select, Toast } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import TextArea from "cmnjg-sb/dist/textarea";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Select from "cmnjg-sb/dist/select";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import {
   editCashflow,
   removeCashflow,
   CASHFLOW_TYPE,
 } from "@/services/cashflow";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import Modal from "@/layouts/modal";
@@ -42,7 +48,26 @@ const CasflowEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const removeCashflowMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeCashflow>[0]
+  >((id) => {
+    return removeCashflow(id);
+  });
+
+  const editCashflowMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editCashflow>[0];
+      data: Parameters<typeof editCashflow>[1];
+    }
+  >(({ id, data }) => {
+    return editCashflow(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -60,27 +85,53 @@ const CasflowEditForm = ({
         }
       });
 
-      editCashflow(id, formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah cashflow" />,
+      });
+
+      editCashflowMutation
+        .mutateAsync({ id, data: formData })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah cashflow"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
 
   const onDelete = (id: number) => {
-    removeCashflow(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus cashflow" />,
+    });
+
+    removeCashflowMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus cashflow"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -132,7 +183,7 @@ const CasflowEditForm = ({
               isInvalid={errors.date !== undefined}
             />
             {errors.date ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -152,7 +203,7 @@ const CasflowEditForm = ({
               isInvalid={errors["idr_amount"] !== undefined}
             />
             {errors["idr_amount"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -172,13 +223,13 @@ const CasflowEditForm = ({
               <option value={CASHFLOW_TYPE.OUTCOME}>Pengeluaran</option>
             </Select>
             {errors.type ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
           </div>
           <div className={styles.inputGroup}>
-            <Textarea
+            <TextArea
               {...register("note")}
               label="Catatan:"
               id="note"
@@ -186,7 +237,7 @@ const CasflowEditForm = ({
               isInvalid={errors.note !== undefined}
             />
             {errors.note ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -205,7 +256,7 @@ const CasflowEditForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

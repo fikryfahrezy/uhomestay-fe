@@ -5,11 +5,14 @@ import { useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
+import { useMutation } from "react-query";
 import { getBlogMeta } from "@/lib/blogmeta";
 import { editBlog, useFindBlog, uploadImage } from "@/services/blog";
-import { Button, LinkButton, Toast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
@@ -23,8 +26,19 @@ const EditBlog = () => {
     enabled: !!id,
     retry: false,
   });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
   const editorStateRef = useRef<EditorState | null>(null);
+
+  const editBlogMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editBlog>[0];
+      data: Parameters<typeof editBlog>[1];
+    }
+  >(({ id, data }) => {
+    return editBlog(id, data);
+  });
 
   const onSave = (id: number) => {
     if (editorStateRef.current) {
@@ -37,14 +51,27 @@ const EditBlog = () => {
         content_text: blogMeta["content_text"],
       };
 
-      editBlog(id, data)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah blog" />,
+      });
+
+      editBlogMutation
+        .mutateAsync({ id, data })
         .then(() => {
           window.location.replace(`${router.pathname}/../../`);
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah blog"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     }

@@ -53,7 +53,7 @@ test("Admin successfully add income transaction", async () => {
   const svBtn = screen.getByTestId("add-cashflow-btn");
   await user.click(svBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -75,7 +75,7 @@ test("Admin successfully add outcome transaction", async () => {
   const svBtn = screen.getByTestId("add-cashflow-btn");
   await user.click(svBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -106,7 +106,7 @@ test("Admin successfully edit income transaction", async () => {
   const editButtn = screen.getByTestId("edit-cashflow-btn");
   await user.click(editButtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -139,16 +139,12 @@ test("Admin successfully edit outcome transaction", async () => {
   const editButtn = screen.getByTestId("edit-cashflow-btn");
   await user.click(editButtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
 test("Admin successfully remove income transaction", async () => {
   render(<Cashflow />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const item = await screen.findByTestId("cashflow-item");
   expect(item).not.toHaveClass("test__outcome__color");
@@ -174,10 +170,6 @@ test("Admin successfully remove income transaction", async () => {
 
 test("Admin successfully remove outcome transaction", async () => {
   render(<Cashflow />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const outcomeTabBtn = screen.getByTestId("outcome-tab-btn");
   await user.click(outcomeTabBtn);

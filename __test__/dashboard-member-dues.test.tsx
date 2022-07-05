@@ -53,7 +53,7 @@ test("Edit member dues success", async () => {
 
   await waitFor(() => {
     expect(
-      screen.queryByText("This field is required")
+      screen.queryByText("Tidak boleh kosong")
     ).not.toBeInTheDocument();
   });
 });
@@ -72,7 +72,7 @@ test("Approve member dues payment success", async () => {
 
   await waitFor(() => {
     expect(
-      screen.queryByText("This field is required")
+      screen.queryByText("Tidak boleh kosong")
     ).not.toBeInTheDocument();
   });
 });

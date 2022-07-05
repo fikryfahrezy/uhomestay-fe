@@ -2,10 +2,15 @@ import type { ChangeEvent } from "react";
 import type { AddPeriodIn, PositionIn } from "@/services/period";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Input, Button, Drawer, Toast, Label } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Label from "cmnjg-sb/dist/label";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { yyyyMm } from "@/lib/fmt";
 import { addPeriod } from "@/services/period";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import OrgStructForm from "@/layouts/orgstructform";
 import OrgGoalWrite from "@/layouts/orggoalwrite";
@@ -42,7 +47,15 @@ const OrgAddForm = ({
     formState: { errors },
   } = useForm({ defaultValues });
 
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const addPeriodMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addPeriod>[0]
+  >((data) => {
+    return addPeriod(data);
+  });
 
   const onSubmit = (
     positions: PositionIn[] | null,
@@ -81,15 +94,28 @@ const OrgAddForm = ({
         }
       }
 
-      addPeriod(newData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading membuat periode" />,
+      });
+
+      addPeriodMutation
+        .mutateAsync(newData)
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
           onSubmited();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error membuat periode"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -153,7 +179,7 @@ const OrgAddForm = ({
               isInvalid={errors["start_date"] !== undefined}
             />
             {errors["start_date"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -172,7 +198,7 @@ const OrgAddForm = ({
               isInvalid={errors["end_date"] !== undefined}
             />
             {errors["end_date"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import { RiFileEditLine } from "react-icons/ri";
 import { useFindLatestHistory } from "@/services/history";
-import { LinkButton } from "cmnjg-sb";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
 import AdminLayout from "@/layouts/adminpage";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";

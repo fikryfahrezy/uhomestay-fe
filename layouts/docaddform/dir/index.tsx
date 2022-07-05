@@ -1,8 +1,12 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { Button, Input, Checkbox, Toast } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import Checkbox from "cmnjg-sb/dist/checkbox";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addDirDocument } from "@/services/document";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -31,7 +35,15 @@ const DocDirAddForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const addDirDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addDirDocument>[0]
+  >((data) => {
+    return addDirDocument(data);
+  });
 
   /**
    * @return {void}
@@ -43,15 +55,28 @@ const DocDirAddForm = ({
 
   const onSubmit = (dirId: number) =>
     handleSubmit((data) => {
-      addDirDocument({ ...data, dir_id: dirId })
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading menambahkan folder" />,
+      });
+
+      addDirDocumentMutation
+        .mutateAsync({ ...data, dir_id: dirId })
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
           onSubmited();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error menambahkan folder"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -80,7 +105,7 @@ const DocDirAddForm = ({
               isInvalid={errors.name !== undefined}
             />
             {errors.name ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -94,7 +119,7 @@ const DocDirAddForm = ({
               Private
             </Checkbox>
             {errors["is_private"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

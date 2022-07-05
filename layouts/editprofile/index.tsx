@@ -3,10 +3,15 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMemberDetailQuery, updateProfile } from "@/services/member";
-import { AvatarPicker, Input, Textarea, Button, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import AvatarPicker from "cmnjg-sb/dist/avatarpicker";
+import Input from "cmnjg-sb/dist/input";
+import TextArea from "cmnjg-sb/dist/textarea";
+import Button from "cmnjg-sb/dist/button";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
@@ -52,7 +57,15 @@ const UpdateProfile = () => {
     formState: { errors },
   } = useForm({ defaultValues });
 
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const updateProfileMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof updateProfile>[0]
+  >((data) => {
+    return updateProfile(data);
+  });
 
   /**
    *
@@ -70,9 +83,16 @@ const UpdateProfile = () => {
         }
       });
 
-      updateProfile(formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading update profile" />,
+      });
+
+      updateProfileMutation
+        .mutateAsync(formData)
         .then(() => {
-          toast({
+          updateToast(lastId, {
             status: "success",
             render: () => (
               <ToastComponent
@@ -83,9 +103,15 @@ const UpdateProfile = () => {
           });
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error update profile"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -163,7 +189,7 @@ const UpdateProfile = () => {
                 isInvalid={errors.username !== undefined}
               />
               {errors.username ? (
-                <InputErrMsg>This field is required</InputErrMsg>
+                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
               ) : (
                 <></>
               )}
@@ -177,11 +203,6 @@ const UpdateProfile = () => {
                 id="password"
                 isInvalid={errors.password !== undefined}
               />
-              {errors.password ? (
-                <InputErrMsg>This field is required</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
           </div>
           <div className={styles.inputGroups}>
@@ -197,7 +218,7 @@ const UpdateProfile = () => {
                 isInvalid={errors.name !== undefined}
               />
               {errors.name ? (
-                <InputErrMsg>This field is required</InputErrMsg>
+                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
               ) : (
                 <></>
               )}
@@ -214,7 +235,7 @@ const UpdateProfile = () => {
                 isInvalid={errors["wa_phone"] !== undefined}
               />
               {errors["wa_phone"] ? (
-                <InputErrMsg>This field is required</InputErrMsg>
+                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
               ) : (
                 <></>
               )}
@@ -233,8 +254,8 @@ const UpdateProfile = () => {
                 required={true}
                 isInvalid={errors["other_phone"] !== undefined}
               />
-              {errors["wa_phone"] ? (
-                <InputErrMsg>This field is required</InputErrMsg>
+              {errors["other_phone"] ? (
+                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
               ) : (
                 <></>
               )}
@@ -251,14 +272,14 @@ const UpdateProfile = () => {
                 isInvalid={errors["homestay_name"] !== undefined}
               />
               {errors["homestay_name"] ? (
-                <InputErrMsg>This field is required</InputErrMsg>
+                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
               ) : (
                 <></>
               )}
             </div>
           </div>
           <div className={styles.inputGroup}>
-            <Textarea
+            <TextArea
               {...register("homestay_address", {
                 required: true,
               })}
@@ -268,7 +289,7 @@ const UpdateProfile = () => {
               isInvalid={errors["homestay_address"] !== undefined}
             />
             {errors["homestay_address"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -290,7 +311,7 @@ const UpdateProfile = () => {
               isInvalid={errors["homestay_latitude"] !== undefined}
             />
             {errors["homestay_latitude"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -311,7 +332,7 @@ const UpdateProfile = () => {
               isInvalid={errors["homestay_longitude"] !== undefined}
             />
             {errors["homestay_longitude"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

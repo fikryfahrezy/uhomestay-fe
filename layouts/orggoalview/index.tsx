@@ -2,7 +2,7 @@ import type { FindOrgPeriodGoalRes } from "@/services/period";
 import dynamic from "next/dynamic";
 import { RiCloseLine } from "react-icons/ri";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import { Button } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
 import styles from "./Styles.module.css";
 
 const RichText = dynamic(() => import("@/layouts/richtext/read"));

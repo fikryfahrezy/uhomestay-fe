@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { yyyyMm } from "@/lib/fmt";
 import { useDashboardQuery } from "@/services/dashboard";
-import { LinkBox, LinkOverlay } from "cmnjg-sb";
+import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import MoreLink from "@/layouts/morelink";

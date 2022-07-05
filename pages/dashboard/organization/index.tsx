@@ -18,7 +18,11 @@ import {
   useDocumentsQuery,
   useDocumentChildsQuery,
 } from "@/services/document";
-import { Button, IconButton, Drawer, Input, Popup } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import IconButton from "cmnjg-sb/dist/iconbutton";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Input from "cmnjg-sb/dist/input";
+import Popup from "cmnjg-sb/dist/popup";
 import AdminLayout from "@/layouts/adminpage";
 import DocFileAddForm from "@/layouts/docaddform/file";
 import DocFileEditForm from "@/layouts/doceditform/file";

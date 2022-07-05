@@ -1,11 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LinkBox, LinkOverlay } from "cmnjg-sb";
+import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
 import styles from "./Styles.module.css";
 
-const PageNav = () => {
+const PageNav = ({ className }: JSX.IntrinsicElements["div"]) => {
   return (
-    <div className={styles.logoContainer}>
+    <div className={`${styles.logoContainer} ${className ? className : ""}`}>
       <LinkBox>
         <Image
           src="/images/image/logo.png"

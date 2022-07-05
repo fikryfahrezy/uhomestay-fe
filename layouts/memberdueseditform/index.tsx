@@ -1,10 +1,14 @@
 import type { MemberDuesOut } from "@/services/member-dues";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { yyyyMm } from "@/lib/fmt";
 import { editDues, paidDues, DUES_STATUS } from "@/services/member-dues";
-import { Button, Input, InputFile, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -35,7 +39,29 @@ const MemberDuesEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const paidDuesMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof paidDues>[0];
+      data: Parameters<typeof paidDues>[1];
+    }
+  >(({ id, data }) => {
+    return paidDues(id, data);
+  });
+
+  const editDuesMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editDues>[0];
+      data: Parameters<typeof editDues>[1];
+    }
+  >(({ id, data }) => {
+    return editDues(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -51,29 +77,62 @@ const MemberDuesEditForm = ({
         }
       });
 
-      editDues(id, formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => (
+          <ToastComponent title="Loading mengubah tagihan anggota" />
+        ),
+      });
+
+      editDuesMutation
+        .mutateAsync({ id, data: formData })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah tagihan anggota"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
 
   const onApprove = (id: number) => {
-    paidDues(id, {
-      is_paid: true,
-    })
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => (
+        <ToastComponent title="Loading menyetujui tagihan anggota" />
+      ),
+    });
+
+    paidDuesMutation
+      .mutateAsync({
+        id,
+        data: {
+          is_paid: true,
+        },
+      })
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menyetujui tagihan anggota"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -126,7 +185,7 @@ const MemberDuesEditForm = ({
               isInvalid={errors.date !== undefined}
             />
             {errors.date ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -146,7 +205,7 @@ const MemberDuesEditForm = ({
               isInvalid={errors["idr_amount"] !== undefined}
             />
             {errors["idr_amount"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -167,7 +226,7 @@ const MemberDuesEditForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

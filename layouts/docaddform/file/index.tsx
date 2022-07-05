@@ -1,8 +1,12 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
-import { Button, InputFile, Checkbox, Toast } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Button from "cmnjg-sb/dist/button";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Checkbox from "cmnjg-sb/dist/checkbox";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addFileDocument } from "@/services/document";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -32,7 +36,15 @@ const DocFileAddForm = ({
     getValues,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const addFileDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addFileDocument>[0]
+  >((data) => {
+    return addFileDocument(data);
+  });
 
   /**
    * @return {void}
@@ -56,15 +68,28 @@ const DocFileAddForm = ({
 
       formData.append(dirIdQ, String(dirId));
 
-      addFileDocument(formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading menambahkan file" />,
+      });
+
+      addFileDocumentMutation
+        .mutateAsync(formData)
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
           onSubmited();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error menambahkan file"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -100,7 +125,7 @@ const DocFileAddForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -114,7 +139,7 @@ const DocFileAddForm = ({
               Private
             </Checkbox>
             {errors["is_private"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

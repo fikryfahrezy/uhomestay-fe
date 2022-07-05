@@ -1,7 +1,13 @@
 import { useForm } from "react-hook-form";
-import { Toast, Select, InputFile, Button, Input, Textarea } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Select from "cmnjg-sb/dist/select";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import TextArea from "cmnjg-sb/dist/textarea";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
-import { useToast } from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -31,7 +37,16 @@ const CashflowAddForm = ({
     getValues,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+
+  const { toast, updateToast, props } = useToast();
+
+  const addCashflowMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addCashflow>[0]
+  >((data) => {
+    return addCashflow(data);
+  });
 
   const onSubmit = handleSubmit((data) => {
     const formData = new FormData();
@@ -43,15 +58,28 @@ const CashflowAddForm = ({
       }
     });
 
-    addCashflow(formData)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading membuat cashflow" />,
+    });
+
+    addCashflowMutation
+      .mutateAsync(formData)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
         onSubmited();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error membuat cashflow"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   });
@@ -79,7 +107,7 @@ const CashflowAddForm = ({
               isInvalid={errors.date !== undefined}
             />
             {errors.date ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -98,7 +126,7 @@ const CashflowAddForm = ({
               isInvalid={errors["idr_amount"] !== undefined}
             />
             {errors["idr_amount"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -117,20 +145,20 @@ const CashflowAddForm = ({
               <option value={CASHFLOW_TYPE.OUTCOME}>Pengeluaran</option>
             </Select>
             {errors.type ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
           </div>
           <div className={styles.inputGroup}>
-            <Textarea
+            <TextArea
               {...register("note")}
               label="Catatan:"
               id="note"
               isInvalid={errors.note !== undefined}
             />
             {errors.note ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -150,7 +178,7 @@ const CashflowAddForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

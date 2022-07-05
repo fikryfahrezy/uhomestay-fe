@@ -1,5 +1,5 @@
 import type { MemberOut } from "@/services/member";
-import { Badge } from "cmnjg-sb";
+import Badge from "cmnjg-sb/dist/badge";
 import MemberItem from "@/layouts/memberitem";
 
 type MemberListItemProps = {

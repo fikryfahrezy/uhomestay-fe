@@ -1,20 +1,20 @@
 import type { ChangeEvent } from "react";
-import type {
-  PeriodRes,
-  EditPeriodIn,
-  PositionIn,
-  FindOrgPeriodGoalRes,
-} from "@/services/period";
+import type { PeriodRes, EditPeriodIn, PositionIn } from "@/services/period";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { yyyyMm } from "@/lib/fmt";
 import {
   usePeriodStructureQuery,
   editPeriod,
   removePeriod,
 } from "@/services/period";
-import { Input, Button, Toast, Label, Drawer } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Label from "cmnjg-sb/dist/label";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import OrgStructForm from "@/layouts/orgstructform";
 import ToastComponent from "@/layouts/toastcomponent";
@@ -54,17 +54,30 @@ const OrgEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
 
   const periodStructureQuery = usePeriodStructureQuery(prevData.id, {
     enabled: !!prevData.id,
   });
 
-  const {
-    isLoading: periodLoading,
-    error: periodError,
-    isIdle: periodIdle,
-  } = periodStructureQuery;
+  const removePeriodMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removePeriod>[0]
+  >((id) => {
+    return removePeriod(id);
+  });
+
+  const editPeriodMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editPeriod>[0];
+      data: Parameters<typeof editPeriod>[1];
+    }
+  >(({ id, data }) => {
+    return editPeriod(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -72,14 +85,27 @@ const OrgEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    removePeriod(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus periode" />,
+    });
+
+    removePeriodMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus periode"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -110,15 +136,28 @@ const OrgEditForm = ({
         newData.vision = goal.vision;
       }
 
-      editPeriod(id, newData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah periode" />,
+      });
+
+      editPeriodMutation
+        .mutateAsync({ id, data: newData })
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
           onEdited();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah periode"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -212,7 +251,7 @@ const OrgEditForm = ({
               isInvalid={errors["start_date"] !== undefined}
             />
             {errors["start_date"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -232,7 +271,7 @@ const OrgEditForm = ({
               isInvalid={errors["end_date"] !== undefined}
             />
             {errors["end_date"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -336,10 +375,10 @@ const OrgEditForm = ({
         withBackdrop={false}
         data-testid="drawer-org-struct"
       >
-        {periodLoading || periodIdle ? (
+        {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
           "Loading..."
-        ) : periodError ? (
-          "An error has occurred: " + periodError.message
+        ) : periodStructureQuery.error ? (
+          "An error has occurred: " + periodStructureQuery.error.message
         ) : (
           <OrgStructForm
             isEditable={isEditable}
@@ -349,10 +388,10 @@ const OrgEditForm = ({
           />
         )}
       </Drawer>
-      {periodLoading || periodIdle ? (
+      {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
         "Loading..."
-      ) : periodError ? (
-        "An error has occurred: " + periodError.message
+      ) : periodStructureQuery.error ? (
+        "An error has occurred: " + periodStructureQuery.error.message
       ) : isEditable ? (
         <OrgGoalWrite
           isOpen={goalModalOpen}

@@ -63,10 +63,6 @@ test("Render show blog edit popup", async () => {
 test("Remove blog", async () => {
   render(<Blog />);
 
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
-
   const blogItem = await screen.findByTestId("blog-container");
   expect(blogItem).toBeInTheDocument();
 
@@ -98,10 +94,6 @@ test("View blog", async () => {
 
 test("Remove blog from detail", async () => {
   render(<BlogView />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const leditorRead = await screen.findByTestId("lexical-editor-blog-read");
   expect(leditorRead).toBeInTheDocument();

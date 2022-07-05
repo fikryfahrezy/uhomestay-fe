@@ -4,7 +4,7 @@
 
 import type { BlogOut } from "@/services/blog";
 import Image from "next/image";
-import { Card } from "cmnjg-sb";
+import Card from "cmnjg-sb/dist/card";
 import styles from "./Styles.module.css";
 
 type BlogListItem = {

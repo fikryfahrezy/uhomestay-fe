@@ -1,10 +1,14 @@
 import type { MemberDuesOut } from "@/services/member-dues";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { yyyyMm } from "@/lib/fmt";
 import { payDues } from "@/services/member-dues";
-import { Button, Input, InputFile, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import InputFile from "cmnjg-sb/dist/inputfile";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
@@ -31,7 +35,18 @@ const MemberDuesPayForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const payDuesMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof payDues>[0];
+      data: Parameters<typeof payDues>[1];
+    }
+  >(({ id, data }) => {
+    return payDues(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -47,14 +62,29 @@ const MemberDuesPayForm = ({
         }
       });
 
-      payDues(id, formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => (
+          <ToastComponent title="Loading mengunggah bukti tagihan" />
+        ),
+      });
+
+      payDuesMutation
+        .mutateAsync({ id, data: formData })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengunggah bukti tagihan"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -96,7 +126,7 @@ const MemberDuesPayForm = ({
               isInvalid={errors.date !== undefined}
             />
             {errors.date ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -116,7 +146,7 @@ const MemberDuesPayForm = ({
               isInvalid={errors["idr_amount"] !== undefined}
             />
             {errors["idr_amount"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -135,7 +165,7 @@ const MemberDuesPayForm = ({
               Pilih File
             </InputFile>
             {errors.file ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

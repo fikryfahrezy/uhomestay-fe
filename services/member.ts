@@ -300,6 +300,7 @@ export const memberLogout = async () => {
   const fetched = fetchJson("/api/logout", {
     method: "POST",
   }).then((res) => {
+    window.localStorage.removeItem("muid");
     window.localStorage.removeItem("ajwt");
     window.localStorage.removeItem("mjwt");
     return res;

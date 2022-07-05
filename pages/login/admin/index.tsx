@@ -1,15 +1,19 @@
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import { useMutation } from "react-query";
 import { adminLogin, useAdmin } from "@/services/member";
-import { Input, Button, Toast } from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import PageNav from "@/layouts/pagenav";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const Login = () => {
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
   const defaultValues = {
     identifier: "",
     password: "",
@@ -19,20 +23,42 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues });
+
   const adminQuery = useAdmin({
     redirectTo: "/dashboard",
     redirectIfFound: true,
   });
 
+  const adminLoginMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof adminLogin>[0]
+  >((data) => {
+    return adminLogin(data);
+  });
+
   const onSubmit = handleSubmit((data) => {
-    adminLogin(data)
-      .then((res) => {
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading login" />,
+    });
+
+    adminLoginMutation
+      .mutateAsync(data)
+      .then(() => {
         adminQuery.refetch();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error login"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   });
@@ -74,7 +100,7 @@ const Login = () => {
                   isInvalid={errors.identifier !== undefined}
                 />
                 {errors.identifier ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}
@@ -93,7 +119,7 @@ const Login = () => {
                   isInvalid={errors.password !== undefined}
                 />
                 {errors.password ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}

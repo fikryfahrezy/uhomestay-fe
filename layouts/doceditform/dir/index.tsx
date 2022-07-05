@@ -1,9 +1,13 @@
 import type { DocumentOut } from "@/services/document";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { Button, Input, Toast, Checkbox } from "cmnjg-sb";
+import { useMutation } from "react-query";
+import Button from "cmnjg-sb/dist/button";
+import Input from "cmnjg-sb/dist/input";
+import Checkbox from "cmnjg-sb/dist/checkbox";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import { editDirDocument, removeDocument } from "@/services/document";
-import { useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
@@ -35,7 +39,26 @@ const DocDirEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const removeDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeDocument>[0]
+  >((id) => {
+    return removeDocument(id);
+  });
+
+  const editDirDocumentMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editDirDocument>[0];
+      data: Parameters<typeof editDirDocument>[1];
+    }
+  >(({ id, data }) => {
+    return editDirDocument(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -43,28 +66,54 @@ const DocDirEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    removeDocument(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus folder" />,
+    });
+
+    removeDocumentMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus folder"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
 
   const onSubmit = (id: number) =>
     handleSubmit((data) => {
-      editDirDocument(id, data)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah folder" />,
+      });
+
+      editDirDocumentMutation
+        .mutateAsync({ id, data })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah folder"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -111,7 +160,7 @@ const DocDirEditForm = ({
               isInvalid={errors.name !== undefined}
             />
             {errors.name ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -126,7 +175,7 @@ const DocDirEditForm = ({
               Private
             </Checkbox>
             {errors["is_private"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}

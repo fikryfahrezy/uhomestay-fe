@@ -1,6 +1,6 @@
 import type { MembersDuesOut } from "@/services/member-dues";
 import { DUES_STATUS } from "@/services/member-dues";
-import { Badge } from "cmnjg-sb";
+import Badge from "cmnjg-sb/dist/badge";
 import MemberItem from "@/layouts/memberitem";
 
 type MemberDuesItemProps = {

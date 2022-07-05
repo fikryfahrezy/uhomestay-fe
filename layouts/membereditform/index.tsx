@@ -3,6 +3,7 @@ import type { MemberOut } from "@/services/member";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "react-query";
 import { idDate } from "@/lib/fmt";
 import {
   useMemberDetailQuery,
@@ -12,16 +13,14 @@ import {
 } from "@/services/member";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
-import {
-  Button,
-  Textarea,
-  Input,
-  Checkbox,
-  Select,
-  AvatarPicker,
-  Toast,
-} from "cmnjg-sb";
-import { useToast } from "cmnjg-sb";
+import Button from "cmnjg-sb/dist/button";
+import TextArea from "cmnjg-sb/dist/textarea";
+import Input from "cmnjg-sb/dist/input";
+import Checkbox from "cmnjg-sb/dist/checkbox";
+import Select from "cmnjg-sb/dist/select";
+import AvatarPicker from "cmnjg-sb/dist/avatarpicker";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import InputErrMsg from "@/layouts/inputerrmsg";
@@ -96,7 +95,34 @@ const MemberEditForm = ({
   const memberDetailQuery = useMemberDetailQuery(prevData.id, {
     enabled: !!prevData.id,
   });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
+  const approveMemberMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof approveMember>[0]
+  >((id) => {
+    return approveMember(id);
+  });
+
+  const removeMemberMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeMember>[0]
+  >((id) => {
+    return removeMember(id);
+  });
+
+  const editMemberMutation = useMutation<
+    unknown,
+    unknown,
+    {
+      id: Parameters<typeof editMember>[0];
+      data: Parameters<typeof editMember>[1];
+    }
+  >(({ id, data }) => {
+    return editMember(id, data);
+  });
 
   const onReset = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -104,27 +130,53 @@ const MemberEditForm = ({
   };
 
   const onDelete = (id: string) => {
-    removeMember(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus anggota" />,
+    });
+
+    removeMemberMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus anggota"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
 
   const onApprove = (id: string) => {
-    approveMember(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menyetujui anggota" />,
+    });
+
+    approveMemberMutation
+      .mutateAsync(id)
       .then(() => {
         onReset();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menyetujui anggota"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };
@@ -141,14 +193,27 @@ const MemberEditForm = ({
         }
       });
 
-      editMember(id, formData)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah anggota" />,
+      });
+
+      editMemberMutation
+        .mutateAsync({ id, data: formData })
         .then(() => {
           onReset();
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah anggota"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     });
@@ -226,7 +291,7 @@ const MemberEditForm = ({
               isInvalid={errors.username !== undefined}
             />
             {errors.username ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -242,7 +307,7 @@ const MemberEditForm = ({
               isInvalid={errors.password !== undefined}
             />
             {errors.password ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -260,7 +325,7 @@ const MemberEditForm = ({
               isInvalid={errors.name !== undefined}
             />
             {errors.name ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -278,7 +343,7 @@ const MemberEditForm = ({
               isInvalid={errors["wa_phone"] !== undefined}
             />
             {errors["wa_phone"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -297,7 +362,7 @@ const MemberEditForm = ({
               isInvalid={errors["other_phone"] !== undefined}
             />
             {errors["wa_phone"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -338,7 +403,7 @@ const MemberEditForm = ({
                     ))}
                 </Select>
                 {errors["position_id"] ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}
@@ -362,7 +427,7 @@ const MemberEditForm = ({
                   isInvalid={errors["period_id"] !== undefined}
                 ></Select>
                 {errors["period_id"] ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}
@@ -417,7 +482,7 @@ const MemberEditForm = ({
                   </option>
                 </Select>
                 {errors["period_id"] ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
+                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
                 ) : (
                   <></>
                 )}
@@ -437,13 +502,13 @@ const MemberEditForm = ({
               isInvalid={errors["homestay_name"] !== undefined}
             />
             {errors["homestay_name"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
           </div>
           <div className={styles.inputGroup}>
-            <Textarea
+            <TextArea
               {...register("homestay_address", {
                 required: true,
               })}
@@ -454,7 +519,7 @@ const MemberEditForm = ({
               isInvalid={errors["homestay_address"] !== undefined}
             />
             {errors["homestay_address"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -477,7 +542,7 @@ const MemberEditForm = ({
               isInvalid={errors["homestay_latitude"] !== undefined}
             />
             {errors["homestay_latitude"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -499,7 +564,7 @@ const MemberEditForm = ({
               isInvalid={errors["homestay_longitude"] !== undefined}
             />
             {errors["homestay_longitude"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
@@ -514,7 +579,7 @@ const MemberEditForm = ({
               Admin
             </Checkbox>
             {errors["is_admin"] ? (
-              <InputErrMsg>This field is required</InputErrMsg>
+              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
             ) : (
               <></>
             )}
