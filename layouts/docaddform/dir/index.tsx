@@ -4,22 +4,29 @@ import { useMutation } from "react-query";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import Checkbox from "cmnjg-sb/dist/checkbox";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addDirDocument } from "@/services/document";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type DocDirAddFormType = "adddir";
 
 const defaultFunc = () => {};
 
 type DocDirAddFormProps = {
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (type: DocDirAddFormType, title?: string, message?: string) => void;
+  onLoading: (
+    type: DocDirAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const DocDirAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: DocDirAddFormProps) => {
   const router = useRouter();
   const dirIdQ = "dir_id";
@@ -34,7 +41,6 @@ const DocDirAddForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const addDirDocumentMutation = useMutation<
     unknown,
@@ -54,11 +60,7 @@ const DocDirAddForm = ({
 
   const onSubmit = (dirId: number) =>
     handleSubmit((data) => {
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading menambahkan folder" />,
-      });
+      onLoading("adddir", "Loading menambahkan folder");
 
       addDirDocumentMutation
         .mutateAsync({ ...data, dir_id: dirId })
@@ -67,16 +69,7 @@ const DocDirAddForm = ({
           onSubmited();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error menambahkan folder"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("adddir", "Error menambahkan folder", e.message);
         });
     });
 
@@ -136,7 +129,6 @@ const DocDirAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

@@ -7,16 +7,15 @@ import Input from "cmnjg-sb/dist/input";
 import TextArea from "cmnjg-sb/dist/textarea";
 import InputFile from "cmnjg-sb/dist/inputfile";
 import Select from "cmnjg-sb/dist/select";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import {
   editCashflow,
   removeCashflow,
   CASHFLOW_TYPE,
 } from "@/services/cashflow";
-import ToastComponent from "@/layouts/toastcomponent";
 import Modal from "@/layouts/modal";
 import styles from "./Styles.module.css";
+
+export type CasflowEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
@@ -24,12 +23,24 @@ type CasflowEditFormProps = {
   prevData: CashflowOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (
+    type: CasflowEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
+  onLoading: (
+    type: CasflowEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const CasflowEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: CasflowEditFormProps) => {
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -47,7 +58,6 @@ const CasflowEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const removeCashflowMutation = useMutation<
     unknown,
@@ -84,11 +94,7 @@ const CasflowEditForm = ({
         }
       });
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah cashflow" />,
-      });
+      onLoading("edit", "Loading mengubah cashflow");
 
       editCashflowMutation
         .mutateAsync({ id, data: formData })
@@ -96,25 +102,12 @@ const CasflowEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah cashflow"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("edit", "Error mengubah cashflow", e.message);
         });
     });
 
   const onDelete = (id: number) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus cashflow" />,
-    });
+    onLoading("delete", "Loading menghapus cashflow");
 
     removeCashflowMutation
       .mutateAsync(id)
@@ -122,16 +115,7 @@ const CasflowEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menghapus cashflow"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("delete", "Error menghapus cashflow", e.message);
       });
   };
 
@@ -295,7 +279,6 @@ const CasflowEditForm = ({
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>
-      <Toast {...props} />
     </>
   );
 };

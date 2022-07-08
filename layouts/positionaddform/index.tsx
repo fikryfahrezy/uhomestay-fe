@@ -4,27 +4,34 @@ import { usePositionLevelsQuery, addPosition } from "@/services/position";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import Select from "cmnjg-sb/dist/select";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
+export type PositionAddFormType = "add";
+
 const defaultFunc = () => {};
 
-/**
- *
- * @param {{
- * 	onSubmited: () => void;
- * 	onCancel: () => void;
- * }} PositionAddFormProps
- *
- * @returns {JSX.Element}
- */
+type PositionAddFormProps = {
+  onSubmited: () => void;
+  onCancel: () => void;
+  onError: (
+    type: PositionAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
+  onLoading: (
+    type: PositionAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
+};
+
 const PositionAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
-}) => {
+  onError = defaultFunc,
+  onLoading = defaultFunc,
+}: PositionAddFormProps) => {
   const defaultValues = {
     name: "",
     level: 0,
@@ -37,7 +44,6 @@ const PositionAddForm = ({
   } = useForm({ defaultValues });
 
   const positionLevelsQuery = usePositionLevelsQuery();
-  const { toast, updateToast, props } = useToast();
 
   const addPositionMutation = useMutation<
     unknown,
@@ -48,11 +54,7 @@ const PositionAddForm = ({
   });
 
   const onSubmit = handleSubmit((data) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menambahkan jabatan" />,
-    });
+    onLoading("add", "Loading menambahkan jabatan");
 
     addPositionMutation
       .mutateAsync(data)
@@ -61,16 +63,7 @@ const PositionAddForm = ({
         onSubmited();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menambahkan jabatan"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("add", "Error menambahkan jabatan", e.message);
       });
   });
 
@@ -147,7 +140,6 @@ const PositionAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

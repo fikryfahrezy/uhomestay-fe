@@ -19,12 +19,11 @@ import Input from "cmnjg-sb/dist/input";
 import Checkbox from "cmnjg-sb/dist/checkbox";
 import Select from "cmnjg-sb/dist/select";
 import AvatarPicker from "cmnjg-sb/dist/avatarpicker";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
-import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
+
+export type MemberEditFormType = "edit" | "delete" | "approve";
 
 const Map = dynamic(() => import("@/layouts/map"), {
   loading: () => <p>...</p>,
@@ -42,12 +41,20 @@ type MemberEditFormProps = {
   prevData: MemberOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (type: MemberEditFormType, title?: string, message?: string) => void;
+  onLoading: (
+    type: MemberEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const MemberEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: MemberEditFormProps) => {
   const prevLng = Number(prevData["homestay_longitude"]);
   const prevLat = Number(prevData["homestay_latitude"]);
@@ -94,7 +101,6 @@ const MemberEditForm = ({
   const memberDetailQuery = useMemberDetailQuery(prevData.id, {
     enabled: !!prevData.id,
   });
-  const { toast, updateToast, props } = useToast();
 
   const approveMemberMutation = useMutation<
     unknown,
@@ -129,11 +135,7 @@ const MemberEditForm = ({
   };
 
   const onDelete = (id: string) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus anggota" />,
-    });
+    onLoading("delete", "Loading menghapus anggota");
 
     removeMemberMutation
       .mutateAsync(id)
@@ -141,25 +143,12 @@ const MemberEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menghapus anggota"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("delete", "Error menghapus anggota", e.message);
       });
   };
 
   const onApprove = (id: string) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menyetujui anggota" />,
-    });
+    onLoading("approve", "Loading menyetujui anggota");
 
     approveMemberMutation
       .mutateAsync(id)
@@ -167,16 +156,7 @@ const MemberEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menyetujui anggota"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("approve", "Error menyetujui anggota", e.message);
       });
   };
 
@@ -192,11 +172,7 @@ const MemberEditForm = ({
         }
       });
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah anggota" />,
-      });
+      onLoading("edit", "Loading mengubah anggota");
 
       editMemberMutation
         .mutateAsync({ id, data: formData })
@@ -204,16 +180,7 @@ const MemberEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah anggota"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("edit", "Error mengubah anggota", e.message);
         });
     });
 
@@ -611,7 +578,6 @@ const MemberEditForm = ({
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>
-      <Toast {...props} />
     </>
   );
 };

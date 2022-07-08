@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { MemberDuesOut } from "@/services/member-dues";
-import { useState, Fragment } from "react";
+import type { MemberDuesEditFormType } from "@/layouts/memberdueseditform";
+import { useState, Fragment, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
@@ -12,11 +13,16 @@ import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Badge from "cmnjg-sb/dist/badge";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
 import MemberDuesEditForm from "@/layouts/memberdueseditform";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = MemberDuesEditFormType;
 
 const MemberDues = () => {
   const router = useRouter();
@@ -29,6 +35,12 @@ const MemberDues = () => {
   });
   const memberDetailQuery = useMemberDetailQuery(id as string, {
     enabled: !!id,
+  });
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    approve: 0,
+    edit: 0,
   });
 
   const observeCallback = () => {
@@ -54,6 +66,27 @@ const MemberDues = () => {
     setTempData(null);
     setOpen(false);
     memberDuesQuery.refetch();
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   return (
@@ -231,11 +264,16 @@ const MemberDues = () => {
             prevData={tempData}
             onCancel={() => onClose()}
             onEdited={() => onModiefied()}
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <></>
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

@@ -10,13 +10,11 @@ import {
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import Select from "cmnjg-sb/dist/select";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
-import ToastComponent from "@/layouts/toastcomponent";
-
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
+
+export type PositionEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
@@ -24,12 +22,24 @@ type PositionEditFormProps = {
   prevData: PositionOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (
+    type: PositionEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
+  onLoading: (
+    type: PositionEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const PositionEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: PositionEditFormProps) => {
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -48,7 +58,6 @@ const PositionEditForm = ({
   });
 
   const positionLevelsQuery = usePositionLevelsQuery();
-  const { toast, updateToast, props } = useToast();
 
   const removePositionMutation = useMutation<
     unknown,
@@ -76,11 +85,7 @@ const PositionEditForm = ({
 
   const onSubmit = (id: number) =>
     handleSubmit((data) => {
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah jabatan" />,
-      });
+      onLoading("edit", "Loading mengubah jabatan");
 
       editPositionMutation
         .mutateAsync({ id, data })
@@ -88,25 +93,12 @@ const PositionEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah jabatan"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("edit", "Error mengubah jabatan", e.message);
         });
     });
 
   const onDelete = (id: number) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus jabatan" />,
-    });
+    onLoading("delete", "Loading menghapus jabatan");
 
     removePositionMutation
       .mutateAsync(id)
@@ -114,16 +106,7 @@ const PositionEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menghapus jabatan"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("delete", "Error menghapus jabatan", e.message);
       });
   };
 
@@ -257,7 +240,6 @@ const PositionEditForm = ({
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>
-      <Toast {...props} />
     </>
   );
 };

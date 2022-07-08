@@ -13,11 +13,10 @@ import Checkbox from "cmnjg-sb/dist/checkbox";
 import Input from "cmnjg-sb/dist/input";
 import TextArea from "cmnjg-sb/dist/textarea";
 import Button from "cmnjg-sb/dist/button";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
+
+export type MemberAddFormType = "add";
 
 const Map = dynamic(() => import("@/layouts/map"), {
   loading: () => <p>...</p>,
@@ -31,11 +30,19 @@ const defaultFunc = () => {};
 type MemberAddFormProps = {
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (type: MemberAddFormType, title?: string, message?: string) => void;
+  onLoading: (
+    type: MemberAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const MemberAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: MemberAddFormProps) => {
   const [lng, setLng] = useState(107.79054317790919);
   const [lat, setLat] = useState(-7.153238933398519);
@@ -67,8 +74,6 @@ const MemberAddForm = ({
   const periodQuery = useFindActivePeriod();
   const positionsQuery = usePositionsQuery();
 
-  const { toast, updateToast, props } = useToast();
-
   const addMemberMutation = useMutation<
     unknown,
     unknown,
@@ -88,11 +93,7 @@ const MemberAddForm = ({
       }
     });
 
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading membuat tagihan" />,
-    });
+    onLoading("add", "Loading menambahkan anggota");
 
     addMemberMutation
       .mutateAsync(formData)
@@ -101,16 +102,7 @@ const MemberAddForm = ({
         onSubmited();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error membuat tagihan"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("add", "Error menambahkan anggota", e.message);
       });
   });
 
@@ -366,7 +358,6 @@ const MemberAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

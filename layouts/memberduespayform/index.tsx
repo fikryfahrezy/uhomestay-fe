@@ -7,21 +7,28 @@ import { payDues } from "@/services/member-dues";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import InputFile from "cmnjg-sb/dist/inputfile";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type MemberDuesPayType = "pay";
 
 const defaultFunc = () => {};
 
 type MemberDuesPayFormProps = {
   prevData: MemberDuesOut;
   onEdited: () => void;
+  onError: (type: MemberDuesPayType, title?: string, message?: string) => void;
+  onLoading: (
+    type: MemberDuesPayType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const MemberDuesPayForm = ({
   prevData,
   onEdited = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: MemberDuesPayFormProps) => {
   const defaultValues = {
     date: "",
@@ -34,7 +41,6 @@ const MemberDuesPayForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const payDuesMutation = useMutation<
     unknown,
@@ -61,13 +67,7 @@ const MemberDuesPayForm = ({
         }
       });
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => (
-          <ToastComponent title="Loading mengunggah bukti tagihan" />
-        ),
-      });
+      onLoading("pay", "Loading mengunggah bukti tagihan");
 
       payDuesMutation
         .mutateAsync({ id, data: formData })
@@ -75,16 +75,7 @@ const MemberDuesPayForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengunggah bukti tagihan"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("pay", "Error mengunggah bukti tagihan", e.message);
         });
     });
 
@@ -169,7 +160,6 @@ const MemberDuesPayForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

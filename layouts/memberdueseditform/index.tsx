@@ -7,10 +7,9 @@ import { editDues, paidDues, DUES_STATUS } from "@/services/member-dues";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import InputFile from "cmnjg-sb/dist/inputfile";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type MemberDuesEditFormType = "edit" | "approve";
 
 const defaultFunc = () => {};
 
@@ -18,12 +17,24 @@ type MemberDuesEditFormProps = {
   prevData: MemberDuesOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (
+    type: MemberDuesEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
+  onLoading: (
+    type: MemberDuesEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const MemberDuesEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: MemberDuesEditFormProps) => {
   const [isEditable, setEditable] = useState(false);
 
@@ -38,7 +49,6 @@ const MemberDuesEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const paidDuesMutation = useMutation<
     unknown,
@@ -76,13 +86,7 @@ const MemberDuesEditForm = ({
         }
       });
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => (
-          <ToastComponent title="Loading mengubah tagihan anggota" />
-        ),
-      });
+      onLoading("edit", "Loading mengubah tagihan anggota");
 
       editDuesMutation
         .mutateAsync({ id, data: formData })
@@ -90,27 +94,12 @@ const MemberDuesEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah tagihan anggota"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("edit", "Error mengubah tagihan anggota", e.message);
         });
     });
 
   const onApprove = (id: number) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => (
-        <ToastComponent title="Loading menyetujui tagihan anggota" />
-      ),
-    });
+    onLoading("approve", "Loading menyetujui tagihan anggota");
 
     paidDuesMutation
       .mutateAsync({
@@ -123,16 +112,7 @@ const MemberDuesEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menyetujui tagihan anggota"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("approve", "Error menyetujui tagihan anggota", e.message);
       });
   };
 
@@ -271,7 +251,6 @@ const MemberDuesEditForm = ({
           )}
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

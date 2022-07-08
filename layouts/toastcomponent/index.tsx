@@ -1,7 +1,7 @@
 import styles from "./Styles.module.css";
 
 type ToastComponentProps = JSX.IntrinsicElements["p"] & {
-  title: string;
+  title?: string;
   message?: string;
 };
 

@@ -5,22 +5,33 @@ import InputFile from "cmnjg-sb/dist/inputfile";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import TextArea from "cmnjg-sb/dist/textarea";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type CashflowAddFormType = "add" | "edit" | "delete";
 
 const defaultFunc = () => {};
 
 type CashflowAddFormProps = {
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (
+    type: CashflowAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
+  onLoading: (
+    type: CashflowAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const CashflowAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: CashflowAddFormProps) => {
   const defaultValues = {
     date: "",
@@ -36,8 +47,6 @@ const CashflowAddForm = ({
     getValues,
     formState: { errors },
   } = useForm({ defaultValues });
-
-  const { toast, updateToast, props } = useToast();
 
   const addCashflowMutation = useMutation<
     unknown,
@@ -57,11 +66,7 @@ const CashflowAddForm = ({
       }
     });
 
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading membuat cashflow" />,
-    });
+    onLoading("add", "Loading membuat cashflow");
 
     addCashflowMutation
       .mutateAsync(formData)
@@ -70,16 +75,7 @@ const CashflowAddForm = ({
         onSubmited();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error membuat cashflow"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("add", "Error membuat cashflow", e.message);
       });
   });
 
@@ -182,7 +178,6 @@ const CashflowAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

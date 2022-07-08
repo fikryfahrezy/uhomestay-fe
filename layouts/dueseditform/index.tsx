@@ -4,14 +4,13 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import Input from "cmnjg-sb/dist/input";
 import Button from "cmnjg-sb/dist/button";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { yyyyMm } from "@/lib/fmt";
 import { editDues, removeDues, useCheckPaidDuesQuery } from "@/services/dues";
 import Modal from "@/layouts/modal";
-import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
+
+export type DuesEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
@@ -19,12 +18,16 @@ type DuesEditFormProps = {
   prevData: DuesOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (type: DuesEditFormType, title?: string, message?: string) => void;
+  onLoading: (type: DuesEditFormType, title?: string, message?: string) => void;
 };
 
 const DuesEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: DuesEditFormProps) => {
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -43,7 +46,6 @@ const DuesEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const removeDuesMutation = useMutation<
     unknown,
@@ -70,11 +72,7 @@ const DuesEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus tagihan" />,
-    });
+    onLoading("delete", "Loading menghapus tagihan");
 
     removeDuesMutation
       .mutateAsync(id)
@@ -82,16 +80,7 @@ const DuesEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menghapus tagihan"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("delete", "Error menghapus tagihan", e.message);
       });
   };
 
@@ -102,11 +91,7 @@ const DuesEditForm = ({
         date: `${data.date}-01`,
       };
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah tagihan" />,
-      });
+      onLoading("edit", "Loading mengubah tagihan");
 
       editDuesMutation
         .mutateAsync({ id, data: newData })
@@ -114,16 +99,7 @@ const DuesEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah tagihan"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("edit", "Error mengubah tagihan", e.message);
         });
     });
 
@@ -269,7 +245,6 @@ const DuesEditForm = ({
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>
-      <Toast {...props} />
     </>
   );
 };

@@ -5,12 +5,11 @@ import { useMutation } from "react-query";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
 import Checkbox from "cmnjg-sb/dist/checkbox";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { editDirDocument, removeDocument } from "@/services/document";
 import Modal from "@/layouts/modal";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type DocDirEditFormType = "editdir" | "deletedir";
 
 const defaultFunc = () => {};
 
@@ -18,12 +17,20 @@ type DocDirEditFormProps = {
   prevData: DocumentOut;
   onEdited: () => void;
   onCancel: () => void;
+  onError: (type: DocDirEditFormType, title?: string, message?: string) => void;
+  onLoading: (
+    type: DocDirEditFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const DocDirEditForm = ({
   prevData,
   onEdited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: DocDirEditFormProps) => {
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
@@ -38,7 +45,6 @@ const DocDirEditForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const removeDocumentMutation = useMutation<
     unknown,
@@ -65,11 +71,7 @@ const DocDirEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus folder" />,
-    });
+    onLoading("deletedir", "Loading menghapus cashflow");
 
     removeDocumentMutation
       .mutateAsync(id)
@@ -77,26 +79,13 @@ const DocDirEditForm = ({
         onReset();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error menghapus folder"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("deletedir", "Error menghapus folder", e.message);
       });
   };
 
   const onSubmit = (id: number) =>
     handleSubmit((data) => {
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah folder" />,
-      });
+      onLoading("editdir", "Loading mengubah folder");
 
       editDirDocumentMutation
         .mutateAsync({ id, data })
@@ -104,16 +93,7 @@ const DocDirEditForm = ({
           onReset();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error mengubah folder"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("editdir", "Error mengubah folder", e.message);
         });
     });
 
@@ -226,7 +206,6 @@ const DocDirEditForm = ({
       >
         <p>Apakah anda yakin ingin menghapus data yang dipilih?</p>
       </Modal>
-      <Toast {...props} />
     </>
   );
 };

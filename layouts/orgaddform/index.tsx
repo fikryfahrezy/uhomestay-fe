@@ -7,14 +7,13 @@ import Input from "cmnjg-sb/dist/input";
 import Button from "cmnjg-sb/dist/button";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Label from "cmnjg-sb/dist/label";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { yyyyMm } from "@/lib/fmt";
 import { addPeriod } from "@/services/period";
-import ToastComponent from "@/layouts/toastcomponent";
 import OrgStructForm from "@/layouts/orgstructform";
 import OrgGoalWrite from "@/layouts/orggoalwrite";
 import styles from "./Styles.module.css";
+
+export type OrgAddFormType = "add";
 
 const defaultFunc = () => {};
 
@@ -22,12 +21,16 @@ type OrgAddFormProps = {
   isOpen: boolean;
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (type: OrgAddFormType, title?: string, message?: string) => void;
+  onLoading: (type: OrgAddFormType, title?: string, message?: string) => void;
 };
 
 const OrgAddForm = ({
   isOpen = false,
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: OrgAddFormProps) => {
   const [endDate, setEndDate] = useState(yyyyMm(new Date()));
   const [structFormOpen, setStructFormOpen] = useState(false);
@@ -45,8 +48,6 @@ const OrgAddForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-
-  const { toast, updateToast, props } = useToast();
 
   const addPeriodMutation = useMutation<
     unknown,
@@ -93,11 +94,7 @@ const OrgAddForm = ({
         }
       }
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading membuat periode" />,
-      });
+      onLoading("add", "Loading membuat periode");
 
       addPeriodMutation
         .mutateAsync(newData)
@@ -106,16 +103,7 @@ const OrgAddForm = ({
           onSubmited();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error membuat periode"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("add", "Error membuat periode", e.message);
         });
     });
 
@@ -277,7 +265,6 @@ const OrgAddForm = ({
         prevData={goal}
         onSave={(goal) => onGoalModalModified(goal)}
       />
-      <Toast {...props} />
     </>
   );
 };

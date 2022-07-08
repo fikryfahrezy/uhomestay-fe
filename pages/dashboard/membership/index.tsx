@@ -1,5 +1,7 @@
 import type { ReactElement } from "react";
 import type { MemberOut } from "@/services/member";
+import type { MemberAddFormType } from "@/layouts/memberaddform";
+import type { MemberEditFormType } from "@/layouts/membereditform";
 import { useState, useRef, Fragment } from "react";
 import { RiUserAddLine, RiSearch2Line, RiMore2Line } from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
@@ -9,13 +11,18 @@ import Drawer from "cmnjg-sb/dist/drawer";
 import Input from "cmnjg-sb/dist/input";
 import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
 import MemberAddForm from "@/layouts/memberaddform";
 import MemberEditForm from "@/layouts/membereditform";
 import EmptyMsg from "@/layouts/emptymsg";
 import MemberListItem from "@/layouts/memberlistitem";
 import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = MemberAddFormType | MemberEditFormType;
 
 const Member = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -24,6 +31,14 @@ const Member = () => {
   const membersQuery = useInfiniteMembersQuery(q, {
     getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    add: 0,
+    approve: 0,
+    delete: 0,
+    edit: 0,
   });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -56,6 +71,27 @@ const Member = () => {
 
   const onSearchClick = (q: string) => {
     setQ(q);
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   return (
@@ -128,15 +164,24 @@ const Member = () => {
           <MemberAddForm
             onCancel={() => onDrawerClose()}
             onSubmited={() => onModified()}
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <MemberEditForm
             prevData={tempData}
             onCancel={() => onDrawerClose()}
             onEdited={() => onModified()}
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

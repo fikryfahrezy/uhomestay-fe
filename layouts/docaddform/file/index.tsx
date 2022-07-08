@@ -4,22 +4,29 @@ import { useMutation } from "react-query";
 import Button from "cmnjg-sb/dist/button";
 import InputFile from "cmnjg-sb/dist/inputfile";
 import Checkbox from "cmnjg-sb/dist/checkbox";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addFileDocument } from "@/services/document";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type DocFileAddFormType = "addfile";
 
 const defaultFunc = () => {};
 
 type DocFileAddFormProps = {
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (type: DocFileAddFormType, title?: string, message?: string) => void;
+  onLoading: (
+    type: DocFileAddFormType,
+    title?: string,
+    message?: string
+  ) => void;
 };
 
 const DocFileAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: DocFileAddFormProps) => {
   const router = useRouter();
   const dirIdQ = "dir_id";
@@ -35,7 +42,6 @@ const DocFileAddForm = ({
     getValues,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const addFileDocumentMutation = useMutation<
     unknown,
@@ -67,11 +73,7 @@ const DocFileAddForm = ({
 
       formData.append(dirIdQ, String(dirId));
 
-      const lastId = toast({
-        status: "info",
-        duration: 999999,
-        render: () => <ToastComponent title="Loading menambahkan file" />,
-      });
+      onLoading("addfile", "Loading menambahkan file");
 
       addFileDocumentMutation
         .mutateAsync(formData)
@@ -80,16 +82,7 @@ const DocFileAddForm = ({
           onSubmited();
         })
         .catch((e) => {
-          updateToast(lastId, {
-            status: "error",
-            render: () => (
-              <ToastComponent
-                title="Error menambahkan file"
-                message={e.message}
-                data-testid="toast-modal"
-              />
-            ),
-          });
+          onError("addfile", "Error menambahkan file", e.message);
         });
     });
 
@@ -156,7 +149,6 @@ const DocFileAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

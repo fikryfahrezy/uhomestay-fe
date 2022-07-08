@@ -1,6 +1,7 @@
 import type { ReactElement } from "react";
 import type { MemberDuesOut } from "@/services/member-dues";
-import { useState, useEffect, Fragment } from "react";
+import type { MemberDuesPayType } from "@/layouts/memberduespayform";
+import { useState, useEffect, Fragment, useRef } from "react";
 import Image from "next/image";
 import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
 import Observe from "@/lib/use-observer";
@@ -11,12 +12,17 @@ import { useMemberDetailQuery } from "@/services/member";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Badge from "cmnjg-sb/dist/badge";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import MemberDuesPayForm from "@/layouts/memberduespayform";
 import MemberDuesDetail from "@/layouts/memberduesdetail";
 import MemberLayout from "@/layouts/memberpage";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = MemberDuesPayType;
 
 const Member = () => {
   const [muid, setMuid] = useState("");
@@ -28,6 +34,11 @@ const Member = () => {
   });
   const memberDetailQuery = useMemberDetailQuery(muid, {
     enabled: !!muid,
+  });
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    pay: 0,
   });
 
   const observeCallback = () => {
@@ -61,6 +72,27 @@ const Member = () => {
     setTempData(null);
     setOpen(false);
     memberDuesQuery.refetch();
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   useEffect(() => {
@@ -245,6 +277,10 @@ const Member = () => {
             <MemberDuesPayForm
               prevData={tempData}
               onEdited={() => onModiefied()}
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
             />
           ) : (
             <MemberDuesDetail prevData={tempData} />
@@ -253,6 +289,7 @@ const Member = () => {
           <></>
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

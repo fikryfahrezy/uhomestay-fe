@@ -4,21 +4,24 @@ import { yyyyMm } from "@/lib/fmt";
 import { addDues } from "@/services/dues";
 import Input from "cmnjg-sb/dist/input";
 import Button from "cmnjg-sb/dist/button";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+export type DuesAddFormType = "add";
 
 const defaultFunc = () => {};
 
 type DuesAddFormProps = {
   onSubmited: () => void;
   onCancel: () => void;
+  onError: (type: DuesAddFormType, title?: string, message?: string) => void;
+  onLoading: (type: DuesAddFormType, title?: string, message?: string) => void;
 };
 
 const DuesAddForm = ({
   onSubmited = defaultFunc,
   onCancel = defaultFunc,
+  onError = defaultFunc,
+  onLoading = defaultFunc,
 }: DuesAddFormProps) => {
   const defaultValues = {
     date: "",
@@ -30,7 +33,6 @@ const DuesAddForm = ({
     reset,
     formState: { errors },
   } = useForm({ defaultValues });
-  const { toast, updateToast, props } = useToast();
 
   const addDuesMutation = useMutation<
     unknown,
@@ -46,11 +48,7 @@ const DuesAddForm = ({
       date: `${data.date}-01`,
     };
 
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading membuat tagihan" />,
-    });
+    onLoading("add", "Loading membuat tagihan");
 
     addDuesMutation
       .mutateAsync(newData)
@@ -59,16 +57,7 @@ const DuesAddForm = ({
         onSubmited();
       })
       .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error membuat tagihan"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+        onError("add", "Error membuat tagihan", e.message);
       });
   });
 
@@ -131,7 +120,6 @@ const DuesAddForm = ({
           </Button>
         </div>
       </form>
-      <Toast {...props} />
     </>
   );
 };

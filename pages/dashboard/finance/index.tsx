@@ -1,6 +1,8 @@
 import type { ReactElement } from "react";
 import type { CashflowOut } from "@/services/cashflow";
-import { useState, Fragment } from "react";
+import type { CashflowAddFormType } from "@/layouts/cashflowaddform";
+import type { CasflowEditFormType } from "@/layouts/cashfloweditform";
+import { useState, useRef, Fragment } from "react";
 import {
   RiAddLine,
   RiMoneyDollarCircleLine,
@@ -14,13 +16,18 @@ import { CASHFLOW_TYPE } from "@/services/cashflow";
 import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
 import CashflowAddForm from "@/layouts/cashflowaddform";
 import CashflowEditForm from "@/layouts/cashfloweditform";
 import EmptyMsg from "@/layouts/emptymsg";
 import CashflowSummary from "@/layouts/cashflowsummary";
 import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = CashflowAddFormType | CasflowEditFormType;
 
 const inOutField = Object.freeze({
   income: "income_cash",
@@ -35,6 +42,13 @@ const Finance = () => {
   >(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
   const cashflowsQuery = useCashflowsQuery();
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    add: 0,
+    delete: 0,
+    edit: 0,
+  });
 
   const observeCallback = () => {
     if (cashflowsQuery.hasNextPage) {
@@ -60,6 +74,27 @@ const Finance = () => {
     setTempData(null);
     setOpen(false);
     cashflowsQuery.refetch();
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   const activateIncomeTab = () => {
@@ -185,15 +220,24 @@ const Finance = () => {
           <CashflowAddForm
             onCancel={() => onClose()}
             onSubmited={() => onModiefied()}
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <CashflowEditForm
             prevData={tempData}
             onCancel={() => onClose()}
             onEdited={() => onModiefied()}
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };
