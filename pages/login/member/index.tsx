@@ -9,7 +9,6 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import PageNav from "@/layouts/pagenav";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const Login = () => {
@@ -88,8 +87,6 @@ const Login = () => {
               <div className={styles.inputGroup}>
                 <Input
                   {...register("identifier", {
-                    minLength: 6,
-                    maxLength: 20,
                     required: true,
                   })}
                   autoComplete="off"
@@ -99,18 +96,13 @@ const Login = () => {
                   aria-label="username"
                   className={styles.input}
                   isInvalid={errors.identifier !== undefined}
+                  errMsg={errors.identifier ? "Tidak boleh kosong" : ""}
                 />
-                {errors.identifier ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
               <div className={styles.inputGroup}>
                 <Input
                   {...register("password", {
                     required: true,
-                    pattern: /[a-z]{0,9}/i,
                   })}
                   autoComplete="off"
                   type="password"
@@ -118,12 +110,8 @@ const Login = () => {
                   aria-label="password"
                   className={styles.input}
                   isInvalid={errors.password !== undefined}
+                  errMsg={errors.password ? "Tidak boleh kosong" : ""}
                 />
-                {errors.password ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
               <Button
                 colorScheme="green"

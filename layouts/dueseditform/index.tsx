@@ -10,7 +10,6 @@ import { yyyyMm } from "@/lib/fmt";
 import { editDues, removeDues, useCheckPaidDuesQuery } from "@/services/dues";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -182,12 +181,8 @@ const DuesEditForm = ({
               required={true}
               readOnly={!isEditable}
               isInvalid={errors.date !== undefined}
+              errMsg={errors.date ? "Tidak boleh kosong" : ""}
             />
-            {errors.date ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -201,12 +196,8 @@ const DuesEditForm = ({
               required={true}
               readOnly={!isEditable}
               isInvalid={errors["idr_amount"] !== undefined}
+              errMsg={errors["idr_amount"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["idr_amount"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

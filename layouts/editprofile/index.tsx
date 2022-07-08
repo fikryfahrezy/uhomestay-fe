@@ -13,7 +13,6 @@ import Button from "cmnjg-sb/dist/button";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -187,12 +186,8 @@ const UpdateProfile = () => {
                 id="username"
                 required={true}
                 isInvalid={errors.username !== undefined}
+                errMsg={errors.username ? "Tidak boleh kosong" : ""}
               />
-              {errors.username ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.inputGroup}>
               <Input
@@ -216,12 +211,8 @@ const UpdateProfile = () => {
                 id="name"
                 required={true}
                 isInvalid={errors.name !== undefined}
+                errMsg={errors.name ? "Tidak boleh kosong" : ""}
               />
-              {errors.name ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.inputGroup}>
               <Input
@@ -233,12 +224,8 @@ const UpdateProfile = () => {
                 id="wa_phone"
                 required={true}
                 isInvalid={errors["wa_phone"] !== undefined}
+                errMsg={errors["wa_phone"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["wa_phone"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
           </div>
           <div className={styles.inputGroups}>
@@ -253,12 +240,8 @@ const UpdateProfile = () => {
                 id="other_phone"
                 required={true}
                 isInvalid={errors["other_phone"] !== undefined}
+                errMsg={errors["other_phone"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["other_phone"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.inputGroup}>
               <Input
@@ -270,12 +253,8 @@ const UpdateProfile = () => {
                 id="homestay_name"
                 required={true}
                 isInvalid={errors["homestay_name"] !== undefined}
+                errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["homestay_name"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
           </div>
           <div className={styles.inputGroup}>
@@ -287,12 +266,8 @@ const UpdateProfile = () => {
               id="homestay_address"
               required={true}
               isInvalid={errors["homestay_address"] !== undefined}
+              errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_address"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <Map lat={lat} lng={lng} onClick={onMapClick} />
           <div className={styles.inputGroup}>
@@ -309,12 +284,8 @@ const UpdateProfile = () => {
                 setLat(val ? val : defLat);
               }}
               isInvalid={errors["homestay_latitude"] !== undefined}
+              errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_latitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -330,12 +301,8 @@ const UpdateProfile = () => {
                 setLng(val ? val : defLng);
               }}
               isInvalid={errors["homestay_longitude"] !== undefined}
+              errMsg={errors["homestay_longitude"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_longitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.editableButtons}>
             <Button

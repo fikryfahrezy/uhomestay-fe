@@ -15,7 +15,6 @@ import {
   CASHFLOW_TYPE,
 } from "@/services/cashflow";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import Modal from "@/layouts/modal";
 import styles from "./Styles.module.css";
 
@@ -181,12 +180,8 @@ const CasflowEditForm = ({
               id="date"
               readOnly={!isEditable}
               isInvalid={errors.date !== undefined}
+              errMsg={errors.date ? "Tidak boleh kosong" : ""}
             />
-            {errors.date ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -201,12 +196,8 @@ const CasflowEditForm = ({
               id="idr_amount"
               readOnly={!isEditable}
               isInvalid={errors["idr_amount"] !== undefined}
+              errMsg={errors["idr_amount"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["idr_amount"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Select
@@ -218,15 +209,11 @@ const CasflowEditForm = ({
               required={true}
               disabled={!isEditable}
               isInvalid={errors.type !== undefined}
+              errMsg={errors.type ? "Tidak boleh kosong" : ""}
             >
               <option value={CASHFLOW_TYPE.INCOME}>Pemasukan</option>
               <option value={CASHFLOW_TYPE.OUTCOME}>Pengeluaran</option>
             </Select>
-            {errors.type ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <TextArea
@@ -235,12 +222,8 @@ const CasflowEditForm = ({
               id="note"
               readOnly={!isEditable}
               isInvalid={errors.note !== undefined}
+              errMsg={errors.note ? "Tidak boleh kosong" : ""}
             />
-            {errors.note ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <InputFile
@@ -252,14 +235,10 @@ const CasflowEditForm = ({
               src={prevData["prove_file_url"]}
               value={prevData["prove_file_url"]}
               isInvalid={errors.file !== undefined}
+              errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >
               Pilih File
             </InputFile>
-            {errors.file ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

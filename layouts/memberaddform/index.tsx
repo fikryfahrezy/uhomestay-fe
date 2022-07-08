@@ -16,7 +16,6 @@ import Button from "cmnjg-sb/dist/button";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -156,12 +155,8 @@ const MemberAddForm = ({
               id="username"
               required={true}
               isInvalid={errors.username !== undefined}
+              errMsg={errors.username ? "Tidak boleh kosong" : ""}
             />
-            {errors.username ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -174,12 +169,8 @@ const MemberAddForm = ({
               id="password"
               required={true}
               isInvalid={errors.password !== undefined}
+              errMsg={errors.password ? "Tidak boleh kosong" : ""}
             />
-            {errors.password ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -191,12 +182,8 @@ const MemberAddForm = ({
               id="name"
               required={true}
               isInvalid={errors.name !== undefined}
+              errMsg={errors.name ? "Tidak boleh kosong" : ""}
             />
-            {errors.name ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -208,12 +195,8 @@ const MemberAddForm = ({
               id="wa_phone"
               required={true}
               isInvalid={errors["wa_phone"] !== undefined}
+              errMsg={errors["wa_phone"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["wa_phone"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -226,12 +209,8 @@ const MemberAddForm = ({
               id="other_phone"
               required={true}
               isInvalid={errors["other_phone"] !== undefined}
+              errMsg={errors["other_phone"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["other_phone"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             {positionsQuery.isLoading ? (
@@ -239,88 +218,69 @@ const MemberAddForm = ({
             ) : positionsQuery.error ? (
               <ErrMsg />
             ) : (
-              <>
-                <Select
-                  {...register("position_id", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Jabatan:"
-                  id="position"
-                  required={true}
-                  isInvalid={errors["position_id"] !== undefined}
-                >
-                  <option value="">Pilih Jabatan</option>
-                  {positionsQuery.data?.data.positions
-                    .sort((a, b) => a.level - b.level)
-                    .map(({ id, name }) => (
-                      <option key={id} value={id}>
-                        {name}
-                      </option>
-                    ))}
-                </Select>
-
-                {errors["position_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
+              <Select
+                {...register("position_id", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                label="Jabatan:"
+                id="position"
+                required={true}
+                isInvalid={errors["position_id"] !== undefined}
+                errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+              >
+                <option value="">Pilih Jabatan</option>
+                {positionsQuery.data?.data.positions
+                  .sort((a, b) => a.level - b.level)
+                  .map(({ id, name }) => (
+                    <option key={id} value={id}>
+                      {name}
+                    </option>
+                  ))}
+              </Select>
             )}
           </div>
           <div className={styles.inputGroup}>
             {periodQuery.isLoading ? (
               "Loading..."
             ) : periodQuery.error ? (
-              <>
-                <Select
-                  {...register("period_id", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Periode Jabatan:"
-                  id="period"
-                  required={true}
-                  isInvalid={errors["period_id"] !== undefined}
-                ></Select>
-                {errors["period_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
+              <Select
+                {...register("period_id", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                label="Periode Jabatan:"
+                id="period"
+                required={true}
+                isInvalid={errors["period_id"] !== undefined}
+                errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+              ></Select>
             ) : (
-              <>
-                <Select
-                  {...register("period_id", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Periode Jabatan:"
-                  id="period"
-                  required={true}
-                  isInvalid={errors["period_id"] !== undefined}
+              <Select
+                {...register("period_id", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                label="Periode Jabatan:"
+                id="period"
+                required={true}
+                isInvalid={errors["period_id"] !== undefined}
+                errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+              >
+                <option value="">Pilih Periode</option>
+                <option
+                  key={periodQuery.data?.data.id}
+                  value={periodQuery.data?.data.id}
                 >
-                  <option value="">Pilih Periode</option>
-                  <option
-                    key={periodQuery.data?.data.id}
-                    value={periodQuery.data?.data.id}
-                  >
-                    {idDate(
-                      new Date(periodQuery.data?.data["start_date"] as string)
-                    )}{" "}
-                    /{" "}
-                    {idDate(
-                      new Date(periodQuery.data?.data["end_date"] as string)
-                    )}
-                  </option>
-                </Select>
-                {errors["period_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
+                  {idDate(
+                    new Date(periodQuery.data?.data["start_date"] as string)
+                  )}{" "}
+                  /{" "}
+                  {idDate(
+                    new Date(periodQuery.data?.data["end_date"] as string)
+                  )}
+                </option>
+              </Select>
             )}
           </div>
           <div className={styles.inputGroup}>
@@ -333,12 +293,8 @@ const MemberAddForm = ({
               id="homestay_name"
               required={true}
               isInvalid={errors["homestay_name"] !== undefined}
+              errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_name"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <TextArea
@@ -349,12 +305,8 @@ const MemberAddForm = ({
               id="homestay_address"
               required={true}
               isInvalid={errors["homestay_address"] !== undefined}
+              errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_address"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <Map lat={lat} lng={lng} onClick={onMapClick} />
           <div className={styles.inputGroup}>
@@ -370,12 +322,8 @@ const MemberAddForm = ({
                 setLat(val ? val : defLat);
               }}
               isInvalid={errors["homestay_latitude"] !== undefined}
+              errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_latitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -390,27 +338,18 @@ const MemberAddForm = ({
                 setLng(val ? val : defLng);
               }}
               isInvalid={errors["homestay_longitude"] !== undefined}
+              errMsg={errors["homestay_longitude"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["homestay_longitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Checkbox
               {...register("is_admin")}
               id="is_admin"
               isInvalid={errors["is_admin"] !== undefined}
+              errMsg={errors["is_admin"] ? "Tidak boleh kosong" : ""}
             >
               Admin
             </Checkbox>
-
-            {errors["is_admin"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

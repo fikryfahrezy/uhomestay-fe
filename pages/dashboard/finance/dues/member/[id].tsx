@@ -103,9 +103,7 @@ const MemberDues = () => {
                 <tr>
                   <td>Periode</td>
                   <td>:</td>
-                  <td>
-                    {memberDetailQuery.data.data.period.split("|").join(" - ")}
-                  </td>
+                  <td>{memberDetailQuery.data.data.period}</td>
                 </tr>
                 <tr>
                   <td>Nama Homestay</td>

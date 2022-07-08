@@ -10,7 +10,6 @@ import useToast from "cmnjg-sb/dist/toast/useToast";
 import { editDirDocument, removeDocument } from "@/services/document";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -158,12 +157,8 @@ const DocDirEditForm = ({
               required={true}
               readOnly={!isEditable}
               isInvalid={errors.name !== undefined}
+              errMsg={errors.name ? "Tidak boleh kosong" : ""}
             />
-            {errors.name ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Checkbox
@@ -171,14 +166,10 @@ const DocDirEditForm = ({
               id="is_private"
               disabled={!isEditable}
               isInvalid={errors["is_private"] !== undefined}
+              errMsg={errors["is_private"] ? "Tidak boleh kosong" : ""}
             >
               Private
             </Checkbox>
-            {errors["is_private"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

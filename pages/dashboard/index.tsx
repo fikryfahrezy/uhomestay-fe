@@ -99,9 +99,15 @@ const Dashboard = () => {
         {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
         ) : dashboardQuery.error ? (
-          <ErrMsg />
+          <>
+            <h2>Iuran Anggota</h2>
+            <ErrMsg />
+          </>
         ) : dashboardQuery.data.data["member_dues"].length === 0 ? (
-          <EmptyMsg />
+          <>
+            <h2>Iuran Anggota</h2>
+            <EmptyMsg />
+          </>
         ) : (
           <>
             <h2>

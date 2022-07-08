@@ -11,7 +11,6 @@ import Input from "cmnjg-sb/dist/input";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import PageNav from "@/layouts/pagenav";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
@@ -112,6 +111,7 @@ const Register = () => {
                   required={true}
                   className={styles.input}
                   isInvalid={errors.username !== undefined}
+                  errMsg={errors.username ? "Tidak boleh kosong" : ""}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -126,23 +126,8 @@ const Register = () => {
                   required={true}
                   className={styles.input}
                   isInvalid={errors.password !== undefined}
+                  errMsg={errors.password ? "Tidak boleh kosong" : ""}
                 />
-              </div>
-            </div>
-            <div className={styles.verticalGroup}>
-              <div>
-                {errors.username ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </div>
-              <div>
-                {errors.password ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
             </div>
             <div className={styles.inputGroup}>
@@ -156,12 +141,8 @@ const Register = () => {
                 required={true}
                 className={styles.input}
                 isInvalid={errors.name !== undefined}
+                errMsg={errors.name ? "Tidak boleh kosong" : ""}
               />
-              {errors.name ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.verticalGroup}>
               <div className={styles.inputGroup}>
@@ -175,6 +156,7 @@ const Register = () => {
                   required={true}
                   className={styles.input}
                   isInvalid={errors["wa_phone"] !== undefined}
+                  errMsg={errors["wa_phone"] ? "Tidak boleh kosong" : ""}
                 />
               </div>
               <div className={styles.inputGroup}>
@@ -189,23 +171,8 @@ const Register = () => {
                   required={true}
                   className={styles.input}
                   isInvalid={errors["other_phone"] !== undefined}
+                  errMsg={errors["other_phone"] ? "Tidak boleh kosong" : ""}
                 />
-              </div>
-            </div>
-            <div className={styles.verticalGroup}>
-              <div>
-                {errors["wa_phone"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </div>
-              <div>
-                {errors["other_phone"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
             </div>
             <div className={styles.inputGroup}>
@@ -219,12 +186,8 @@ const Register = () => {
                 required={true}
                 className={styles.input}
                 isInvalid={errors["homestay_name"] !== undefined}
+                errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["homestay_name"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.inputGroup}>
               <TextArea
@@ -236,12 +199,8 @@ const Register = () => {
                 required={true}
                 className={styles.input}
                 isInvalid={errors["homestay_address"] !== undefined}
+                errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["homestay_address"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <Map lat={lat} lng={lng} onClick={onMapClick} />
             <div className={styles.inputGroup}>
@@ -257,12 +216,8 @@ const Register = () => {
                   setLat(val ? val : -70.9);
                 }}
                 isInvalid={errors["homestay_latitude"] !== undefined}
+                errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
               />
-              {errors["homestay_latitude"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.inputGroup}>
               <Input
@@ -278,12 +233,10 @@ const Register = () => {
                   setLng(val ? val : -70.9);
                 }}
                 isInvalid={errors["homestay_longitude"] !== undefined}
+                errMsg={
+                  errors["homestay_longitude"] ? "Tidak boleh kosong" : ""
+                }
               />
-              {errors["homestay_longitude"] ? (
-                <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-              ) : (
-                <></>
-              )}
             </div>
             <div>
               <Button

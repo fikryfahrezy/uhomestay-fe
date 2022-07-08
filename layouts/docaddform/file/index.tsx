@@ -8,7 +8,6 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addFileDocument } from "@/services/document";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -121,28 +120,20 @@ const DocFileAddForm = ({
                   : (getValues().file as File[])[0].name
               }
               isInvalid={errors.file !== undefined}
+              errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >
               Pilih File
             </InputFile>
-            {errors.file ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Checkbox
               {...register("is_private")}
               id="is_private"
               isInvalid={errors["is_private"] !== undefined}
+              errMsg={errors["is_private"] ? "Tidak boleh kosong" : ""}
             >
               Private
             </Checkbox>
-            {errors["is_private"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

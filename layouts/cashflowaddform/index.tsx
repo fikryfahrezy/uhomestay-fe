@@ -9,7 +9,6 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -105,12 +104,8 @@ const CashflowAddForm = ({
               label="Tanggal:"
               id="date"
               isInvalid={errors.date !== undefined}
+              errMsg={errors.date ? "Tidak boleh kosong" : ""}
             />
-            {errors.date ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -124,12 +119,8 @@ const CashflowAddForm = ({
               label="Jumlah:"
               id="idr_amount"
               isInvalid={errors["idr_amount"] !== undefined}
+              errMsg={errors["idr_amount"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["idr_amount"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Select
@@ -140,15 +131,11 @@ const CashflowAddForm = ({
               id="type"
               required={true}
               isInvalid={errors.type !== undefined}
+              errMsg={errors.type ? "Tidak boleh kosong" : ""}
             >
               <option value={CASHFLOW_TYPE.INCOME}>Pemasukan</option>
               <option value={CASHFLOW_TYPE.OUTCOME}>Pengeluaran</option>
             </Select>
-            {errors.type ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <TextArea
@@ -156,12 +143,8 @@ const CashflowAddForm = ({
               label="Catatan:"
               id="note"
               isInvalid={errors.note !== undefined}
+              errMsg={errors.note ? "Tidak boleh kosong" : ""}
             />
-            {errors.note ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <InputFile
@@ -174,14 +157,10 @@ const CashflowAddForm = ({
                   : (getValues().file as File[])[0].name
               }
               isInvalid={errors.file !== undefined}
+              errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >
               Pilih File
             </InputFile>
-            {errors.file ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

@@ -10,7 +10,6 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -168,14 +167,10 @@ const DocFileEditForm = ({
               src={isEditable ? "" : prevData.url}
               disabled={!isEditable}
               isInvalid={errors.file !== undefined}
+              errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >
               Pilih File
             </InputFile>
-            {errors.file ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Checkbox
@@ -183,14 +178,10 @@ const DocFileEditForm = ({
               id="is_private"
               disabled={!isEditable}
               isInvalid={errors["is_private"] !== undefined}
+              errMsg={errors["is_private"] ? "Tidak boleh kosong" : ""}
             >
               Private
             </Checkbox>
-            {errors["is_private"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

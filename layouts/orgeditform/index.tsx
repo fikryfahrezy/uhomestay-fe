@@ -18,7 +18,6 @@ import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import OrgStructForm from "@/layouts/orgstructform";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import OrgGoalWrite from "@/layouts/orggoalwrite";
 import OrgGoalView from "@/layouts/orggoalview";
 import styles from "./Styles.module.css";
@@ -249,12 +248,8 @@ const OrgEditForm = ({
               required={true}
               readOnly={!isEditable}
               isInvalid={errors["start_date"] !== undefined}
+              errMsg={errors["start_date"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["start_date"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -269,12 +264,8 @@ const OrgEditForm = ({
               required={true}
               readOnly={!isEditable}
               isInvalid={errors["end_date"] !== undefined}
+              errMsg={errors["end_date"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["end_date"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Label note="(Lewati jika ingin dibuat atau diubah nanti)">

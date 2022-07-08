@@ -14,7 +14,7 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
+
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -171,13 +171,9 @@ const PositionEditForm = ({
               id="name"
               readOnly={!isEditable}
               isInvalid={errors.name !== undefined}
+              errMsg={errors.name ? "Tidak boleh kosong" : ""}
               data-testid="edit-position-name-field"
             />
-            {errors.name ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             {positionLevelsQuery.isLoading ? (
@@ -185,30 +181,24 @@ const PositionEditForm = ({
             ) : positionLevelsQuery.error ? (
               <ErrMsg />
             ) : (
-              <>
-                <Select
-                  {...register("level", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Level:"
-                  id="level"
-                  required={true}
-                  disabled={!isEditable}
-                  isInvalid={errors.level !== undefined}
-                >
-                  {positionLevelsQuery.data?.data.map(({ level }) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </Select>
-                {errors.level ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
+              <Select
+                {...register("level", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                label="Level:"
+                id="level"
+                required={true}
+                disabled={!isEditable}
+                isInvalid={errors.level !== undefined}
+                errMsg={errors.level ? "Tidak boleh kosong" : ""}
+              >
+                {positionLevelsQuery.data?.data.map(({ level }) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </Select>
             )}
           </div>
         </div>

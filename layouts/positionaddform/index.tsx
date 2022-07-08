@@ -7,7 +7,6 @@ import Select from "cmnjg-sb/dist/select";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -95,12 +94,8 @@ const PositionAddForm = ({
               label="Posisi:"
               id="name"
               isInvalid={errors.name !== undefined}
+              errMsg={errors.name ? "Tidak boleh kosong" : ""}
             />
-            {errors.name ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             {positionLevelsQuery.isLoading ? (
@@ -108,33 +103,27 @@ const PositionAddForm = ({
             ) : positionLevelsQuery.error ? (
               <ErrMsg />
             ) : (
-              <>
-                <Select
-                  {...register("level", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Level:"
-                  id="level"
-                  required={true}
-                  isInvalid={errors.level !== undefined}
-                  defaultValue=""
-                >
-                  <option disabled value="">
-                    Pilih Level
+              <Select
+                {...register("level", {
+                  required: true,
+                  valueAsNumber: true,
+                })}
+                label="Level:"
+                id="level"
+                defaultValue=""
+                required={true}
+                isInvalid={errors.level !== undefined}
+                errMsg={errors.level ? "Tidak boleh kosong" : ""}
+              >
+                <option disabled value="">
+                  Pilih Level
+                </option>
+                {positionLevelsQuery.data?.data.map(({ level }) => (
+                  <option key={level} value={level}>
+                    {level}
                   </option>
-                  {positionLevelsQuery.data?.data.map(({ level }) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </Select>
-                {errors.level ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
+                ))}
+              </Select>
             )}
           </div>
         </div>

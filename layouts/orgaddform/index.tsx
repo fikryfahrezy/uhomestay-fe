@@ -14,7 +14,6 @@ import { addPeriod } from "@/services/period";
 import ToastComponent from "@/layouts/toastcomponent";
 import OrgStructForm from "@/layouts/orgstructform";
 import OrgGoalWrite from "@/layouts/orggoalwrite";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -177,12 +176,8 @@ const OrgAddForm = ({
               min={yyyyMm(new Date())}
               onChange={onStartDateChange}
               isInvalid={errors["start_date"] !== undefined}
+              errMsg={errors["start_date"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["start_date"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -196,12 +191,8 @@ const OrgAddForm = ({
               type="month"
               min={endDate}
               isInvalid={errors["end_date"] !== undefined}
+              errMsg={errors["end_date"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["end_date"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Label note="(Lewati jika ingin dibuat atau diubah nanti)">

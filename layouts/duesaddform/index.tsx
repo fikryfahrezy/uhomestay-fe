@@ -7,7 +7,6 @@ import Button from "cmnjg-sb/dist/button";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -95,12 +94,8 @@ const DuesAddForm = ({
               id="date"
               required={true}
               isInvalid={errors.date !== undefined}
+              errMsg={errors.date ? "Tidak boleh kosong" : ""}
             />
-            {errors.date ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -113,12 +108,8 @@ const DuesAddForm = ({
               id="idr_amount"
               required={true}
               isInvalid={errors["idr_amount"] !== undefined}
+              errMsg={errors["idr_amount"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["idr_amount"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

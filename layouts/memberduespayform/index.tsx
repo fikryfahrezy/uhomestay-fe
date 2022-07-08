@@ -10,7 +10,6 @@ import InputFile from "cmnjg-sb/dist/inputfile";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -124,12 +123,8 @@ const MemberDuesPayForm = ({
               id="date"
               readOnly={true}
               isInvalid={errors.date !== undefined}
+              errMsg={errors.date ? "Tidak boleh kosong" : ""}
             />
-            {errors.date ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <Input
@@ -144,12 +139,8 @@ const MemberDuesPayForm = ({
               id="idr_amount"
               readOnly={true}
               isInvalid={errors["idr_amount"] !== undefined}
+              errMsg={errors["idr_amount"] ? "Tidak boleh kosong" : ""}
             />
-            {errors["idr_amount"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
           <div className={styles.inputGroup}>
             <InputFile
@@ -161,14 +152,10 @@ const MemberDuesPayForm = ({
               multiple={false}
               required={true}
               isInvalid={errors.file !== undefined}
+              errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >
               Pilih File
             </InputFile>
-            {errors.file ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
           </div>
         </div>
         <div>

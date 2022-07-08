@@ -23,7 +23,6 @@ import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
-import InputErrMsg from "@/layouts/inputerrmsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
@@ -74,8 +73,8 @@ const MemberEditForm = ({
     name: "",
     wa_phone: "",
     other_phone: "",
-    position_id: 0,
-    period_id: 0,
+    position_id: "",
+    period_id: "",
     homestay_name: "",
     homestay_address: "",
     homestay_latitude: String(lat),
@@ -254,10 +253,20 @@ const MemberEditForm = ({
         period,
         is_approved,
         profile_pic_url: profile,
+        position_id: posId,
+        period_id: perId,
         ...restData
       } = memberDetailQuery.data.data;
 
-      reset({ profile, ...restData }, { keepDefaultValues: true });
+      reset(
+        {
+          profile,
+          position_id: posId === 0 ? "" : String(posId),
+          period_id: perId === 0 ? "" : String(perId),
+          ...restData,
+        },
+        { keepDefaultValues: true }
+      );
     }
   }, [memberDetailQuery.data, reset]);
 
@@ -268,112 +277,96 @@ const MemberEditForm = ({
       ) : (
         <h2 className={styles.drawerTitle}>Detail Anggota</h2>
       )}
-      <form className={styles.drawerBody} onSubmit={onSubmit(prevData.id)}>
-        <div className={styles.drawerContent}>
-          <AvatarPicker
-            {...register("profile")}
-            text="Ubah"
-            defaultSrc={"/images/image/grey.png"}
-            className={styles.avatarPicker}
-            disabled={!isEditable}
-            src={prevData["profile_pic_url"]}
-          />
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("username", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Username:"
-              id="username"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors.username !== undefined}
+      {memberDetailQuery.isLoading ? (
+        "Loading..."
+      ) : memberDetailQuery.error ? (
+        <ErrMsg />
+      ) : (
+        <form className={styles.drawerBody} onSubmit={onSubmit(prevData.id)}>
+          <div className={styles.drawerContent}>
+            <AvatarPicker
+              {...register("profile")}
+              text="Ubah"
+              defaultSrc={"/images/image/grey.png"}
+              className={styles.avatarPicker}
+              disabled={!isEditable}
+              src={prevData["profile_pic_url"]}
             />
-            {errors.username ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("password", {})}
-              autoComplete="off"
-              label="Password:"
-              type="password"
-              id="password"
-              readOnly={!isEditable}
-              isInvalid={errors.password !== undefined}
-            />
-            {errors.password ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("name", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Nama:"
-              id="name"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors.name !== undefined}
-            />
-            {errors.name ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("wa_phone", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Nomor WA:"
-              id="wa_phone"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors["wa_phone"] !== undefined}
-            />
-            {errors["wa_phone"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("other_phone", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Nomor Lainnya:"
-              note="(samakan dengan WA bila tidak ada)"
-              id="other_phone"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors["other_phone"] !== undefined}
-            />
-            {errors["wa_phone"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            {positionsQuery.isLoading ? (
-              "Loading..."
-            ) : positionsQuery.error ? (
-              <ErrMsg />
-            ) : (
-              <>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("username", {
+                  required: true,
+                })}
+                autoComplete="off"
+                label="Username:"
+                id="username"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors.username !== undefined}
+                errMsg={errors.username ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("password", {})}
+                autoComplete="off"
+                label="Password:"
+                type="password"
+                id="password"
+                readOnly={!isEditable}
+                isInvalid={errors.password !== undefined}
+                errMsg={errors.password ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("name", {
+                  required: true,
+                })}
+                autoComplete="off"
+                label="Nama:"
+                id="name"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors.name !== undefined}
+                errMsg={errors.name ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("wa_phone", {
+                  required: true,
+                })}
+                autoComplete="off"
+                label="Nomor WA:"
+                id="wa_phone"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors["wa_phone"] !== undefined}
+                errMsg={errors["wa_phone"] ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("other_phone", {
+                  required: true,
+                })}
+                autoComplete="off"
+                label="Nomor Lainnya:"
+                note="(samakan dengan WA bila tidak ada)"
+                id="other_phone"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors["other_phone"] !== undefined}
+                errMsg={errors["other_phone"] ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              {positionsQuery.isLoading ? (
+                "Loading..."
+              ) : positionsQuery.error ? (
+                <ErrMsg />
+              ) : (
                 <Select
                   {...register("position_id", {
                     required: true,
@@ -384,11 +377,10 @@ const MemberEditForm = ({
                   required={true}
                   disabled={!isEditable}
                   isInvalid={errors["position_id"] !== undefined}
+                  errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
                 >
-                  {memberDetailQuery.isLoading ? (
-                    "Loading..."
-                  ) : memberDetailQuery.error ? (
-                    <ErrMsg />
+                  {memberDetailQuery.data?.data["position_id"] === 0 ? (
+                    <option value="">Pilih Jabatan</option>
                   ) : (
                     <option value={memberDetailQuery.data?.data["position_id"]}>
                       {memberDetailQuery.data?.data.position}
@@ -396,25 +388,22 @@ const MemberEditForm = ({
                   )}
                   {positionsQuery.data?.data.positions
                     .sort((a, b) => a.level - b.level)
+                    .filter(
+                      ({ id }) =>
+                        id !== memberDetailQuery.data?.data["position_id"]
+                    )
                     .map(({ id, name }) => (
                       <option key={id} value={id}>
                         {name}
                       </option>
                     ))}
                 </Select>
-                {errors["position_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            {periodQuery.isLoading ? (
-              "Loading..."
-            ) : periodQuery.error ? (
-              <>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              {periodQuery.isLoading ? (
+                "Loading..."
+              ) : periodQuery.error ? (
                 <Select
                   {...register("period_id", {
                     required: true,
@@ -425,15 +414,9 @@ const MemberEditForm = ({
                   required={true}
                   disabled={!isEditable}
                   isInvalid={errors["period_id"] !== undefined}
+                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
                 ></Select>
-                {errors["period_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
-              </>
-            ) : (
-              <>
+              ) : (
                 <Select
                   {...register("period_id", {
                     required: true,
@@ -444,17 +427,16 @@ const MemberEditForm = ({
                   required={true}
                   disabled={!isEditable}
                   isInvalid={errors["period_id"] !== undefined}
+                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
                 >
-                  {memberDetailQuery.isLoading ? (
-                    "Loading..."
-                  ) : memberDetailQuery.error ? (
-                    <ErrMsg />
+                  {memberDetailQuery.data?.data["period_id"] === 0 ? (
+                    <option value="">Pilih Periode</option>
                   ) : (
                     <option value={memberDetailQuery.data?.data["period_id"]}>
                       {idDate(
                         new Date(
                           (memberDetailQuery.data?.data.period as string).split(
-                            "|"
+                            " / "
                           )[0]
                         )
                       )}{" "}
@@ -462,183 +444,165 @@ const MemberEditForm = ({
                       {idDate(
                         new Date(
                           (memberDetailQuery.data?.data.period as string).split(
-                            "|"
+                            " / "
                           )[1]
                         )
                       )}
                     </option>
                   )}
-                  <option
-                    key={periodQuery.data?.data.id}
-                    value={periodQuery.data?.data.id}
-                  >
-                    {idDate(
-                      new Date(periodQuery.data?.data["start_date"] as string)
-                    )}{" "}
-                    /{" "}
-                    {idDate(
-                      new Date(periodQuery.data?.data["end_date"] as string)
-                    )}
-                  </option>
+                  {memberDetailQuery.data?.data["period_id"] !==
+                  periodQuery.data?.data.id ? (
+                    <option
+                      key={periodQuery.data?.data.id}
+                      value={periodQuery.data?.data.id}
+                    >
+                      {idDate(
+                        new Date(periodQuery.data?.data["start_date"] as string)
+                      )}{" "}
+                      /{" "}
+                      {idDate(
+                        new Date(periodQuery.data?.data["end_date"] as string)
+                      )}
+                    </option>
+                  ) : (
+                    <></>
+                  )}
                 </Select>
-                {errors["period_id"] ? (
-                  <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-                ) : (
-                  <></>
-                )}
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("homestay_name", {
+                  required: true,
+                })}
+                autoComplete="off"
+                label="Nama Homestay:"
+                id="homestay_name"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors["homestay_name"] !== undefined}
+                errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <TextArea
+                {...register("homestay_address", {
+                  required: true,
+                })}
+                label="Alamat Homestay:"
+                id="homestay_address"
+                required={true}
+                readOnly={!isEditable}
+                isInvalid={errors["homestay_address"] !== undefined}
+                errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <Map lat={lat} lng={lng} onClick={onMapClick} />
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("homestay_latitude", {})}
+                autoComplete="off"
+                label="Homestay Latitude:"
+                id="homestay_latitude"
+                type="hidden"
+                value={lat}
+                required={true}
+                readOnly={!isEditable}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setLat(val ? val : defLat);
+                }}
+                isInvalid={errors["homestay_latitude"] !== undefined}
+                errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Input
+                {...register("homestay_longitude", {})}
+                autoComplete="off"
+                label="Homestay Longitude:"
+                id="homestay_longitude"
+                type="hidden"
+                value={lng}
+                required={true}
+                readOnly={!isEditable}
+                onChange={(e) => {
+                  const val = Number(e.target.value);
+                  setLng(val ? val : defLng);
+                }}
+                isInvalid={errors["homestay_longitude"] !== undefined}
+                errMsg={
+                  errors["homestay_longitude"] ? "Tidak boleh kosong" : ""
+                }
+              />
+            </div>
+            <div className={styles.inputGroup}>
+              <Checkbox
+                {...register("is_admin")}
+                id="is_admin"
+                disabled={!isEditable}
+                isInvalid={errors["is_admin"] !== undefined}
+                errMsg={errors["is_admin"] ? "Tidak boleh kosong" : ""}
+              >
+                Admin
+              </Checkbox>
+            </div>
+          </div>
+          <div>
+            {!prevData["is_approved"] ? (
+              <Button
+                className={styles.formBtn}
+                type="button"
+                onClick={() => onApprove(prevData.id)}
+              >
+                Setujui
+              </Button>
+            ) : (
+              <></>
+            )}
+            {!isEditable ? (
+              <>
+                <Button
+                  key="edit_btn"
+                  colorScheme="green"
+                  type="button"
+                  className={styles.formBtn}
+                  onClick={() => onSetEditable()}
+                >
+                  Ubah
+                </Button>
+                <Button
+                  colorScheme="red"
+                  type="button"
+                  className={styles.formBtn}
+                  onClick={() => onConfirmDelete()}
+                >
+                  Hapus
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button
+                  key="save_edit_btn"
+                  colorScheme="green"
+                  type="submit"
+                  className={styles.formBtn}
+                >
+                  Ubah
+                </Button>
+                <Button
+                  colorScheme="red"
+                  type="reset"
+                  className={styles.formBtn}
+                  onClick={() => onClose()}
+                >
+                  Batal
+                </Button>
               </>
             )}
           </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_name", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Nama Homestay:"
-              id="homestay_name"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors["homestay_name"] !== undefined}
-            />
-            {errors["homestay_name"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <TextArea
-              {...register("homestay_address", {
-                required: true,
-              })}
-              label="Alamat Homestay:"
-              id="homestay_address"
-              required={true}
-              readOnly={!isEditable}
-              isInvalid={errors["homestay_address"] !== undefined}
-            />
-            {errors["homestay_address"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <Map lat={lat} lng={lng} onClick={onMapClick} />
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_latitude", {})}
-              autoComplete="off"
-              label="Homestay Latitude:"
-              id="homestay_latitude"
-              type="hidden"
-              value={lat}
-              required={true}
-              readOnly={!isEditable}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLat(val ? val : defLat);
-              }}
-              isInvalid={errors["homestay_latitude"] !== undefined}
-            />
-            {errors["homestay_latitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_longitude", {})}
-              autoComplete="off"
-              label="Homestay Longitude:"
-              id="homestay_longitude"
-              type="hidden"
-              value={lng}
-              required={true}
-              readOnly={!isEditable}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLng(val ? val : defLng);
-              }}
-              isInvalid={errors["homestay_longitude"] !== undefined}
-            />
-            {errors["homestay_longitude"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
-            <Checkbox
-              {...register("is_admin")}
-              id="is_admin"
-              disabled={!isEditable}
-              isInvalid={errors["is_admin"] !== undefined}
-            >
-              Admin
-            </Checkbox>
-            {errors["is_admin"] ? (
-              <InputErrMsg>Tidak boleh kosong</InputErrMsg>
-            ) : (
-              <></>
-            )}
-          </div>
-        </div>
-        <div>
-          {!prevData["is_approved"] ? (
-            <Button
-              className={styles.formBtn}
-              type="button"
-              onClick={() => onApprove(prevData.id)}
-            >
-              Setujui
-            </Button>
-          ) : (
-            <></>
-          )}
-          {!isEditable ? (
-            <>
-              <Button
-                key="edit_btn"
-                colorScheme="green"
-                type="button"
-                className={styles.formBtn}
-                onClick={() => onSetEditable()}
-              >
-                Ubah
-              </Button>
-              <Button
-                colorScheme="red"
-                type="button"
-                className={styles.formBtn}
-                onClick={() => onConfirmDelete()}
-              >
-                Hapus
-              </Button>
-            </>
-          ) : (
-            <>
-              <Button
-                key="save_edit_btn"
-                colorScheme="green"
-                type="submit"
-                className={styles.formBtn}
-              >
-                Ubah
-              </Button>
-              <Button
-                colorScheme="red"
-                type="reset"
-                className={styles.formBtn}
-                onClick={() => onClose()}
-              >
-                Batal
-              </Button>
-            </>
-          )}
-        </div>
-      </form>
+        </form>
+      )}
       <Modal
         isOpen={isModalOpen}
         heading="Peringatan!"
