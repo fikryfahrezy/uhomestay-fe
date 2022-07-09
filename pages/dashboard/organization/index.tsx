@@ -168,15 +168,18 @@ const Organization = () => {
     setOpen(true);
   };
 
-  /**
-   * @return {void}
-   */
-  const onModified = () => {
+
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
 
     documentsQuery.refetch();
     documentChildsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onSearchClick = (q: string) => {
@@ -343,7 +346,9 @@ const Organization = () => {
           tempData === null ? (
             <DocFileAddForm
               onCancel={() => onClose()}
-              onSubmited={() => onModified()}
+			  onSubmited={(type, title, message) =>
+				onModified(type, title, message)
+			  }
               onError={(type, title, message) => onError(type, title, message)}
               onLoading={(type, title, message) =>
                 onLoading(type, title, message)
@@ -353,7 +358,9 @@ const Organization = () => {
             <DocFileEditForm
               prevData={tempData}
               onCancel={() => onClose()}
-              onEdited={() => onModified()}
+			  onSubmited={(type, title, message) =>
+				onModified(type, title, message)
+			  }
               onError={(type, title, message) => onError(type, title, message)}
               onLoading={(type, title, message) =>
                 onLoading(type, title, message)
@@ -363,7 +370,9 @@ const Organization = () => {
         ) : tempData === null ? (
           <DocDirAddForm
             onCancel={() => onClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)
@@ -373,7 +382,9 @@ const Organization = () => {
           <DocDirEditForm
             prevData={tempData}
             onCancel={() => onClose()}
-            onEdited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)

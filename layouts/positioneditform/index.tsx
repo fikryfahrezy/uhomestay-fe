@@ -18,25 +18,23 @@ export type PositionEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: PositionEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type PositionEditFormProps = {
   prevData: PositionOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (
-    type: PositionEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: PositionEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const PositionEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -78,9 +76,9 @@ const PositionEditForm = ({
     return editPosition(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: PositionEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onSubmit = (id: number) =>
@@ -90,7 +88,7 @@ const PositionEditForm = ({
       editPositionMutation
         .mutateAsync({ id, data })
         .then(() => {
-          onReset();
+          onReset("edit", "Sukses mengubah jabatan");
         })
         .catch((e) => {
           onError("edit", "Error mengubah jabatan", e.message);
@@ -103,7 +101,7 @@ const PositionEditForm = ({
     removePositionMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("delete", "Sukses menghapus jabatan");
       })
       .catch((e) => {
         onError("delete", "Error menghapus jabatan", e.message);

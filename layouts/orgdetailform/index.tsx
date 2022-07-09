@@ -19,16 +19,22 @@ export type OrgDetailFormType = "delete" | "active";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: OrgDetailFormType,
+  title?: string,
+  message?: string
+) => void
+
 type OrgEditFormProps = {
   prevData: PeriodRes;
-  onEdited: () => void;
-  onError: (type: OrgDetailFormType, title?: string, message?: string) => void;
-  onLoading: (type: OrgDetailFormType, title?: string, message?: string) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const OrgEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
 }: OrgEditFormProps) => {
@@ -63,7 +69,7 @@ const OrgEditForm = ({
     removePeriodMutation
       .mutateAsync(id)
       .then(() => {
-        onEdited();
+        onSubmited("delete", "Sukses menghapus periode");
       })
       .catch((e) => {
         onError("delete", "Error menghapus periode", e.message);
@@ -80,7 +86,7 @@ const OrgEditForm = ({
     changePeriodStatusMutation
       .mutateAsync({ data, id: prevData.id })
       .then(() => {
-        onEdited();
+        onSubmited("active", "Sukses mengubah status periode");
       })
       .catch((e) => {
         onError("active", "Error mengubah status periode", e.message);

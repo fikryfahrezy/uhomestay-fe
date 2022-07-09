@@ -11,19 +11,17 @@ export type PositionAddFormType = "add";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: PositionAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type PositionAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (
-    type: PositionAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: PositionAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const PositionAddForm = ({
@@ -60,7 +58,7 @@ const PositionAddForm = ({
       .mutateAsync(data)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
-        onSubmited();
+        onSubmited("add", "Sukses menambahkan jabatan");
       })
       .catch((e) => {
         onError("add", "Error menambahkan jabatan", e.message);

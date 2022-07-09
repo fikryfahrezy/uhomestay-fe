@@ -58,10 +58,15 @@ const Organization = () => {
     setOpen(true);
   };
 
-  const onModified = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
     periodsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onError = (type: FormType, title?: string, message?: string) => {
@@ -138,7 +143,9 @@ const Organization = () => {
           <OrgAddForm
             isOpen={open}
             onCancel={() => onClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)
@@ -150,7 +157,9 @@ const Organization = () => {
               <OrgEditForm
                 prevData={tempData}
                 onCancel={() => onClose()}
-                onEdited={() => onModified()}
+				onSubmited={(type, title, message) =>
+				  onModified(type, title, message)
+				}
                 onError={(type, title, message) =>
                   onError(type, title, message)
                 }
@@ -161,7 +170,9 @@ const Organization = () => {
             ) : (
               <OrgDetailForm
                 prevData={tempData}
-                onEdited={() => onModified()}
+				onSubmited={(type, title, message) =>
+				  onModified(type, title, message)
+				}
                 onError={(type, title, message) =>
                   onError(type, title, message)
                 }

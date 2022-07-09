@@ -13,20 +13,22 @@ export type MemberDuesPayType = "pay";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: MemberDuesPayType,
+  title?: string,
+  message?: string
+) => void;
+
 type MemberDuesPayFormProps = {
   prevData: MemberDuesOut;
-  onEdited: () => void;
-  onError: (type: MemberDuesPayType, title?: string, message?: string) => void;
-  onLoading: (
-    type: MemberDuesPayType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const MemberDuesPayForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
 }: MemberDuesPayFormProps) => {
@@ -53,9 +55,9 @@ const MemberDuesPayForm = ({
     return payDues(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: MemberDuesPayType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onSubmit = (id: number) =>
@@ -72,7 +74,7 @@ const MemberDuesPayForm = ({
       payDuesMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset();
+          onReset("pay", "Sukses mengunggah bukti tagihan");
         })
         .catch((e) => {
           onError("pay", "Error mengunggah bukti tagihan", e.message);

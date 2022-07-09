@@ -13,25 +13,23 @@ export type MemberDuesEditFormType = "edit" | "approve";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: MemberDuesEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type MemberDuesEditFormProps = {
   prevData: MemberDuesOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (
-    type: MemberDuesEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: MemberDuesEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const MemberDuesEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -72,9 +70,9 @@ const MemberDuesEditForm = ({
     return editDues(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: MemberDuesEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onSubmit = (id: number) =>
@@ -91,7 +89,7 @@ const MemberDuesEditForm = ({
       editDuesMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset();
+          onReset("edit", "Sukses mengubah tagihan anggota");
         })
         .catch((e) => {
           onError("edit", "Error mengubah tagihan anggota", e.message);
@@ -109,7 +107,7 @@ const MemberDuesEditForm = ({
         },
       })
       .then(() => {
-        onReset();
+        onReset("approve", "Sukses menyetujui tagihan anggota");
       })
       .catch((e) => {
         onError("approve", "Error menyetujui tagihan anggota", e.message);

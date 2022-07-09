@@ -13,25 +13,23 @@ export type DocFileEditFormType = "editfile" | "deletefile";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DocFileEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DocFileEditFormProps = {
   prevData: DocumentOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (
-    type: DocFileEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: DocFileEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DocFileEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -69,9 +67,9 @@ const DocFileEditForm = ({
     return editFileDocument(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: DocFileEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onDelete = (id: number) => {
@@ -80,7 +78,7 @@ const DocFileEditForm = ({
     removeDocumentMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("deletefile", "Sukses menghapus file");
       })
       .catch((e) => {
         onError("deletefile", "Error menghapus file", e.message);
@@ -104,7 +102,7 @@ const DocFileEditForm = ({
       editFileDocumentMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset();
+          onReset("editfile", "Sukses mengubah file");
         })
         .catch((e) => {
           onError("editfile", "Error mengubah file", e.message);

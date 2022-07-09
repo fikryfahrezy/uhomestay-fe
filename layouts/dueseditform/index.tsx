@@ -14,17 +14,23 @@ export type DuesEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DuesEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DuesEditFormProps = {
   prevData: DuesOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (type: DuesEditFormType, title?: string, message?: string) => void;
-  onLoading: (type: DuesEditFormType, title?: string, message?: string) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DuesEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -66,9 +72,9 @@ const DuesEditForm = ({
     return editDues(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: DuesEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onDelete = (id: number) => {
@@ -77,7 +83,7 @@ const DuesEditForm = ({
     removeDuesMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("delete", "Sukses menghapus tagihan");
       })
       .catch((e) => {
         onError("delete", "Error menghapus tagihan", e.message);
@@ -96,7 +102,7 @@ const DuesEditForm = ({
       editDuesMutation
         .mutateAsync({ id, data: newData })
         .then(() => {
-          onReset();
+          onReset("edit", "Sukses mengubah tagihan");
         })
         .catch((e) => {
           onError("edit", "Error mengubah tagihan", e.message);

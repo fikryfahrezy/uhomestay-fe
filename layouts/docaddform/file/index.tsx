@@ -11,15 +11,17 @@ export type DocFileAddFormType = "addfile";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DocFileAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DocFileAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (type: DocFileAddFormType, title?: string, message?: string) => void;
-  onLoading: (
-    type: DocFileAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DocFileAddForm = ({
@@ -79,7 +81,7 @@ const DocFileAddForm = ({
         .mutateAsync(formData)
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
-          onSubmited();
+          onSubmited("addfile", "Sukses menambahkan file");
         })
         .catch((e) => {
           onError("addfile", "Error menambahkan file", e.message);

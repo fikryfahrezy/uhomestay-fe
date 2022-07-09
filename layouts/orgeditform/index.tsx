@@ -23,17 +23,23 @@ export type OrgEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: OrgEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type OrgEditFormProps = {
   prevData: PeriodRes;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (type: OrgEditFormType, title?: string, message?: string) => void;
-  onLoading: (type: OrgEditFormType, title?: string, message?: string) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const OrgEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -80,9 +86,9 @@ const OrgEditForm = ({
     return editPeriod(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: OrgEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onDelete = (id: number) => {
@@ -91,7 +97,7 @@ const OrgEditForm = ({
     removePeriodMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("delete", "Sukses menghapus periode");
       })
       .catch((e) => {
         onError("delete", "Error menghapus periode", e.message);
@@ -130,7 +136,7 @@ const OrgEditForm = ({
         .mutateAsync({ id, data: newData })
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
-          onEdited();
+          onSubmited("edit", "Sukses mengubah periode");
         })
         .catch((e) => {
           onError("edit", "Error mengubah periode", e.message);

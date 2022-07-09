@@ -63,10 +63,15 @@ const Member = () => {
     setDrawerOpen(true);
   };
 
-  const onModified = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setDrawerOpen(false);
     membersQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onSearchClick = (q: string) => {
@@ -163,7 +168,9 @@ const Member = () => {
         {tempData === null ? (
           <MemberAddForm
             onCancel={() => onDrawerClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)
@@ -173,7 +180,9 @@ const Member = () => {
           <MemberEditForm
             prevData={tempData}
             onCancel={() => onDrawerClose()}
-            onEdited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)

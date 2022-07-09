@@ -11,15 +11,17 @@ export type DocDirAddFormType = "adddir";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DocDirAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DocDirAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (type: DocDirAddFormType, title?: string, message?: string) => void;
-  onLoading: (
-    type: DocDirAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DocDirAddForm = ({
@@ -66,7 +68,7 @@ const DocDirAddForm = ({
         .mutateAsync({ ...data, dir_id: dirId })
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
-          onSubmited();
+          onSubmited("adddir", "Sukses menambahkan folder");
         })
         .catch((e) => {
           onError("adddir", "Error menambahkan folder", e.message);

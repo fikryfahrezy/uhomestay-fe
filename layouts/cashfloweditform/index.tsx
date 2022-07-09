@@ -19,25 +19,23 @@ export type CasflowEditFormType = "edit" | "delete";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: CasflowEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type CasflowEditFormProps = {
   prevData: CashflowOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (
-    type: CasflowEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: CasflowEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const CasflowEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -78,9 +76,9 @@ const CasflowEditForm = ({
     return editCashflow(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: CasflowEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onSubmit = (id: number) =>
@@ -99,7 +97,7 @@ const CasflowEditForm = ({
       editCashflowMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset();
+          onReset("edit", "Sukses mengubah cashflow");
         })
         .catch((e) => {
           onError("edit", "Error mengubah cashflow", e.message);
@@ -112,7 +110,7 @@ const CasflowEditForm = ({
     removeCashflowMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("delete", "Sukses menghapus cashflow");
       })
       .catch((e) => {
         onError("delete", "Error menghapus cashflow", e.message);

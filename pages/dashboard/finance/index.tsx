@@ -70,10 +70,15 @@ const Finance = () => {
     setOpen(true);
   };
 
-  const onModiefied = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
     cashflowsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onError = (type: FormType, title?: string, message?: string) => {
@@ -219,7 +224,9 @@ const Finance = () => {
         {tempData === null ? (
           <CashflowAddForm
             onCancel={() => onClose()}
-            onSubmited={() => onModiefied()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)
@@ -229,7 +236,9 @@ const Finance = () => {
           <CashflowEditForm
             prevData={tempData}
             onCancel={() => onClose()}
-            onEdited={() => onModiefied()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)

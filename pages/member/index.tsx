@@ -68,10 +68,15 @@ const Member = () => {
     setOpen(true);
   };
 
-  const onModiefied = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
     memberDuesQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onError = (type: FormType, title?: string, message?: string) => {
@@ -276,7 +281,9 @@ const Member = () => {
           duesStatus === DUES_STATUS.UNPAID ? (
             <MemberDuesPayForm
               prevData={tempData}
-              onEdited={() => onModiefied()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
               onError={(type, title, message) => onError(type, title, message)}
               onLoading={(type, title, message) =>
                 onLoading(type, title, message)

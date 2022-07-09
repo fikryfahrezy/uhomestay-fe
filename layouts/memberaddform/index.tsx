@@ -27,15 +27,17 @@ const defLat = -7.153238933398519;
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: MemberAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type MemberAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (type: MemberAddFormType, title?: string, message?: string) => void;
-  onLoading: (
-    type: MemberAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const MemberAddForm = ({
@@ -99,7 +101,7 @@ const MemberAddForm = ({
       .mutateAsync(formData)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
-        onSubmited();
+        onSubmited("add", "Sukses menambahkan anggota");
       })
       .catch((e) => {
         onError("add", "Error menambahkan anggota", e.message);

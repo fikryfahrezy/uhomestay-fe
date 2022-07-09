@@ -13,21 +13,23 @@ export type DocDirEditFormType = "editdir" | "deletedir";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DocDirEditFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DocDirEditFormProps = {
   prevData: DocumentOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (type: DocDirEditFormType, title?: string, message?: string) => void;
-  onLoading: (
-    type: DocDirEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DocDirEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -65,9 +67,9 @@ const DocDirEditForm = ({
     return editDirDocument(id, data);
   });
 
-  const onReset = () => {
+  const onReset = (type: DocDirEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onDelete = (id: number) => {
@@ -76,7 +78,7 @@ const DocDirEditForm = ({
     removeDocumentMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("deletedir", "Sukses menghapus cashflow");
       })
       .catch((e) => {
         onError("deletedir", "Error menghapus folder", e.message);
@@ -90,7 +92,7 @@ const DocDirEditForm = ({
       editDirDocumentMutation
         .mutateAsync({ id, data })
         .then(() => {
-          onReset();
+          onReset("editdir", "Sukses mengubah folder");
         })
         .catch((e) => {
           onError("editdir", "Error mengubah folder", e.message);

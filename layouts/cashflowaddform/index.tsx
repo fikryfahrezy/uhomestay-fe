@@ -8,23 +8,21 @@ import TextArea from "cmnjg-sb/dist/textarea";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
 import styles from "./Styles.module.css";
 
-export type CashflowAddFormType = "add" | "edit" | "delete";
+export type CashflowAddFormType = "add";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: CashflowAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type CashflowAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (
-    type: CashflowAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
-  onLoading: (
-    type: CashflowAddFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const CashflowAddForm = ({
@@ -72,7 +70,7 @@ const CashflowAddForm = ({
       .mutateAsync(formData)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
-        onSubmited();
+        onSubmited("add", "Sukses membuat cashflow");
       })
       .catch((e) => {
         onError("add", "Error membuat cashflow", e.message);

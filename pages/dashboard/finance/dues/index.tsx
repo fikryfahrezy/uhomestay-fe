@@ -70,11 +70,16 @@ const Dues = () => {
     setDrawerOpen(true);
   };
 
-  const onModified = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setDrawerOpen(false);
     membersDuesQuery.refetch();
     duesQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onDuesSelect = (val: string) => {
@@ -223,7 +228,9 @@ const Dues = () => {
         {tempData === null ? (
           <DuesAddForm
             onCancel={() => onDrawerClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)
@@ -233,7 +240,9 @@ const Dues = () => {
           <DuesEditForm
             prevData={tempData}
             onCancel={() => onDrawerClose()}
-            onEdited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
             onError={(type, title, message) => onError(type, title, message)}
             onLoading={(type, title, message) =>
               onLoading(type, title, message)

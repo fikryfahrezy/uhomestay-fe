@@ -10,11 +10,17 @@ export type DuesAddFormType = "add";
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: DuesAddFormType,
+  title?: string,
+  message?: string
+) => void;
+
 type DuesAddFormProps = {
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (type: DuesAddFormType, title?: string, message?: string) => void;
-  onLoading: (type: DuesAddFormType, title?: string, message?: string) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const DuesAddForm = ({
@@ -54,7 +60,7 @@ const DuesAddForm = ({
       .mutateAsync(newData)
       .then(() => {
         reset(defaultValues, { keepDefaultValues: true });
-        onSubmited();
+        onSubmited("add", "Sukses membuat tagihan");
       })
       .catch((e) => {
         onError("add", "Error membuat tagihan", e.message);

@@ -17,12 +17,14 @@ export type OrgAddFormType = "add";
 
 const defaultFunc = () => {};
 
+type OnEvent = (type: OrgAddFormType, title?: string, message?: string) => void;
+
 type OrgAddFormProps = {
   isOpen: boolean;
-  onSubmited: () => void;
   onCancel: () => void;
-  onError: (type: OrgAddFormType, title?: string, message?: string) => void;
-  onLoading: (type: OrgAddFormType, title?: string, message?: string) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const OrgAddForm = ({
@@ -100,7 +102,7 @@ const OrgAddForm = ({
         .mutateAsync(newData)
         .then(() => {
           reset(defaultValues, { keepDefaultValues: true });
-          onSubmited();
+          onSubmited("add", "Sukses membuat periode");
         })
         .catch((e) => {
           onError("add", "Error membuat periode", e.message);

@@ -37,21 +37,23 @@ const limLat = 90;
 
 const defaultFunc = () => {};
 
+type OnEvent = (
+  type: MemberEditFormType,
+  title?: string,
+  message?: string
+) => void
+
 type MemberEditFormProps = {
   prevData: MemberOut;
-  onEdited: () => void;
   onCancel: () => void;
-  onError: (type: MemberEditFormType, title?: string, message?: string) => void;
-  onLoading: (
-    type: MemberEditFormType,
-    title?: string,
-    message?: string
-  ) => void;
+  onSubmited: OnEvent;
+  onError: OnEvent;
+  onLoading: OnEvent;
 };
 
 const MemberEditForm = ({
   prevData,
-  onEdited = defaultFunc,
+  onSubmited = defaultFunc,
   onCancel = defaultFunc,
   onError = defaultFunc,
   onLoading = defaultFunc,
@@ -129,9 +131,10 @@ const MemberEditForm = ({
     return editMember(id, data);
   });
 
-  const onReset = () => {
+  
+  const onReset = (type: MemberEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
-    onEdited();
+    onSubmited(type, title);
   };
 
   const onDelete = (id: string) => {
@@ -140,7 +143,7 @@ const MemberEditForm = ({
     removeMemberMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("delete", "Sukses menghapus anggota");
       })
       .catch((e) => {
         onError("delete", "Error menghapus anggota", e.message);
@@ -153,7 +156,7 @@ const MemberEditForm = ({
     approveMemberMutation
       .mutateAsync(id)
       .then(() => {
-        onReset();
+        onReset("approve", "Sukses menyetujui anggota");
       })
       .catch((e) => {
         onError("approve", "Error menyetujui anggota", e.message);
@@ -177,7 +180,7 @@ const MemberEditForm = ({
       editMemberMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset();
+          onReset("edit", "Sukses mengubah anggota");
         })
         .catch((e) => {
           onError("edit", "Error mengubah anggota", e.message);
