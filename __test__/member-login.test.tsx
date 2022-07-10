@@ -31,7 +31,7 @@ test("Member successfully login", async () => {
   const logBtn = screen.getByText("Login");
   await user.click(logBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -41,7 +41,7 @@ test("Member fail login without credentials", async () => {
   const logBtn = screen.getByText("Login");
   await user.click(logBtn);
 
-  const errMsgs = screen.getAllByText("This field is required");
+  const errMsgs = screen.getAllByText("Tidak boleh kosong");
   errMsgs.forEach((errMsg) => {
     expect(errMsg).toBeInTheDocument();
   });
@@ -56,7 +56,7 @@ test("Member fail login without username", async () => {
   const logBtn = screen.getByText("Login");
   await user.click(logBtn);
 
-  const errMsg = screen.getByText("This field is required");
+  const errMsg = screen.getByText("Tidak boleh kosong");
   expect(errMsg).toBeInTheDocument();
 });
 
@@ -69,6 +69,6 @@ test("Member fail login without password", async () => {
   const logBtn = screen.getByText("Login");
   await user.click(logBtn);
 
-  const errMsg = screen.getByText("This field is required");
+  const errMsg = screen.getByText("Tidak boleh kosong");
   expect(errMsg).toBeInTheDocument();
 });

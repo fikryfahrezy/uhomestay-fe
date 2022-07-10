@@ -29,10 +29,6 @@ test("Render organization period list", async () => {
 test("Add new period success", async () => {
   render(<OrgPeriod />);
 
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
-
   const drwBtn = screen.getByTestId("period-drawer-btn");
   await user.click(drwBtn);
 
@@ -81,16 +77,12 @@ test("Add new period success", async () => {
   const createBtn = screen.getByTestId("create-period-btn");
   await user.click(createBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
 test("Edit period success", async () => {
   render(<OrgPeriod />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const periodChip = await screen.findByTestId("period-chip");
   await user.click(periodChip);
@@ -143,7 +135,7 @@ test("Edit period success", async () => {
   const createBtn = screen.getByTestId("edit-period-btn");
   await user.click(createBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 });
 
@@ -182,10 +174,6 @@ test("Activate period success", async () => {
 
 test("Remove period success", async () => {
   render(<OrgPeriod />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const periodChip = await screen.findByTestId("period-chip");
   await user.click(periodChip);

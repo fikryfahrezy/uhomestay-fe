@@ -3,18 +3,20 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useRef } from "react";
+import { useMutation } from "react-query";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
 import { useFindPeriodGoal } from "@/services/period";
 import { addGoal } from "@/services/period";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import Toast, { useToast } from "@/components/toast";
-import AdminLayout from "@/layout/adminpage";
-import ToastComponent from "@/layout/toastcomponent";
+import Button from "cmnjg-sb/dist/button";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/write"));
+const RichText = dynamic(() => import("@/layouts/richtext/write"));
 
 const CreateMission = () => {
   const router = useRouter();
@@ -22,10 +24,18 @@ const CreateMission = () => {
   const periodGoal = useFindPeriodGoal(Number(id), {
     enabled: !!id,
   });
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
 
   const editorVisionStateRef = useRef();
   const editorMissionStateRef = useRef();
+
+  const addGoalMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addGoal>[0]
+  >((data) => {
+    return addGoal(data);
+  });
 
   const onClick = (id: string) => {
     if (editorVisionStateRef.current && editorMissionStateRef.current) {
@@ -51,14 +61,27 @@ const CreateMission = () => {
         org_period_id: Number(id),
       };
 
-      addGoal(data)
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title={`Loading visi & misi`} />,
+      });
+
+      addGoalMutation
+        .mutateAsync(data)
         .then(() => {
           window.location.replace(`${router.pathname}/../../view/${id}`);
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title={`Error visi & misi`}
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     }

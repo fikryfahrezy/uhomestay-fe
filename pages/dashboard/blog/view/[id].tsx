@@ -1,28 +1,38 @@
-import type { ReactElement, MouseEvent } from "react";
+import type { ReactElement } from "react";
 import { useState } from "react";
+import { useMutation } from "react-query";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiFileSettingsLine, RiDeleteBin6Line } from "react-icons/ri";
 import { useFindBlog, removeBlog } from "@/services/blog";
-import LinkButton from "@/components/linkbutton";
-import Button from "@/components/button";
-import Toast, { useToast } from "@/components/toast";
-import Modal from "@/layout/modal";
-import ToastComponent from "@/layout/toastcomponent";
-import AdminLayout from "@/layout/adminpage";
-import ErrMsg from "@/layout/errmsg";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Button from "cmnjg-sb/dist/button";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import Modal from "@/layouts/modal";
+import ToastComponent from "@/layouts/toastcomponent";
+import AdminLayout from "@/layouts/adminpage";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const Editor = dynamic(() => import("@/layout/blogeditor/read"));
+const Editor = dynamic(() => import("@/layouts/blogeditor/read"));
 
 const ViewBlog = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
   const router = useRouter();
   const { id } = router.query;
   const blog = useFindBlog(Number(id), {
     enabled: !!id,
+  });
+
+  const removeBlogMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof removeBlog>[0]
+  >((id) => {
+    return removeBlog(id);
   });
 
   /**
@@ -30,14 +40,27 @@ const ViewBlog = () => {
    * @param {string} id
    */
   const onDeleteBlog = (id: number) => {
-    removeBlog(id)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading menghapus blog" />,
+    });
+
+    removeBlogMutation
+      .mutateAsync(id)
       .then(() => {
         router.replace(`${router.pathname}/../..`);
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error menghapus blog"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };

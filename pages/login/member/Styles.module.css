@@ -72,3 +72,14 @@
 .errorMsg {
   color: #ff7474;
 }
+
+.link {
+	display: flex;
+	width: max-content;
+	margin-top: 25px;
+	margin-left: auto;
+	color: #fff;
+	justify-content: center;
+	align-items: center;
+  }
+  

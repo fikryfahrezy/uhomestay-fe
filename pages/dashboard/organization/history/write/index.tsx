@@ -1,25 +1,35 @@
 import type { ReactElement } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
+import { useMutation } from "react-query";
 import { useRef } from "react";
 import Link from "next/link";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
 import { addHistory, useFindLatestHistory } from "@/services/history";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import Toast, { useToast } from "@/components/toast";
-import ToastComponent from "@/layout/toastcomponent";
-import AdminLayout from "@/layout/adminpage";
+import Button from "cmnjg-sb/dist/button";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import ToastComponent from "@/layouts/toastcomponent";
+import AdminLayout from "@/layouts/adminpage";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/write"));
+const RichText = dynamic(() => import("@/layouts/richtext/write"));
 
 const WriteHistory = () => {
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
   const latestHistory = useFindLatestHistory();
   const router = useRouter();
   const editorStateRef = useRef();
+
+  const addHistoryMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addHistory>[0]
+  >((data) => {
+    return addHistory(data);
+  });
 
   const onClick = () => {
     if (editorStateRef.current) {
@@ -30,17 +40,30 @@ const WriteHistory = () => {
         contentText = getPlainText(editorStateRef.current);
       }
 
-      addHistory({
-        content,
-        content_text: contentText,
-      })
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading mengubah sejarah" />,
+      });
+
+      addHistoryMutation
+        .mutateAsync({
+          content,
+          content_text: contentText,
+        })
         .then(() => {
           window.location.replace(`${router.pathname}/../`);
         })
         .catch((e) => {
-          toast({
+          updateToast(lastId, {
             status: "error",
-            render: () => <ToastComponent title="Error" message={e.message} />,
+            render: () => (
+              <ToastComponent
+                title="Error mengubah sejarah"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
           });
         });
     }
@@ -54,7 +77,7 @@ const WriteHistory = () => {
           leftIcon={<RiCheckFill />}
           onClick={onClick}
           className={styles.actionBtn}
-		  data-testid="edit-history-btn"
+          data-testid="edit-history-btn"
         >
           Ubah
         </Button>

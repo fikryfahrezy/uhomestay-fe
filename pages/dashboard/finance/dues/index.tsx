@@ -1,6 +1,8 @@
 import type { ReactElement } from "react";
 import type { DuesOut } from "@/services/dues";
-import { useState, useEffect, Fragment } from "react";
+import type { DuesAddFormType } from "@/layouts/duesaddform";
+import type { DuesEditFormType } from "@/layouts/dueseditform";
+import { useState, useEffect, Fragment, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
@@ -9,18 +11,23 @@ import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
 import { useMembersDuesQuery } from "@/services/member-dues";
-import Drawer from "@/components/drawer";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Select from "@/components/select";
-import LinkButton from "@/components/linkbutton";
-import AdminLayout from "@/layout/adminpage";
-import DuesAddForm from "@/layout/duesaddform";
-import DuesEditForm from "@/layout/dueseditform";
-import EmptyMsg from "@/layout/emptymsg";
-import MemberDuesItem from "@/layout/memberduesitem";
-import ErrMsg from "@/layout/errmsg";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Button from "cmnjg-sb/dist/button";
+import IconButton from "cmnjg-sb/dist/iconbutton";
+import Select from "cmnjg-sb/dist/select";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import DuesAddForm from "@/layouts/duesaddform";
+import DuesEditForm from "@/layouts/dueseditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import MemberDuesItem from "@/layouts/memberduesitem";
+import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = DuesAddFormType | DuesEditFormType;
 
 const Dues = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
@@ -35,6 +42,13 @@ const Dues = () => {
       enabled: !!selectedDues,
     }
   );
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    add: 0,
+    delete: 0,
+    edit: 0,
+  });
 
   const observeCallback = () => {
     if (membersDuesQuery.hasNextPage) {
@@ -56,11 +70,16 @@ const Dues = () => {
     setDrawerOpen(true);
   };
 
-  const onModified = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setDrawerOpen(false);
     membersDuesQuery.refetch();
     duesQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onDuesSelect = (val: string) => {
@@ -73,6 +92,27 @@ const Dues = () => {
     if (dues !== undefined) {
       setSelectedDues(dues);
     }
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   useEffect(() => {
@@ -188,16 +228,29 @@ const Dues = () => {
         {tempData === null ? (
           <DuesAddForm
             onCancel={() => onDrawerClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <DuesEditForm
             prevData={tempData}
             onCancel={() => onDrawerClose()}
-            onEdited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

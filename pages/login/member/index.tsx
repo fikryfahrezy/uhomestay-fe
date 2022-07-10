@@ -1,16 +1,19 @@
 import { useForm } from "react-hook-form";
 import Image from "next/image";
+import Link from "next/link";
+import { useMutation } from "react-query";
 import { memberLogin, useMember } from "@/services/member";
-import Input from "@/components/input";
-import Button from "@/components/button";
-import Toast, { useToast } from "@/components/toast";
-import PageNav from "@/layout/pagenav";
-import ToastComponent from "@/layout/toastcomponent";
-import InputErrMsg from "@/layout/inputerrmsg";
+import Input from "cmnjg-sb/dist/input";
+import Button from "cmnjg-sb/dist/button";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import PageNav from "@/layouts/pagenav";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
 const Login = () => {
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
+
   const defaultValues = {
     identifier: "",
     password: "",
@@ -20,20 +23,42 @@ const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm({ defaultValues });
+
   const loginQuery = useMember({
     redirectTo: "/member",
     redirectIfFound: true,
   });
 
+  const memberLoginMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof memberLogin>[0]
+  >((data) => {
+    return memberLogin(data);
+  });
+
   const onSubmit = handleSubmit((data) => {
-    memberLogin(data)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading login" />,
+    });
+
+    memberLoginMutation
+      .mutateAsync(data)
       .then(() => {
         loginQuery.refetch();
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error login"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   });
@@ -62,8 +87,6 @@ const Login = () => {
               <div className={styles.inputGroup}>
                 <Input
                   {...register("identifier", {
-                    minLength: 6,
-                    maxLength: 20,
                     required: true,
                   })}
                   autoComplete="off"
@@ -73,18 +96,13 @@ const Login = () => {
                   aria-label="username"
                   className={styles.input}
                   isInvalid={errors.identifier !== undefined}
+                  errMsg={errors.identifier ? "Tidak boleh kosong" : ""}
                 />
-                {errors.identifier ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
               <div className={styles.inputGroup}>
                 <Input
                   {...register("password", {
                     required: true,
-                    pattern: /[a-z]{0,9}/i,
                   })}
                   autoComplete="off"
                   type="password"
@@ -92,12 +110,8 @@ const Login = () => {
                   aria-label="password"
                   className={styles.input}
                   isInvalid={errors.password !== undefined}
+                  errMsg={errors.password ? "Tidak boleh kosong" : ""}
                 />
-                {errors.password ? (
-                  <InputErrMsg>This field is required</InputErrMsg>
-                ) : (
-                  <></>
-                )}
               </div>
               <Button
                 colorScheme="green"

@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import MemberLayout from "@/layout/memberpage";
-import UpdateProfile from "@/layout/editprofile";
+import MemberLayout from "@/layouts/memberpage";
+import UpdateProfile from "@/layouts/editprofile";
 
 const EditProfile = () => {
   return <UpdateProfile />;

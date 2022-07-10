@@ -24,10 +24,6 @@ test("Render welcome message", () => {
 test("Admin successfully add folder", async () => {
   render(<Organization />);
 
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
-
   const addBtn = screen.getByTestId("add-btn");
   await user.click(addBtn);
 
@@ -47,7 +43,7 @@ test("Admin successfully add folder", async () => {
   const addDirBtn = screen.getByTestId("add-dir-btn");
   await user.click(addDirBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 
   const toastModal = screen.queryByTestId("toast-modal");
@@ -60,10 +56,6 @@ test("Admin successfully add folder", async () => {
 
 test("Admin successfully add file", async () => {
   render(<Organization />);
-
-  const portalRoot = document.createElement("div");
-  portalRoot.setAttribute("id", "modal");
-  document.body.appendChild(portalRoot);
 
   const addBtn = screen.getByTestId("add-btn");
   await user.click(addBtn);
@@ -86,7 +78,7 @@ test("Admin successfully add file", async () => {
   const addDirBtn = screen.getByTestId("add-file-btn");
   await user.click(addDirBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 
   const toastModal = screen.queryByTestId("toast-modal");
@@ -169,7 +161,7 @@ test("Admin successfully edit file", async () => {
   expect(editBtn).toBeInTheDocument();
   await user.click(editBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 
   const toastModal = screen.queryByTestId("toast-modal");
@@ -226,7 +218,7 @@ test("Admin successfully edit folder", async () => {
   expect(editBtn).toBeInTheDocument();
   await user.click(editBtn);
 
-  const errMsg = screen.queryByText("This field is required");
+  const errMsg = screen.queryByText("Tidak boleh kosong");
   expect(errMsg).not.toBeInTheDocument();
 
   const toastModal = screen.queryByTestId("toast-modal");

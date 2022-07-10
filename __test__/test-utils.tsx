@@ -17,7 +17,13 @@ const RQWrapper: FC<{ children: React.ReactNode }> = ({ children }) => (
 );
 
 const AllTheProviders: FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <RQWrapper>{children}</RQWrapper>;
+  return (
+    <RQWrapper>
+      {children}
+      <div id="modal" />
+      <div id="lexical-portal" />
+    </RQWrapper>
+  );
 };
 
 const customRender = (

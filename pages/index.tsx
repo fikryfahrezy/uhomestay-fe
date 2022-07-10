@@ -4,16 +4,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { yyyyMm } from "@/lib/fmt";
 import { useDashboardQuery } from "@/services/dashboard";
-import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
-import MoreLink from "@/layout/morelink";
-import DocListItem from "@/layout/doclistitem";
-import GoalView from "@/layout/goalview";
-import BlogListItem from "@/layout/bloglistitem";
+import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
+import MoreLink from "@/layouts/morelink";
+import DocListItem from "@/layouts/doclistitem";
+import GoalView from "@/layouts/goalview";
+import BlogListItem from "@/layouts/bloglistitem";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/read"));
+const RichText = dynamic(() => import("@/layouts/richtext/read"));
 
 const LandingPage = () => {
   const [isNavHiding, setNavHiding] = useState(false);

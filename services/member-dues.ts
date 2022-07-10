@@ -1,5 +1,5 @@
-import type { UseInfiniteQueryOptions, UseQueryOptions } from "react-query";
-import { useQuery, useInfiniteQuery } from "react-query";
+import type { UseInfiniteQueryOptions } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export const DUES_STATUS = Object.freeze({

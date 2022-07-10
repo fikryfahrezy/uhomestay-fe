@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import AdminPage from "@/layout/adminpage";
-import UpdateProfile from "@/layout/editprofile";
+import AdminPage from "@/layouts/adminpage";
+import UpdateProfile from "@/layouts/editprofile";
 
 const EditProfile = () => {
   return <UpdateProfile />;

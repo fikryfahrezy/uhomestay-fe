@@ -5,22 +5,32 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import slugify from "@sindresorhus/slugify";
+import { useMutation } from "react-query";
 import { RiCheckFill, RiCloseLine } from "react-icons/ri";
 import { getBlogMeta } from "@/lib/blogmeta";
 import { addBlog, uploadImage } from "@/services/blog";
-import Button from "@/components/button";
-import LinkButton from "@/components/linkbutton";
-import AdminLayout from "@/layout/adminpage";
-import Toast, { useToast } from "@/components/toast";
-import ToastComponent from "@/layout/toastcomponent";
+import Button from "cmnjg-sb/dist/button";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-const Editor = dynamic(() => import("@/layout/blogeditor/write"));
+const Editor = dynamic(() => import("@/layouts/blogeditor/write"));
 
 const CreateBlog = () => {
   const router = useRouter();
-  const { toast, props } = useToast();
+  const { toast, updateToast, props } = useToast();
   const editorStateRef = useRef<EditorState | null>(null);
+
+  const addBlogMutation = useMutation<
+    unknown,
+    unknown,
+    Parameters<typeof addBlog>[0]
+  >((data) => {
+    return addBlog(data);
+  });
 
   const onSave = () => {
     const content = editorStateRef.current
@@ -46,14 +56,27 @@ const CreateBlog = () => {
       data["content_text"] = blogMeta["content_text"];
     }
 
-    addBlog(data)
+    const lastId = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title="Loading membuat blog" />,
+    });
+
+    addBlogMutation
+      .mutateAsync(data)
       .then(() => {
         window.location.replace(`${router.pathname}/../`);
       })
       .catch((e) => {
-        toast({
+        updateToast(lastId, {
           status: "error",
-          render: () => <ToastComponent title="Error" message={e.message} />,
+          render: () => (
+            <ToastComponent
+              title="Error membuat blog"
+              message={e.message}
+              data-testid="toast-modal"
+            />
+          ),
         });
       });
   };

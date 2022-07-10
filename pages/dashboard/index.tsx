@@ -5,20 +5,20 @@ import dynamic from "next/dynamic";
 import { idrCurrency } from "@/lib/fmt";
 import { DOC_TYPE } from "@/services/document";
 import { usePrivateDashboardQuery } from "@/services/dashboard";
-import MoreLink from "@/layout/morelink";
-import AdminLayout from "@/layout/adminpage";
-import CashflowSummary from "@/layout/cashflowsummary";
-import MemberListItem from "@/layout/memberlistitem";
-import DocListItem from "@/layout/doclistitem";
-import MemberDuesItem from "@/layout/memberduesitem";
-import BlogListItem from "@/layout/bloglistitem";
-import PositionListItem from "@/layout/positionlistitem";
-import GoalView from "@/layout/goalview";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import MoreLink from "@/layouts/morelink";
+import AdminLayout from "@/layouts/adminpage";
+import CashflowSummary from "@/layouts/cashflowsummary";
+import MemberListItem from "@/layouts/memberlistitem";
+import DocListItem from "@/layouts/doclistitem";
+import MemberDuesItem from "@/layouts/memberduesitem";
+import BlogListItem from "@/layouts/bloglistitem";
+import PositionListItem from "@/layouts/positionlistitem";
+import GoalView from "@/layouts/goalview";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const RichText = dynamic(() => import("@/layout/richtext/read"));
+const RichText = dynamic(() => import("@/layouts/richtext/read"));
 
 const Dashboard = () => {
   const [token, setToken] = useState("");
@@ -99,9 +99,15 @@ const Dashboard = () => {
         {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
         ) : dashboardQuery.error ? (
-          <ErrMsg />
+          <>
+            <h2>Iuran Anggota</h2>
+            <ErrMsg />
+          </>
         ) : dashboardQuery.data.data["member_dues"].length === 0 ? (
-          <EmptyMsg />
+          <>
+            <h2>Iuran Anggota</h2>
+            <EmptyMsg />
+          </>
         ) : (
           <>
             <h2>

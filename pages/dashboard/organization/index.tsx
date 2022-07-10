@@ -1,5 +1,9 @@
 import type { ReactElement, MouseEvent } from "react";
 import type { DocumentOut } from "@/services/document";
+import type { DocFileAddFormType } from "@/layouts/docaddform/file";
+import type { DocFileEditFormType } from "@/layouts/doceditform/file";
+import type { DocDirAddFormType } from "@/layouts/docaddform/dir";
+import type { DocDirEditFormType } from "@/layouts/doceditform/dir";
 import { useRouter } from "next/router";
 import { useState, useMemo, useRef, Fragment } from "react";
 import Link from "next/link";
@@ -18,20 +22,29 @@ import {
   useDocumentsQuery,
   useDocumentChildsQuery,
 } from "@/services/document";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Input from "@/components/input";
-import PopUp from "@/components/popup";
-import AdminLayout from "@/layout/adminpage";
-import DocFileAddForm from "@/layout/docaddform/file";
-import DocFileEditForm from "@/layout/doceditform/file";
-import DocDirAddForm from "@/layout/docaddform/dir";
-import DocDirEditForm from "@/layout/doceditform/dir";
-import EmptyMsg from "@/layout/emptymsg";
-import DocListItem from "@/layout/doclistitem";
-import ErrMsg from "@/layout/errmsg";
+import Button from "cmnjg-sb/dist/button";
+import IconButton from "cmnjg-sb/dist/iconbutton";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Input from "cmnjg-sb/dist/input";
+import Popup from "cmnjg-sb/dist/popup";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import DocFileAddForm from "@/layouts/docaddform/file";
+import DocFileEditForm from "@/layouts/doceditform/file";
+import DocDirAddForm from "@/layouts/docaddform/dir";
+import DocDirEditForm from "@/layouts/doceditform/dir";
+import EmptyMsg from "@/layouts/emptymsg";
+import DocListItem from "@/layouts/doclistitem";
+import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType =
+  | DocFileAddFormType
+  | DocFileEditFormType
+  | DocDirAddFormType
+  | DocDirEditFormType;
 
 const Organization = () => {
   const [open, setOpen] = useState(false);
@@ -47,6 +60,16 @@ const Organization = () => {
     typeof dirId === "string" ? Number(dirId) : 0,
     q
   );
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    adddir: 0,
+    addfile: 0,
+    deletedir: 0,
+    deletefile: 0,
+    editdir: 0,
+    editfile: 0,
+  });
 
   const documentParent = useMemo(() => {
     const data = documentsQuery.data ? documentsQuery.data.data.documents : [];
@@ -145,26 +168,50 @@ const Organization = () => {
     setOpen(true);
   };
 
-  /**
-   * @return {void}
-   */
-  const onModified = () => {
+
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
 
     documentsQuery.refetch();
     documentChildsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
   };
 
   const onSearchClick = (q: string) => {
     setQ(q);
   };
 
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
+  };
+
   return (
     <>
       <h1 className={styles.pageTitle}>Dokumen</h1>
       <div className={styles.headerContainer}>
-        <PopUp
+        <Popup
           popUpContent={
             <ul className={styles.addBtnOptions}>
               <li
@@ -193,7 +240,7 @@ const Organization = () => {
           >
             Tambah
           </Button>
-        </PopUp>
+        </Popup>
         <div className={styles.form}>
           <Input
             ref={inputRef}
@@ -299,28 +346,53 @@ const Organization = () => {
           tempData === null ? (
             <DocFileAddForm
               onCancel={() => onClose()}
-              onSubmited={() => onModified()}
+			  onSubmited={(type, title, message) =>
+				onModified(type, title, message)
+			  }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
             />
           ) : (
             <DocFileEditForm
               prevData={tempData}
               onCancel={() => onClose()}
-              onEdited={() => onModified()}
+			  onSubmited={(type, title, message) =>
+				onModified(type, title, message)
+			  }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
             />
           )
         ) : tempData === null ? (
           <DocDirAddForm
             onCancel={() => onClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <DocDirEditForm
             prevData={tempData}
             onCancel={() => onClose()}
-            onEdited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

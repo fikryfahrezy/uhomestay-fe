@@ -1,26 +1,42 @@
 import type { ReactElement } from "react";
 import type { PeriodRes } from "@/services/period";
-import { useState, Fragment } from "react";
+import type { OrgAddFormType } from "@/layouts/orgaddform";
+import type { OrgEditFormType } from "@/layouts/orgeditform";
+import type { OrgDetailFormType } from "@/layouts/orgdetailform";
+import { useState, Fragment, useRef } from "react";
 import { RiAddLine } from "react-icons/ri";
 import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
-import Button from "@/components/button";
-import Drawer from "@/components/drawer";
-import Chip from "@/components/chip";
-import AdminLayout from "@/layout/adminpage";
-import OrgAddForm from "@/layout/orgaddform";
-import OrgEditForm from "@/layout/orgeditform";
-import OrgDetailForm from "@/layout/orgdetailform";
-import EmptyMsg from "@/layout/emptymsg";
-import ErrMsg from "@/layout/errmsg";
+import Button from "cmnjg-sb/dist/button";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Chip from "cmnjg-sb/dist/chip";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import OrgAddForm from "@/layouts/orgaddform";
+import OrgEditForm from "@/layouts/orgeditform";
+import OrgDetailForm from "@/layouts/orgdetailform";
+import EmptyMsg from "@/layouts/emptymsg";
+import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = OrgAddFormType | OrgEditFormType | OrgDetailFormType;
 
 const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
   const [open, setOpen] = useState(false);
   const periodsQuery = usePeriodsQuery();
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    active: 0,
+    add: 0,
+    delete: 0,
+    edit: 0,
+  });
 
   const observeCallback = () => {
     if (periodsQuery.hasNextPage) {
@@ -42,10 +58,36 @@ const Organization = () => {
     setOpen(true);
   };
 
-  const onModified = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
     periodsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   return (
@@ -101,7 +143,13 @@ const Organization = () => {
           <OrgAddForm
             isOpen={open}
             onCancel={() => onClose()}
-            onSubmited={() => onModified()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <>
@@ -109,17 +157,34 @@ const Organization = () => {
               <OrgEditForm
                 prevData={tempData}
                 onCancel={() => onClose()}
-                onEdited={() => onModified()}
+				onSubmited={(type, title, message) =>
+				  onModified(type, title, message)
+				}
+                onError={(type, title, message) =>
+                  onError(type, title, message)
+                }
+                onLoading={(type, title, message) =>
+                  onLoading(type, title, message)
+                }
               />
             ) : (
               <OrgDetailForm
                 prevData={tempData}
-                onEdited={() => onModified()}
+				onSubmited={(type, title, message) =>
+				  onModified(type, title, message)
+				}
+                onError={(type, title, message) =>
+                  onError(type, title, message)
+                }
+                onLoading={(type, title, message) =>
+                  onLoading(type, title, message)
+                }
               />
             )}
           </>
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };

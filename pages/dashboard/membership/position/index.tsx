@@ -1,24 +1,38 @@
 import type { ReactElement } from "react";
 import type { PositionOut } from "@/services/position";
-import { useState, Fragment } from "react";
+import type { PositionAddFormType } from "@/layouts/positionaddform";
+import type { PositionEditFormType } from "@/layouts/positioneditform";
+import { useState, Fragment, useRef } from "react";
 import { RiAddLine } from "react-icons/ri";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useInfinitePositionsQuery } from "@/services/position";
-import Button from "@/components/button";
-import Drawer from "@/components/drawer";
-import AdminLayout from "@/layout/adminpage";
-import PositionAddForm from "@/layout/positionaddform";
-import PositionEditForm from "@/layout/positioneditform";
-import EmptyMsg from "@/layout/emptymsg";
-import PositionListItem from "@/layout/positionlistitem";
-import ErrMsg from "@/layout/errmsg";
+import Button from "cmnjg-sb/dist/button";
+import Drawer from "cmnjg-sb/dist/drawer";
+import Toast from "cmnjg-sb/dist/toast";
+import useToast from "cmnjg-sb/dist/toast/useToast";
+import AdminLayout from "@/layouts/adminpage";
+import PositionAddForm from "@/layouts/positionaddform";
+import PositionEditForm from "@/layouts/positioneditform";
+import EmptyMsg from "@/layouts/emptymsg";
+import PositionListItem from "@/layouts/positionlistitem";
+import ErrMsg from "@/layouts/errmsg";
+import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
+
+type FormType = PositionAddFormType | PositionEditFormType;
 
 const Position = () => {
   const [open, setOpen] = useState(false);
   const [tempData, setTempData] = useState<PositionOut | null>(null);
   const positionsQuery = useInfinitePositionsQuery();
+
+  const { toast, updateToast, props } = useToast();
+  const toastId = useRef<{ [key in FormType]: number }>({
+    add: 0,
+    delete: 0,
+    edit: 0,
+  });
 
   const observeCallback = () => {
     if (positionsQuery.hasNextPage) {
@@ -40,10 +54,36 @@ const Position = () => {
     setOpen(true);
   };
 
-  const onModiefied = () => {
+  const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
     setOpen(false);
     positionsQuery.refetch();
+
+    updateToast(toastId.current[type], {
+      status: "success",
+      render: () => <ToastComponent title={title} message={message} />,
+    });
+  };
+
+  const onError = (type: FormType, title?: string, message?: string) => {
+    updateToast(toastId.current[type], {
+      status: "error",
+      render: () => (
+        <ToastComponent
+          title={title}
+          message={message}
+          data-testid="toast-modal"
+        />
+      ),
+    });
+  };
+
+  const onLoading = (type: FormType, title?: string, __?: string) => {
+    toastId.current[type] = toast({
+      status: "info",
+      duration: 999999,
+      render: () => <ToastComponent title={title} />,
+    });
   };
 
   return (
@@ -92,16 +132,29 @@ const Position = () => {
         {tempData === null ? (
           <PositionAddForm
             onCancel={() => onClose()}
-            onSubmited={() => onModiefied()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         ) : (
           <PositionEditForm
             prevData={tempData}
             onCancel={() => onClose()}
-            onEdited={() => onModiefied()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
           />
         )}
       </Drawer>
+      <Toast {...props} />
     </>
   );
 };
