@@ -58,7 +58,11 @@ const Organization = () => {
   const documentsQuery = useDocumentsQuery("");
   const documentChildsQuery = useDocumentChildsQuery(
     typeof dirId === "string" ? Number(dirId) : 0,
-    q
+    q,
+    {
+      getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+      getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+    }
   );
 
   const { toast, updateToast, props } = useToast();
@@ -167,7 +171,6 @@ const Organization = () => {
     setDocType(type);
     setOpen(true);
   };
-
 
   const onModified = (type: FormType, title?: string, message?: string) => {
     setTempData(null);
@@ -346,9 +349,9 @@ const Organization = () => {
           tempData === null ? (
             <DocFileAddForm
               onCancel={() => onClose()}
-			  onSubmited={(type, title, message) =>
-				onModified(type, title, message)
-			  }
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
               onError={(type, title, message) => onError(type, title, message)}
               onLoading={(type, title, message) =>
                 onLoading(type, title, message)
@@ -358,9 +361,9 @@ const Organization = () => {
             <DocFileEditForm
               prevData={tempData}
               onCancel={() => onClose()}
-			  onSubmited={(type, title, message) =>
-				onModified(type, title, message)
-			  }
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
               onError={(type, title, message) => onError(type, title, message)}
               onLoading={(type, title, message) =>
                 onLoading(type, title, message)

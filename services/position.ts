@@ -43,9 +43,9 @@ export const useInfinitePositionsQuery = <
 ) => {
   const query = useInfiniteQuery<D, E>(
     "positionsInfiniteQuery",
-    async () => {
+    async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/positions?cursor=${pageParam}`
       ).then((res) => {
         return res;
       });

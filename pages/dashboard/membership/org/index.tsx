@@ -28,7 +28,10 @@ type FormType = OrgAddFormType | OrgEditFormType | OrgDetailFormType;
 const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
   const [open, setOpen] = useState(false);
-  const periodsQuery = usePeriodsQuery();
+  const periodsQuery = usePeriodsQuery({
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
 
   const { toast, updateToast, props } = useToast();
   const toastId = useRef<{ [key in FormType]: number }>({
@@ -157,9 +160,9 @@ const Organization = () => {
               <OrgEditForm
                 prevData={tempData}
                 onCancel={() => onClose()}
-				onSubmited={(type, title, message) =>
-				  onModified(type, title, message)
-				}
+                onSubmited={(type, title, message) =>
+                  onModified(type, title, message)
+                }
                 onError={(type, title, message) =>
                   onError(type, title, message)
                 }
@@ -170,9 +173,9 @@ const Organization = () => {
             ) : (
               <OrgDetailForm
                 prevData={tempData}
-				onSubmited={(type, title, message) =>
-				  onModified(type, title, message)
-				}
+                onSubmited={(type, title, message) =>
+                  onModified(type, title, message)
+                }
                 onError={(type, title, message) =>
                   onError(type, title, message)
                 }

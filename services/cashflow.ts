@@ -1,5 +1,5 @@
-import type { UseInfiniteQueryOptions } from "react-query";
-import { useInfiniteQuery } from "react-query";
+import type { UseInfiniteQueryOptions, UseQueryOptions } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export const CASHFLOW_TYPE = Object.freeze({
@@ -28,14 +28,37 @@ type UseBlogsQueryData = {
   data: CashflowRes;
 };
 
-export const useCashflowsQuery = <D = UseBlogsQueryData, E = FetchError>(
+export const useInfiniteCashflowsQuery = <
+  D = UseBlogsQueryData,
+  E = FetchError
+>(
   option?: UseInfiniteQueryOptions<D, E>
 ) => {
   const query = useInfiniteQuery<D, E>(
-    "cashflowsQuery",
+    "cashflowsInfiniteQuery",
     async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
         `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows?cursor=${pageParam}`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
+export const useCashflowsQuery = <D = UseBlogsQueryData, E = FetchError>(
+  option?: UseQueryOptions<D, E>
+) => {
+  const query = useQuery<D, E>(
+    "cashflowsQuery",
+    async () => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows?limit=999`
       ).then((res) => {
         return res;
       });

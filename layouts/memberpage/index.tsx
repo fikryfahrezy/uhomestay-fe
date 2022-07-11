@@ -44,7 +44,6 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
     e.preventDefault();
     memberLogoutMutation.mutateAsync().then(() => {
       memberQuery.refetch();
-      router.push("/login/member");
     });
   };
 

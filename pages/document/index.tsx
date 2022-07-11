@@ -11,7 +11,10 @@ import styles from "./Styles.module.css";
 
 const Document = () => {
   const [q, setQ] = useState("");
-  const documentQuery = useInfiniteDocumentsQuery(q);
+  const documentQuery = useInfiniteDocumentsQuery(q, {
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
 
   const inputRef = useRef<HTMLInputElement | null>(null);
 

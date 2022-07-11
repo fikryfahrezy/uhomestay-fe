@@ -3,18 +3,27 @@ import type { MemberDuesOut } from "@/services/member-dues";
 import type { MemberDuesEditFormType } from "@/layouts/memberdueseditform";
 import { useState, Fragment, useRef } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import Image from "next/image";
-import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
+import {
+  RiMoneyDollarCircleLine,
+  RiMore2Line,
+  RiPrinterLine,
+} from "react-icons/ri";
 import Observe from "@/lib/use-observer";
 import { debounce } from "@/lib/perf";
 import { idrCurrency } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";
-import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
+import {
+  useInfiniteMemberDuesQuery,
+  DUES_STATUS,
+} from "@/services/member-dues";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Badge from "cmnjg-sb/dist/badge";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
 import AdminLayout from "@/layouts/adminpage";
 import MemberDuesEditForm from "@/layouts/memberdueseditform";
 import EmptyMsg from "@/layouts/emptymsg";
@@ -30,8 +39,10 @@ const MemberDues = () => {
 
   const [open, setOpen] = useState(false);
   const [tempData, setTempData] = useState<MemberDuesOut | null>(null);
-  const memberDuesQuery = useMemberDuesQuery(id as string, {
+  const memberDuesQuery = useInfiniteMemberDuesQuery(id as string, {
     enabled: !!id,
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
   const memberDetailQuery = useMemberDetailQuery(id as string, {
     enabled: !!id,
@@ -100,6 +111,20 @@ const MemberDues = () => {
           <ErrMsg />
         ) : (
           <div className={styles.contentHeadPart}>
+            <Link
+              href={{
+                pathname: `./print/[id]`,
+                query: { id },
+              }}
+              passHref
+            >
+              <LinkButton
+                leftIcon={<RiPrinterLine />}
+                className={styles.printBtn}
+              >
+                Cetak
+              </LinkButton>
+            </Link>
             <div className={styles.profileContainer}>
               <div className={styles.profileImgContainer}>
                 <Image

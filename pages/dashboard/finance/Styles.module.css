@@ -11,9 +11,14 @@
 }
 
 .addBtn {
-  margin-left: auto;
   width: fit-content;
+  margin-left: auto;
+  margin-bottom: 10px;
   font-size: 24px !important;
+}
+
+.printBtn {
+  width: fit-content;
 }
 
 @media screen and (max-width: 500px) {

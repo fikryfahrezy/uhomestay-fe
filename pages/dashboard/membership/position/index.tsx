@@ -25,7 +25,10 @@ type FormType = PositionAddFormType | PositionEditFormType;
 const Position = () => {
   const [open, setOpen] = useState(false);
   const [tempData, setTempData] = useState<PositionOut | null>(null);
-  const positionsQuery = useInfinitePositionsQuery();
+  const positionsQuery = useInfinitePositionsQuery({
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
 
   const { toast, updateToast, props } = useToast();
   const toastId = useRef<{ [key in FormType]: number }>({

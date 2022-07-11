@@ -1,5 +1,5 @@
-import type { UseInfiniteQueryOptions } from "react-query";
-import { useInfiniteQuery } from "react-query";
+import type { UseInfiniteQueryOptions, UseQueryOptions } from "react-query";
+import { useInfiniteQuery, useQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
 export const DUES_STATUS = Object.freeze({
@@ -29,15 +29,39 @@ type UseMemberDuesQueryData = {
   data: MemberDuesRes;
 };
 
-export const useMemberDuesQuery = <D = UseMemberDuesQueryData, E = FetchError>(
+export const useInfiniteMemberDuesQuery = <
+  D = UseMemberDuesQueryData,
+  E = FetchError
+>(
   id: string,
   option: UseInfiniteQueryOptions<D, E>
 ) => {
   const query = useInfiniteQuery<D, E>(
+    ["memberDeusInfiniteQuery", id],
+    async ({ pageParam = 0 }) => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/members/${id}?cursor=${pageParam}`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
+export const useMemberDuesQuery = <D = UseMemberDuesQueryData, E = FetchError>(
+  id: string,
+  option: UseQueryOptions<D, E>
+) => {
+  const query = useQuery<D, E>(
     ["memberDeusQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/members/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/members/${id}?limit=999`
       ).then((res) => {
         return res;
       });
@@ -82,12 +106,17 @@ export type MembersDuesOut = {
 
 type UseMembersDuesQueryData = {
   data: {
+    dues_id: number;
     cursor: number;
+    dues_date: string;
+    dues_amount: string;
+    paid_dues: string;
+    unpaid_dues: string;
     member_dues: MembersDuesOut[];
   };
 };
 
-export const useMembersDuesQuery = <
+export const useInfiniteMembersDuesQuery = <
   D = UseMembersDuesQueryData,
   E = FetchError
 >(
@@ -95,10 +124,34 @@ export const useMembersDuesQuery = <
   option?: UseInfiniteQueryOptions<D, E>
 ) => {
   const query = useInfiniteQuery<D, E>(
+    ["membersDeusInfiniteQuery", id],
+    async ({ pageParam = 0 }) => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/members?cursor=${pageParam}`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
+};
+
+export const useMembersDuesQuery = <
+  D = UseMembersDuesQueryData,
+  E = FetchError
+>(
+  id: number,
+  option?: UseQueryOptions<D, E>
+) => {
+  const query = useQuery<D, E>(
     ["membersDeusQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/members`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/members?limit=999`
       ).then((res) => {
         return res;
       });

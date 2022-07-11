@@ -13,7 +13,10 @@ import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Mission = () => {
-  const periodsQuery = usePeriodsQuery();
+  const periodsQuery = usePeriodsQuery({
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
   const router = useRouter();
 
   const observeCallback = () => {

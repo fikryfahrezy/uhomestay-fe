@@ -268,7 +268,6 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
     e.preventDefault();
     memberLogoutMutation.mutateAsync().then(() => {
       adminQuery.refetch();
-      router.push("/login/admin");
     });
   };
 

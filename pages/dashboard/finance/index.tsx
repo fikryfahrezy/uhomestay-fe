@@ -3,21 +3,25 @@ import type { CashflowOut } from "@/services/cashflow";
 import type { CashflowAddFormType } from "@/layouts/cashflowaddform";
 import type { CasflowEditFormType } from "@/layouts/cashfloweditform";
 import { useState, useRef, Fragment } from "react";
+import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   RiAddLine,
   RiMoneyDollarCircleLine,
   RiMore2Line,
+  RiPrinterLine,
 } from "react-icons/ri";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { idrCurrency } from "@/lib/fmt";
-import { useCashflowsQuery } from "@/services/cashflow";
+import { useInfiniteCashflowsQuery } from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
 import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
 import AdminLayout from "@/layouts/adminpage";
 import CashflowAddForm from "@/layouts/cashflowaddform";
 import CashflowEditForm from "@/layouts/cashfloweditform";
@@ -41,7 +45,11 @@ const Finance = () => {
     typeof CASHFLOW_TYPE[keyof typeof CASHFLOW_TYPE]
   >(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
-  const cashflowsQuery = useCashflowsQuery();
+
+  const cashflowsQuery = useInfiniteCashflowsQuery({
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
 
   const { toast, updateToast, props } = useToast();
   const toastId = useRef<{ [key in FormType]: number }>({
@@ -49,6 +57,8 @@ const Finance = () => {
     delete: 0,
     edit: 0,
   });
+
+  const router = useRouter();
 
   const observeCallback = () => {
     if (cashflowsQuery.hasNextPage) {
@@ -122,7 +132,12 @@ const Finance = () => {
         >
           Buat Transaksi
         </Button>
-        {cashflowsQuery.isLoading ? (
+        <Link href={`${router.pathname}/print`} passHref>
+          <LinkButton leftIcon={<RiPrinterLine />} className={styles.printBtn}>
+            Cetak
+          </LinkButton>
+        </Link>
+        {cashflowsQuery.isLoading || cashflowsQuery.isIdle ? (
           "Loading..."
         ) : cashflowsQuery.error ? (
           <ErrMsg />

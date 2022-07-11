@@ -7,7 +7,10 @@ import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
 import Observe from "@/lib/use-observer";
 import { debounce } from "@/lib/perf";
 import { idrCurrency } from "@/lib/fmt";
-import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
+import {
+  useInfiniteMemberDuesQuery,
+  DUES_STATUS,
+} from "@/services/member-dues";
 import { useMemberDetailQuery } from "@/services/member";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
@@ -29,8 +32,10 @@ const Member = () => {
   const [open, setOpen] = useState(false);
   const [duesStatus, setDuesStatus] = useState("");
   const [tempData, setTempData] = useState<MemberDuesOut | null>(null);
-  const memberDuesQuery = useMemberDuesQuery(muid, {
+  const memberDuesQuery = useInfiniteMemberDuesQuery(muid, {
     enabled: !!muid,
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
   const memberDetailQuery = useMemberDetailQuery(muid, {
     enabled: !!muid,

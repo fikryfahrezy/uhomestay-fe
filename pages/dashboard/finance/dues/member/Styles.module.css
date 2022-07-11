@@ -21,6 +21,11 @@
   flex: 1;
 }
 
+.printBtn {
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
 .profileContainer {
   display: flex;
   align-items: center;

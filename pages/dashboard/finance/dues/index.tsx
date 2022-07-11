@@ -5,12 +5,16 @@ import type { DuesEditFormType } from "@/layouts/dueseditform";
 import { useState, useEffect, Fragment, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { RiMoneyDollarCircleLine, RiMore2Line } from "react-icons/ri";
-import { idrCurrency } from "@/lib/fmt";
+import {
+  RiMoneyDollarCircleLine,
+  RiMore2Line,
+  RiPrinterLine,
+} from "react-icons/ri";
+import { idrCurrency, yyyyMm } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
-import { useMembersDuesQuery } from "@/services/member-dues";
+import { useInfiniteMembersDuesQuery } from "@/services/member-dues";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
@@ -31,17 +35,16 @@ type FormType = DuesAddFormType | DuesEditFormType;
 
 const Dues = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const [selectedDues, setSelectedDues] = useState<DuesOut | null>(null);
+  const [selectedDues, setSelectedDues] = useState<number>(0);
   const [tempData, setTempData] = useState<DuesOut | null>(null);
   const router = useRouter();
 
   const duesQuery = useDuesQuery();
-  const membersDuesQuery = useMembersDuesQuery(
-    selectedDues ? selectedDues.id : 0,
-    {
-      enabled: !!selectedDues,
-    }
-  );
+  const membersDuesQuery = useInfiniteMembersDuesQuery(selectedDues, {
+    enabled: !!selectedDues,
+    getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
+    getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
+  });
 
   const { toast, updateToast, props } = useToast();
   const toastId = useRef<{ [key in FormType]: number }>({
@@ -90,7 +93,7 @@ const Dues = () => {
     });
 
     if (dues !== undefined) {
-      setSelectedDues(dues);
+      setSelectedDues(dues.id);
     }
   };
 
@@ -118,7 +121,7 @@ const Dues = () => {
   useEffect(() => {
     const duesData = duesQuery.data;
     if (duesData !== undefined && duesData.data.dues.length != 0) {
-      setSelectedDues(duesData.data.dues[0]);
+      setSelectedDues(duesData.data.dues[0].id);
     }
   }, [duesQuery.data]);
 
@@ -135,54 +138,96 @@ const Dues = () => {
         Buat Tagihan
       </Button>
       <div className={styles.tableContainer}>
-        <div className={styles.groupTitle}>
-          <div className={styles.groupTitleBody}>
-            <div>
-              <p className={styles.groupSubtitle}>Tanggal</p>
-              {duesQuery.isLoading ? (
-                "Loading..."
-              ) : duesQuery.error ? (
-                <ErrMsg />
-              ) : duesQuery.data ? (
-                <Select
-                  className={styles.select}
-                  onChange={(e) => onDuesSelect(e.currentTarget.value)}
-                  value={selectedDues ? selectedDues.id : ""}
-                >
-                  {duesQuery.data.data.dues.map((val) => {
-                    const { id, date } = val;
-                    return (
-                      <option key={id} value={id}>
-                        {date}
-                      </option>
-                    );
-                  })}
-                </Select>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div>
-              <p className={styles.groupSubtitle}>Jumlah Iuran</p>
-              {selectedDues !== null && selectedDues !== undefined ? (
+        <Link
+          href={{
+            pathname: `${router.pathname}/print/[id]`,
+            query: { id: selectedDues },
+          }}
+          passHref
+        >
+          <LinkButton leftIcon={<RiPrinterLine />} className={styles.printBtn}>
+            Cetak
+          </LinkButton>
+        </Link>
+        <div className={styles.groupHeader}>
+          <div className={styles.groupTitle}>
+            <div className={styles.groupTitleBody}>
+              <div>
+                <p className={styles.groupSubtitle}>Tanggal</p>
+                {duesQuery.isLoading ? (
+                  "Loading..."
+                ) : duesQuery.error ? (
+                  <ErrMsg />
+                ) : duesQuery.data ? (
+                  <Select
+                    className={styles.select}
+                    onChange={(e) => onDuesSelect(e.currentTarget.value)}
+                    value={selectedDues ? selectedDues : ""}
+                  >
+                    {duesQuery.data.data.dues.map((val) => {
+                      const { id, date } = val;
+                      return (
+                        <option key={id} value={id}>
+                          {yyyyMm(new Date(date))}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                ) : (
+                  <></>
+                )}
+              </div>
+              <div>
+                <p className={styles.groupSubtitle}>Jumlah Iuran</p>
                 <p className={styles.groupSubvalue}>
-                  {idrCurrency.format(Number(selectedDues["idr_amount"]))}
+                  {idrCurrency.format(
+                    Number(
+                      membersDuesQuery.data?.pages[0].data["dues_amount"] || 0
+                    )
+                  )}
                 </p>
-              ) : (
-                <></>
-              )}
+              </div>
+            </div>
+            <div className={styles.currencyFlowContainer}>
+              <div>
+                <h3 className={styles.currencyFlowTitle}>Jumlah Terbayar</h3>
+                <p className={`${styles.currency} ${styles.green}`}>
+                  {idrCurrency.format(
+                    Number(
+                      membersDuesQuery.data?.pages[0].data["paid_dues"] || 0
+                    )
+                  )}
+                </p>
+              </div>
+              <div>
+                <h3 className={styles.currencyFlowTitle}>Belum Terbayar</h3>
+                <p className={`${styles.currency} ${styles.red}`}>
+                  {idrCurrency.format(
+                    Number(
+                      membersDuesQuery.data?.pages[0].data["unpaid_dues"] || 0
+                    )
+                  )}
+                </p>
+              </div>
             </div>
           </div>
           <IconButton
             className={styles.moreBtn}
-            onClick={() => openDrawer(selectedDues)}
+            onClick={() =>
+              openDrawer({
+                date: membersDuesQuery.data?.pages[0].data["dues_date"] || "",
+                idr_amount:
+                  membersDuesQuery.data?.pages[0].data["dues_amount"] || "",
+                id: selectedDues,
+              })
+            }
             data-testid="option-dues-btn"
           >
             <RiMore2Line />
           </IconButton>
         </div>
         {membersDuesQuery.isLoading || membersDuesQuery.isIdle ? (
-          <EmptyMsg />
+          "Loading..."
         ) : membersDuesQuery.error ? (
           <ErrMsg />
         ) : membersDuesQuery.data?.pages[0].data["member_dues"].length === 0 ? (

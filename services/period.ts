@@ -21,9 +21,9 @@ export const usePeriodsQuery = <D = UsePeriodsQueryData, E = FetchError>(
 ) => {
   const query = useInfiniteQuery<D, E>(
     "periodsQuery",
-    async () => {
+    async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/periods?cursor=${pageParam}`
       ).then((res) => {
         return res;
       });

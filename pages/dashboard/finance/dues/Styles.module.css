@@ -3,9 +3,15 @@
 }
 
 .addBtn {
-  margin-left: auto;
   width: fit-content;
+  margin-left: auto;
+  margin-bottom: 10px;
   font-size: 24px !important;
+}
+
+.printBtn {
+  width: fit-content;
+  margin-bottom: 10px;
 }
 
 .tableContainer {
@@ -13,11 +19,24 @@
   margin-bottom: 25px;
 }
 
+.groupHeader,
 .groupTitle {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+}
+
+.groupTitle {
+  width: 100%;
+  gap: 3ch;
+}
+
+@media screen and (max-width: 500px) {
+  .groupTitle {
+    align-items: flex-start;
+    flex-direction: column;
+  }
 }
 
 .groupTitleBody {
@@ -48,6 +67,26 @@
   overflow: hidden;
 }
 
+.currencyFlowContainer {
+  display: flex;
+  gap: 2ch;
+}
+
+@media screen and (max-width: 500px) {
+  .currencyFlowContainer {
+    flex-direction: column;
+  }
+}
+
+.currencyFlowTitle {
+  margin-top: 0;
+}
+
+.currency {
+  margin-bottom: 0;
+  font-size: 20px;
+}
+
 .select {
   color: #777777;
   background-color: #f2f2f2;
@@ -66,4 +105,12 @@
 .moreBtn:hover,
 .moreBtn:active {
   background-color: transparent;
+}
+
+.green {
+  color: #50ac97;
+}
+
+.red {
+  color: #ff7474;
 }
