@@ -1,7 +1,7 @@
 import type { DocumentOut } from "@/services/document";
 import { RiFolderFill, RiFileFill } from "react-icons/ri";
 import { DOC_TYPE } from "@/services/document";
-import styles from "./Styles.module.css";
+import BadgeList from "@/layouts/badgelist";
 
 type DocListItemProps = {
   document: DocumentOut;
@@ -19,11 +19,9 @@ const DocListItem = ({ moreBtn, document }: DocListItemProps) => {
   })();
 
   return (
-    <div className={styles.documentItem}>
-      <span className={styles.documentIcon}>{icon}</span>
-      <p className={styles.documentName}>{document.name}</p>
-      {moreBtn ? moreBtn : <></>}
-    </div>
+    <BadgeList icon={icon} moreBtn={moreBtn}>
+      {document.name}
+    </BadgeList>
   );
 };
 

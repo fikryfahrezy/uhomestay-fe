@@ -1,5 +1,5 @@
 import type { MapMouseEvent, EventData } from "mapbox-gl";
-import type { MemberOut } from "@/services/member";
+import type { MemberOut, MemberPosition } from "@/services/member";
 import dynamic from "next/dynamic";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -18,6 +18,7 @@ import TextArea from "cmnjg-sb/dist/textarea";
 import Input from "cmnjg-sb/dist/input";
 import Checkbox from "cmnjg-sb/dist/checkbox";
 import Select from "cmnjg-sb/dist/select";
+import DynamicSelect from "cmnjg-sb/dist/dynamicselect";
 import AvatarPicker from "cmnjg-sb/dist/avatarpicker";
 import Modal from "@/layouts/modal";
 import ErrMsg from "@/layouts/errmsg";
@@ -41,7 +42,7 @@ type OnEvent = (
   type: MemberEditFormType,
   title?: string,
   message?: string
-) => void
+) => void;
 
 type MemberEditFormProps = {
   prevData: MemberOut;
@@ -74,6 +75,10 @@ const MemberEditForm = ({
 
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
+  const [isEditPosition, setEditPostion] = useState(false);
+  const [positionCache, setPositionCache] = useState<Record<number, number>>(
+    {}
+  );
 
   const defaultValues = {
     profile: "",
@@ -131,7 +136,6 @@ const MemberEditForm = ({
     return editMember(id, data);
   });
 
-  
   const onReset = (type: MemberEditFormType, title: string) => {
     reset(defaultValues, { keepDefaultValues: true });
     onSubmited(type, title);
@@ -163,16 +167,22 @@ const MemberEditForm = ({
       });
   };
 
-  const onSubmit = (id: string) =>
+  const onSubmit = (id: string, position: Record<number, number>) =>
     handleSubmit((data) => {
+      const { position_id: posId, ...restData } = data;
       const formData = new FormData();
-      Object.entries(data).forEach(([k, v]) => {
+
+      Object.entries(restData).forEach(([k, v]) => {
         const uv = v as unknown;
         if (uv instanceof FileList && uv.length !== 0) {
           formData.append(k, uv[0]);
         } else {
           formData.append(k, String(v));
         }
+      });
+
+      Object.entries(position).forEach(([_, v]) => {
+        formData.append("position_ids", String(v));
       });
 
       onLoading("edit", "Loading mengubah anggota");
@@ -215,15 +225,50 @@ const MemberEditForm = ({
     onCancel();
   };
 
+  const onEditPosition = () => {
+    setPositionCache({});
+    setEditPostion(true);
+  };
+
+  const onCancelEditPosition = (prev: MemberPosition[]) => {
+    setPositionCache(() => {
+      const newCache: Record<number, number> = {};
+      prev.forEach(({ id }) => {
+        newCache[id] = id;
+      });
+
+      return newCache;
+    });
+    setEditPostion(false);
+  };
+
+  const onSelectPosition = (currentValue: number, prevValue: number) => {
+    setPositionCache((prevState) => {
+      const newState = { ...prevState };
+
+      delete newState[prevValue];
+      newState[currentValue] = currentValue;
+
+      return newState;
+    });
+  };
+
+  const onDeletePosition = (val: number) => {
+    setPositionCache((prevState) => {
+      const newState = { ...prevState };
+      delete newState[val];
+
+      return newState;
+    });
+  };
+
   useEffect(() => {
     if (memberDetailQuery.data !== undefined) {
       const {
         id,
-        position,
         period,
         is_approved,
         profile_pic_url: profile,
-        position_id: posId,
         period_id: perId,
         ...restData
       } = memberDetailQuery.data.data;
@@ -231,7 +276,6 @@ const MemberEditForm = ({
       reset(
         {
           profile,
-          position_id: posId === 0 ? "" : String(posId),
           period_id: perId === 0 ? "" : String(perId),
           ...restData,
         },
@@ -252,7 +296,10 @@ const MemberEditForm = ({
       ) : memberDetailQuery.error ? (
         <ErrMsg />
       ) : (
-        <form className={styles.drawerBody} onSubmit={onSubmit(prevData.id)}>
+        <form
+          className={styles.drawerBody}
+          onSubmit={onSubmit(prevData.id, positionCache)}
+        >
           <div className={styles.drawerContent}>
             <AvatarPicker
               {...register("profile")}
@@ -332,42 +379,96 @@ const MemberEditForm = ({
               />
             </div>
             <div className={styles.inputGroup}>
-              {positionsQuery.isLoading ? (
-                "Loading..."
-              ) : positionsQuery.error ? (
-                <ErrMsg />
-              ) : (
-                <Select
-                  {...register("position_id", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Jabatan:"
-                  id="position"
-                  required={true}
-                  disabled={!isEditable}
-                  isInvalid={errors["position_id"] !== undefined}
-                  errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
-                >
-                  {memberDetailQuery.data?.data["position_id"] === 0 ? (
+              {isEditPosition ? (
+                positionsQuery.isLoading ? (
+                  "Loading..."
+                ) : positionsQuery.error ? (
+                  <ErrMsg />
+                ) : (
+                  <DynamicSelect
+                    {...register("position_id", {
+                      required: true,
+                    })}
+                    id="position_id"
+                    label="Ubah Jabatan:"
+                    disabled={false}
+                    isInvalid={errors["position_id"] !== undefined}
+                    errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+                    onFieldDelete={(v) => onDeletePosition(Number(v))}
+                    onFieldChange={(cv, pv) =>
+                      onSelectPosition(Number(cv), Number(pv))
+                    }
+                    selects={Object.keys(positionCache).map((key) => {
+                      return {
+                        key,
+                        value: key,
+                        defaultValue: key,
+                      };
+                    })}
+                  >
                     <option value="">Pilih Jabatan</option>
-                  ) : (
-                    <option value={memberDetailQuery.data?.data["position_id"]}>
-                      {memberDetailQuery.data?.data.position}
-                    </option>
-                  )}
-                  {positionsQuery.data?.data.positions
+                    {positionsQuery.data?.data.positions.map(({ id, name }) => {
+                      return (
+                        <option
+                          key={id}
+                          value={id}
+                          disabled={positionCache[id] !== undefined}
+                        >
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </DynamicSelect>
+                )
+              ) : (
+                <DynamicSelect
+                  label="Jabatan Sekarang atau Sebelumnya:"
+                  disabled={true}
+                  selects={(memberDetailQuery.data?.data.positions || [])
                     .sort((a, b) => a.level - b.level)
-                    .filter(
-                      ({ id }) =>
-                        id !== memberDetailQuery.data?.data["position_id"]
+                    .map(({ id }) => {
+                      return {
+                        key: id,
+                        value: id,
+                        defaultValue: id,
+                      };
+                    })}
+                >
+                  {(memberDetailQuery.data?.data.positions || []).map(
+                    ({ id, name }) => {
+                      return (
+                        <option key={id} value={id}>
+                          {name}
+                        </option>
+                      );
+                    }
+                  )}
+                </DynamicSelect>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              {isEditPosition ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() =>
+                    onCancelEditPosition(
+                      memberDetailQuery.data?.data.positions || []
                     )
-                    .map(({ id, name }) => (
-                      <option key={id} value={id}>
-                        {name}
-                      </option>
-                    ))}
-                </Select>
+                  }
+                >
+                  Batal Ubah Jabatan
+                </Button>
+              ) : isEditable ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() => onEditPosition()}
+                >
+                  Ubah Jabatan
+                </Button>
+              ) : (
+                <></>
               )}
             </div>
             <div className={styles.inputGroup}>

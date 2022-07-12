@@ -13,3 +13,9 @@
   flex-wrap: wrap;
   gap: 15px;
 }
+
+.moreBtn,
+.moreBtn:hover,
+.moreBtn:active {
+  background-color: transparent;
+}

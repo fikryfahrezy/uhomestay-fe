@@ -46,6 +46,9 @@ const MapLayout = ({ lng, lat, onClick }: MapLayoutProps) => {
     // Create a default Marker and add it to the map.
     const newMarker = new mapboxgl.Marker({}).setLngLat(center).addTo(newMap);
 
+    // Add zoom and rotation controls to the map.
+    newMap.addControl(new mapboxgl.NavigationControl());
+
     map.current = newMap;
     mapMarker.current = newMarker;
   });

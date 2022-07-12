@@ -12,6 +12,7 @@ import Select from "cmnjg-sb/dist/select";
 import Checkbox from "cmnjg-sb/dist/checkbox";
 import Input from "cmnjg-sb/dist/input";
 import TextArea from "cmnjg-sb/dist/textarea";
+import DynamicSelect from "cmnjg-sb/dist/dynamicselect";
 import Button from "cmnjg-sb/dist/button";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
@@ -48,6 +49,9 @@ const MemberAddForm = ({
 }: MemberAddFormProps) => {
   const [lng, setLng] = useState(107.79054317790919);
   const [lat, setLat] = useState(-7.153238933398519);
+  const [positionCache, setPositionCache] = useState<Record<number, number>>(
+    {}
+  );
 
   const defaultValues = {
     profile: [],
@@ -84,29 +88,37 @@ const MemberAddForm = ({
     return addMember(data);
   });
 
-  const onSubmit = handleSubmit((data) => {
-    const formData = new FormData();
-    Object.entries(data).forEach(([k, v]) => {
-      const uv = v as unknown;
-      if (uv instanceof FileList && uv.length !== 0) {
-        formData.append(k, uv[0]);
-      } else {
-        formData.append(k, String(v));
-      }
-    });
+  const onSubmit = (position: Record<number, number>) =>
+    handleSubmit((data) => {
+      const { position_id: posId, ...restData } = data;
+      const formData = new FormData();
 
-    onLoading("add", "Loading menambahkan anggota");
-
-    addMemberMutation
-      .mutateAsync(formData)
-      .then(() => {
-        reset(defaultValues, { keepDefaultValues: true });
-        onSubmited("add", "Sukses menambahkan anggota");
-      })
-      .catch((e) => {
-        onError("add", "Error menambahkan anggota", e.message);
+      Object.entries(restData).forEach(([k, v]) => {
+        const uv = v as unknown;
+        if (uv instanceof FileList && uv.length !== 0) {
+          formData.append(k, uv[0]);
+        } else {
+          formData.append(k, String(v));
+        }
       });
-  });
+
+      Object.entries(position).forEach(([_, v]) => {
+        formData.append("position_ids", String(v));
+      });
+
+      onLoading("add", "Loading menambahkan anggota");
+
+      addMemberMutation
+        .mutateAsync(formData)
+        .then(() => {
+          reset(defaultValues, { keepDefaultValues: true });
+          setPositionCache({});
+          onSubmited("add", "Sukses menambahkan anggota");
+        })
+        .catch((e) => {
+          onError("add", "Error menambahkan anggota", e.message);
+        });
+    });
 
   const onClose = () => {
     reset(defaultValues, { keepDefaultValues: true });
@@ -123,10 +135,30 @@ const MemberAddForm = ({
     setValue("homestay_longitude", String(lng));
   };
 
+  const onSelectPosition = (currentValue: number, prevValue: number) => {
+    setPositionCache((prevState) => {
+      const newState = { ...prevState };
+
+      delete newState[prevValue];
+      newState[currentValue] = currentValue;
+
+      return newState;
+    });
+  };
+
+  const onDeletePosition = (val: number) => {
+    setPositionCache((prevState) => {
+      const newState = { ...prevState };
+      delete newState[val];
+
+      return newState;
+    });
+  };
+
   return (
     <>
       <h2 className={styles.drawerTitle}>Tambah Anggota</h2>
-      <form className={styles.drawerBody} onSubmit={onSubmit}>
+      <form className={styles.drawerBody} onSubmit={onSubmit(positionCache)}>
         <div className={styles.drawerContent}>
           <AvatarPicker
             {...register("profile")}
@@ -212,26 +244,40 @@ const MemberAddForm = ({
             ) : positionsQuery.error ? (
               <ErrMsg />
             ) : (
-              <Select
+              <DynamicSelect
                 {...register("position_id", {
                   required: true,
-                  valueAsNumber: true,
                 })}
+                id="position_id"
                 label="Jabatan:"
-                id="position"
                 required={true}
                 isInvalid={errors["position_id"] !== undefined}
                 errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+                onFieldDelete={(v) => onDeletePosition(Number(v))}
+                onFieldChange={(cv, pv) =>
+                  onSelectPosition(Number(cv), Number(pv))
+                }
+                selects={Object.keys(positionCache).map((key) => {
+                  return {
+                    key,
+                    value: key,
+                    defaultValue: key,
+                  };
+                })}
               >
                 <option value="">Pilih Jabatan</option>
                 {positionsQuery.data?.data.positions
                   .sort((a, b) => a.level - b.level)
                   .map(({ id, name }) => (
-                    <option key={id} value={id}>
+                    <option
+                      key={id}
+                      value={id}
+                      disabled={positionCache[id] !== undefined}
+                    >
                       {name}
                     </option>
                   ))}
-              </Select>
+              </DynamicSelect>
             )}
           </div>
           <div className={styles.inputGroup}>

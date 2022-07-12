@@ -13,3 +13,14 @@
   flex-wrap: wrap;
   gap: 15px;
 }
+
+.levelSubtitle {
+  margin-top: 5px;
+  margin-bottom: 0;
+}
+
+.moreBtn,
+.moreBtn:hover,
+.moreBtn:active {
+  background-color: transparent;
+}

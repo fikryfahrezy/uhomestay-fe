@@ -1,7 +1,5 @@
 import type { PositionIn } from "@/services/period";
-import type { ChangeEvent } from "react";
-import type { StructurePositonOut } from "@/services/period";
-import { useState, useEffect, useRef } from "react";
+import { useRef } from "react";
 import { useMembersQuery } from "@/services/member";
 import { usePositionsQuery } from "@/services/position";
 import DynamicSelect from "cmnjg-sb/dist/dynamicselect";
@@ -17,104 +15,86 @@ type MemberId = {
 };
 
 type OrgStructAddFormProps = {
-  isPositionSaved?: boolean;
-  isEditable?: boolean;
   onSave?: (positions: PositionIn[]) => void;
-  prevData?: StructurePositonOut[] | null;
 };
 
-const OrgStructAddForm = ({
-  isPositionSaved = false,
-  isEditable = false,
-  prevData = null,
-  onSave = defaultFunc,
-}: OrgStructAddFormProps) => {
-  const [memberCache, setMemberCache] = useState<Record<string, number>>({});
+type MemberCache = { id: number; members: MemberId[] };
+
+const OrgStructAddForm = ({ onSave = defaultFunc }: OrgStructAddFormProps) => {
   const positionsQuery = usePositionsQuery();
   const membersQuery = useMembersQuery("");
+
+  const memberCache = useRef<MemberCache[]>([]);
   const formRef = useRef<HTMLFormElement | null>(null);
+  const selectList = useRef([
+    {
+      key: 0,
+      value: "",
+    },
+  ]);
 
-  const onSaveClick = (memberCache: Record<string, number>) => {
-    const positions: Record<string, { members: MemberId[] }> = {};
-    Object.entries(memberCache).forEach(([k, v]) => {
-      if (!(v in positions)) {
-        positions[v] = { members: [] };
-      }
-
-      if (!("members" in positions[v])) {
-        positions[v].members = [];
-      }
-      positions[v].members.push({ id: k });
-    });
-
-    const positionsArr: PositionIn[] = [];
-    Object.entries(positions).forEach(([k, v]) => {
-      positionsArr.push({
-        id: Number(k),
-        members: v.members,
+  const onSaveClick = (memberCache: MemberCache[]) => {
+    const newMemberCache = memberCache.map(({ id, members }) => {
+      const memberSet = new Set<string>();
+      members.forEach(({ id }) => {
+        memberSet.add(id);
       });
+
+      const newMembers: MemberId[] = [];
+      memberSet.forEach((v) => {
+        newMembers.push({ id: v });
+      });
+
+      return {
+        id,
+        members: newMembers,
+      };
     });
 
-    onSave(positionsArr);
+    onSave(newMemberCache);
   };
 
   const onSelectMember = (
     positionId: number,
-    _: string,
-    prevValue: string,
-    e: ChangeEvent<HTMLSelectElement>
+    currentValue: string,
+    prevValue: string
   ) => {
-    setMemberCache((prevState) => {
-      const newState = { ...prevState };
-      delete newState[prevValue];
-      newState[e.target.value] = positionId;
-
-      return newState;
-    });
-  };
-
-  const onDeleteMember = (val: string) => {
-    setMemberCache((prevState) => {
-      const newState = { ...prevState };
-      delete newState[val];
-
-      return newState;
-    });
-  };
-
-  useEffect(() => {
-    if (isPositionSaved === false) {
-      setMemberCache({});
-      formRef.current?.reset();
+    let chcIdx = memberCache.current.findIndex(({ id }) => id === positionId);
+    if (chcIdx === -1) {
+      memberCache.current.push({ id: positionId, members: [] });
+      chcIdx = memberCache.current.length - 1;
     }
-  }, [isPositionSaved]);
 
-  useEffect(() => {
-    if (prevData === null) {
+    const prevMem = memberCache.current[chcIdx];
+
+    const firstIdx = prevMem.members.findIndex(({ id }) => id === prevValue);
+    if (firstIdx !== -1) {
+      prevMem.members.splice(firstIdx, 1);
+    }
+
+    prevMem.members.push({ id: currentValue });
+    memberCache.current[chcIdx] = prevMem;
+  };
+
+  const onDeleteMember = (positionId: number, val: string) => {
+    const chcIdx = memberCache.current.findIndex(({ id }) => id === positionId);
+    if (chcIdx === -1) {
       return;
     }
 
-    const prevMember: Record<string, number> = {};
-    prevData.forEach(({ id: posId, members }) => {
-      members.forEach(({ id }) => {
-        prevMember[id] = posId;
-      });
-    });
+    const prevMem = memberCache.current[chcIdx];
 
-    setMemberCache(prevMember);
-  }, [prevData]);
+    const firstIdx = prevMem.members.findIndex(({ id }) => id === val);
+    if (firstIdx !== -1) {
+      prevMem.members.splice(firstIdx, 1);
+    }
+
+    memberCache.current[chcIdx].members = prevMem.members;
+  };
 
   return (
     <>
-      {prevData ? (
-        isEditable ? (
-          <h2 className={styles.drawerTitle}>Ubah Struktur Organisasi</h2>
-        ) : (
-          <h2 className={styles.drawerTitle}>Struktur Organisasi</h2>
-        )
-      ) : (
-        <h2 className={styles.drawerTitle}>Buat Struktur Organisasi</h2>
-      )}
+      <h2 className={styles.drawerTitle}>Buat Struktur Organisasi</h2>
       <form
         ref={formRef}
         className={styles.drawerBody}
@@ -138,52 +118,34 @@ const OrgStructAddForm = ({
                   ) : membersQuery.error ? (
                     <ErrMsg />
                   ) : (
-                    <>
-                      <DynamicSelect
-                        label={name}
-                        disabled={!isEditable}
-                        onFieldDelete={(v) => onDeleteMember(v)}
-                        onFieldChange={(cv, pv, e) =>
-                          onSelectMember(id, cv, pv, e)
-                        }
-                        selects={Object.entries(memberCache)
-                          .filter(([_, v]) => v === id)
-                          .map(([id]) => ({
-                            key: id,
-                            value: id,
-                            defaultValue: id,
-                          }))}
-                      >
-                        <option value="">Pilih Anggota</option>
-                        {membersQuery.data?.data.members.map(({ id, name }) => (
-                          <option
-                            key={id}
-                            value={id}
-                            disabled={memberCache[id] !== undefined}
-                          >
-                            {name}
-                          </option>
-                        ))}
-                      </DynamicSelect>
-                    </>
+                    <DynamicSelect
+                      label={name}
+                      disabled={false}
+                      onFieldDelete={(v) => onDeleteMember(id, v)}
+                      onFieldChange={(cv, pv) => onSelectMember(id, cv, pv)}
+                      selects={selectList.current}
+                    >
+                      <option value="">Pilih Anggota</option>
+                      {membersQuery.data?.data.members.map(({ id, name }) => (
+                        <option key={id} value={id}>
+                          {name}
+                        </option>
+                      ))}
+                    </DynamicSelect>
                   )}
                 </div>
               ))
           )}
         </div>
         <div>
-          {isEditable ? (
-            <Button
-              className={styles.formBtn}
-              colorScheme="green"
-              type="button"
-              onClick={() => onSaveClick(memberCache)}
-            >
-              Simpan
-            </Button>
-          ) : (
-            <></>
-          )}
+          <Button
+            className={styles.formBtn}
+            colorScheme="green"
+            type="button"
+            onClick={() => onSaveClick(memberCache.current)}
+          >
+            Simpan
+          </Button>
         </div>
       </form>
     </>

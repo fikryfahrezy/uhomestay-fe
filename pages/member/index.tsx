@@ -23,6 +23,7 @@ import MemberLayout from "@/layouts/memberpage";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
+import ProfileTable from "@/layouts/profiletable";
 import styles from "./Styles.module.css";
 
 type FormType = MemberDuesPayType;
@@ -140,40 +141,7 @@ const Member = () => {
                   {memberDetailQuery.data.data.name}
                 </h2>
               </div>
-              <table className={styles.profileData}>
-                <tbody>
-                  <tr>
-                    <td>Nomor WA</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data["wa_phone"]}</td>
-                  </tr>
-                  <tr>
-                    <td>Nomor Lainnya</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data["other_phone"]}</td>
-                  </tr>
-                  <tr>
-                    <td>Jabatan</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data.position}</td>
-                  </tr>
-                  <tr>
-                    <td>Periode</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data.period}</td>
-                  </tr>
-                  <tr>
-                    <td>Nama Homestay</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data["homestay_name"]}</td>
-                  </tr>
-                  <tr>
-                    <td>Alamat Homestay</td>
-                    <td>:</td>
-                    <td>{memberDetailQuery.data.data["homestay_address"]}</td>
-                  </tr>
-                </tbody>
-              </table>
+              <ProfileTable data={memberDetailQuery.data.data} />
             </div>
           )}
           {memberDuesQuery.isLoading || memberDuesQuery.isIdle ? (

@@ -2,28 +2,28 @@ import type { ReactElement } from "react";
 import type { PeriodRes } from "@/services/period";
 import type { OrgAddFormType } from "@/layouts/orgaddform";
 import type { OrgEditFormType } from "@/layouts/orgeditform";
-import type { OrgDetailFormType } from "@/layouts/orgdetailform";
 import { useState, Fragment, useRef } from "react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiCalendar2Fill, RiMore2Line } from "react-icons/ri";
 import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
 import Button from "cmnjg-sb/dist/button";
 import Drawer from "cmnjg-sb/dist/drawer";
-import Chip from "cmnjg-sb/dist/chip";
+import Badge from "cmnjg-sb/dist/badge";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
+import IconButton from "cmnjg-sb/dist/iconbutton";
 import AdminLayout from "@/layouts/adminpage";
 import OrgAddForm from "@/layouts/orgaddform";
 import OrgEditForm from "@/layouts/orgeditform";
-import OrgDetailForm from "@/layouts/orgdetailform";
+import BadgeList from "@/layouts/badgelist";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
 
-type FormType = OrgAddFormType | OrgEditFormType | OrgDetailFormType;
+type FormType = OrgAddFormType | OrgEditFormType;
 
 const Organization = () => {
   const [tempData, setTempData] = useState<PeriodRes | null>(null);
@@ -35,7 +35,6 @@ const Organization = () => {
 
   const { toast, updateToast, props } = useToast();
   const toastId = useRef<{ [key in FormType]: number }>({
-    active: 0,
     add: 0,
     delete: 0,
     edit: 0,
@@ -124,15 +123,29 @@ const Organization = () => {
                     is_active: isActive,
                   } = val;
                   return (
-                    <Chip
+                    <BadgeList
                       key={id}
-                      isActive={isActive}
-                      onClick={() => onChipClick(val)}
-                      data-testid="period-chip"
+                      icon={<RiCalendar2Fill />}
+                      badge={
+                        isActive ? (
+                          <Badge colorScheme="green">Periode Aktif</Badge>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      moreBtn={
+                        <IconButton
+                          className={styles.moreBtn}
+                          onClick={() => onChipClick(val)}
+                          data-testid="period-chip"
+                        >
+                          <RiMore2Line />
+                        </IconButton>
+                      }
                     >
                       {idDate(new Date(startDate))} /{" "}
                       {idDate(new Date(endDate))}
-                    </Chip>
+                    </BadgeList>
                   );
                 })}
               </Fragment>
@@ -155,36 +168,17 @@ const Organization = () => {
             }
           />
         ) : (
-          <>
-            {tempData["is_active"] ? (
-              <OrgEditForm
-                prevData={tempData}
-                onCancel={() => onClose()}
-                onSubmited={(type, title, message) =>
-                  onModified(type, title, message)
-                }
-                onError={(type, title, message) =>
-                  onError(type, title, message)
-                }
-                onLoading={(type, title, message) =>
-                  onLoading(type, title, message)
-                }
-              />
-            ) : (
-              <OrgDetailForm
-                prevData={tempData}
-                onSubmited={(type, title, message) =>
-                  onModified(type, title, message)
-                }
-                onError={(type, title, message) =>
-                  onError(type, title, message)
-                }
-                onLoading={(type, title, message) =>
-                  onLoading(type, title, message)
-                }
-              />
-            )}
-          </>
+          <OrgEditForm
+            prevData={tempData}
+            onCancel={() => onClose()}
+            onSubmited={(type, title, message) =>
+              onModified(type, title, message)
+            }
+            onError={(type, title, message) => onError(type, title, message)}
+            onLoading={(type, title, message) =>
+              onLoading(type, title, message)
+            }
+          />
         )}
       </Drawer>
       <Toast {...props} />

@@ -1,7 +1,7 @@
 import type { PositionOut } from "@/services/position";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import {
   usePositionLevelsQuery,
   editPosition,
@@ -55,6 +55,7 @@ const PositionEditForm = ({
     defaultValues,
   });
 
+  const queryClient = useQueryClient();
   const positionLevelsQuery = usePositionLevelsQuery();
 
   const removePositionMutation = useMutation<
@@ -88,6 +89,7 @@ const PositionEditForm = ({
       editPositionMutation
         .mutateAsync({ id, data })
         .then(() => {
+          queryClient.invalidateQueries("positionLevelsQuery");
           onReset("edit", "Sukses mengubah jabatan");
         })
         .catch((e) => {
@@ -101,6 +103,7 @@ const PositionEditForm = ({
     removePositionMutation
       .mutateAsync(id)
       .then(() => {
+        queryClient.invalidateQueries("positionLevelsQuery");
         onReset("delete", "Sukses menghapus jabatan");
       })
       .catch((e) => {
@@ -181,6 +184,26 @@ const PositionEditForm = ({
                 ))}
               </Select>
             )}
+            <p>
+              <em>
+                Level menunjukan ada pada tingkat keberapa suatu jabatan
+                tersebut.
+              </em>
+            </p>
+            <p>
+              <em>
+                Contoh jabatan <strong>Ketua</strong> memiliki{" "}
+                <strong>level 1</strong> dan jabatan{" "}
+                <strong>Wakil ketua</strong> memiliki <strong>level 2</strong>
+              </em>
+            </p>
+            <p>
+              <em>Sehingga hirarki yang terbentuk akan menjadi:</em>
+            </p>
+            <ol>
+              <li>Ketua</li>
+              <li>Wakil Ketua</li>
+            </ol>
           </div>
         </div>
         <div>

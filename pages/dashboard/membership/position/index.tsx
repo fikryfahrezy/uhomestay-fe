@@ -3,7 +3,7 @@ import type { PositionOut } from "@/services/position";
 import type { PositionAddFormType } from "@/layouts/positionaddform";
 import type { PositionEditFormType } from "@/layouts/positioneditform";
 import { useState, Fragment, useRef } from "react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiMedal2Fill, RiMore2Line } from "react-icons/ri";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useInfinitePositionsQuery } from "@/services/position";
@@ -11,11 +11,12 @@ import Button from "cmnjg-sb/dist/button";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
+import IconButton from "cmnjg-sb/dist/iconbutton";
 import AdminLayout from "@/layouts/adminpage";
 import PositionAddForm from "@/layouts/positionaddform";
 import PositionEditForm from "@/layouts/positioneditform";
+import BadgeList from "@/layouts/badgelist";
 import EmptyMsg from "@/layouts/emptymsg";
-import PositionListItem from "@/layouts/positionlistitem";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
@@ -112,13 +113,44 @@ const Position = () => {
           positionsQuery.data?.pages.map((page) => {
             return (
               <Fragment key={page.data.cursor}>
-                {page.data.positions.map((val) => {
+                {Object.entries(
+                  page.data.positions.reduce<{
+                    [k: number]: PositionOut[];
+                  }>((prevValue, currentValue) => {
+                    const prev = prevValue[currentValue.level];
+                    if (prev !== undefined) {
+                      prev.push(currentValue);
+                      return prevValue;
+                    }
+
+                    prevValue[currentValue.level] = [currentValue];
+                    return prevValue;
+                  }, {})
+                ).map(([level, positions]) => {
                   return (
-                    <PositionListItem
-                      key={val.id}
-                      position={val}
-                      onClick={() => onChipClick(val)}
-                    />
+                    <Fragment key={level}>
+                      <h2 className={styles.levelSubtitle}>Level {level}</h2>
+                      {positions.map((val) => {
+                        const { id, name } = val;
+                        return (
+                          <BadgeList
+                            key={id}
+                            icon={<RiMedal2Fill />}
+                            moreBtn={
+                              <IconButton
+                                className={styles.moreBtn}
+                                onClick={() => onChipClick(val)}
+                                data-testid="position-list-item"
+                              >
+                                <RiMore2Line />
+                              </IconButton>
+                            }
+                          >
+                            {name}
+                          </BadgeList>
+                        );
+                      })}
+                    </Fragment>
                   );
                 })}
               </Fragment>

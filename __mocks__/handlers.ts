@@ -603,10 +603,9 @@ export const handlers = [
         ctx.json({
           data: {
             ...member,
+            positions,
             period_id: 1,
             period: "",
-            position_id: 1,
-            position: "",
           },
         })
       );

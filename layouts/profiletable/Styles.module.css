@@ -1,0 +1,13 @@
+.profileData {
+  border-collapse: separate;
+  border-spacing: 5px;
+}
+
+.profileData td {
+  vertical-align: top;
+}
+
+.profileData ol {
+  padding-left: 20px;
+  margin: 0;
+}

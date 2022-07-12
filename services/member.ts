@@ -72,6 +72,12 @@ export const useInfiniteMembersQuery = <
   return query;
 };
 
+export type MemberPosition = {
+  id: number;
+  level: number;
+  name: string;
+};
+
 export type MemberDetailRes = {
   id: string;
   name: string;
@@ -87,8 +93,7 @@ export type MemberDetailRes = {
   is_approved: boolean;
   period_id: number;
   period: string;
-  position_id: number;
-  position: string;
+  positions: MemberPosition[];
 };
 
 type UseMemberDetailQueryData = {

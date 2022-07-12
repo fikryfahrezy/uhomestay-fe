@@ -257,8 +257,6 @@ const OrgAddForm = ({
         data-testid="drawer-org-struct"
       >
         <OrgStructForm
-          isEditable={true}
-          isPositionSaved={positions !== null && positions.length !== 0}
           onSave={(positions) => onStructFormModified(positions)}
         />
       </Drawer>

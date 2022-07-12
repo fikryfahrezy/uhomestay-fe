@@ -6,6 +6,7 @@ import { useMemberDetailQuery } from "@/services/member";
 import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
 import PrintLayout from "@/layouts/printpage";
 import ErrMsg from "@/layouts/errmsg";
+import ProfileTable from "@/layouts/profiletable";
 import styles from "./Styles.module.css";
 
 const MemberDues = () => {
@@ -41,40 +42,7 @@ const MemberDues = () => {
         </div>
       </header>
       <h2>{memberDetailQuery.data.data.name}</h2>
-      <table>
-        <tbody>
-          <tr>
-            <td>Nomor WA</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data["wa_phone"]}</td>
-          </tr>
-          <tr>
-            <td>Nomor Lainnya</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data["other_phone"]}</td>
-          </tr>
-          <tr>
-            <td>Jabatan</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data.position}</td>
-          </tr>
-          <tr>
-            <td>Periode</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data.period}</td>
-          </tr>
-          <tr>
-            <td>Nama Homestay</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data["homestay_name"]}</td>
-          </tr>
-          <tr>
-            <td>Alamat Homestay</td>
-            <td>:</td>
-            <td>{memberDetailQuery.data.data["homestay_address"]}</td>
-          </tr>
-        </tbody>
-      </table>
+      <ProfileTable data={memberDetailQuery.data.data} />
       {memberDuesQuery.isLoading || memberDuesQuery.isIdle ? (
         "Loading..."
       ) : memberDuesQuery.error ? (

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { usePositionLevelsQuery, addPosition } from "@/services/position";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
@@ -32,7 +32,7 @@ const PositionAddForm = ({
 }: PositionAddFormProps) => {
   const defaultValues = {
     name: "",
-    level: 0,
+    level: "",
   };
   const {
     register,
@@ -41,6 +41,7 @@ const PositionAddForm = ({
     formState: { errors },
   } = useForm({ defaultValues });
 
+  const queryClient = useQueryClient();
   const positionLevelsQuery = usePositionLevelsQuery();
 
   const addPositionMutation = useMutation<
@@ -51,12 +52,16 @@ const PositionAddForm = ({
     return addPosition(data);
   });
 
-  const onSubmit = handleSubmit((data) => {
+  const onSubmit = handleSubmit(({ name, level }) => {
     onLoading("add", "Loading menambahkan jabatan");
 
     addPositionMutation
-      .mutateAsync(data)
+      .mutateAsync({
+        name,
+        level: Number(level),
+      })
       .then(() => {
+        queryClient.invalidateQueries("positionLevelsQuery");
         reset(defaultValues, { keepDefaultValues: true });
         onSubmited("add", "Sukses menambahkan jabatan");
       })
@@ -116,6 +121,26 @@ const PositionAddForm = ({
                 ))}
               </Select>
             )}
+            <p>
+              <em>
+                Level menunjukan ada pada tingkat keberapa suatu jabatan
+                tersebut.
+              </em>
+            </p>
+            <p>
+              <em>
+                Contoh jabatan <strong>Ketua</strong> memiliki{" "}
+                <strong>level 1</strong> dan jabatan{" "}
+                <strong>Wakil ketua</strong> memiliki <strong>level 2</strong>
+              </em>
+            </p>
+            <p>
+              <em>Sehingga hirarki yang terbentuk akan menjadi:</em>
+            </p>
+            <ol>
+              <li>Ketua</li>
+              <li>Wakil Ketua</li>
+            </ol>
           </div>
         </div>
         <div>

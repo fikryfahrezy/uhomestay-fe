@@ -133,7 +133,6 @@ const UpdateProfile = () => {
     if (memberDetailQuery.data !== undefined) {
       const {
         id,
-        position,
         period,
         is_approved,
         profile_pic_url: profile,
