@@ -157,21 +157,31 @@ const Dues = () => {
                 {duesQuery.isLoading ? (
                   "Loading..."
                 ) : duesQuery.error ? (
-                  <ErrMsg />
+                  <Select className={styles.select}>
+                    <option disabled value="">
+                      - Tidak Memiliki Tagihan -
+                    </option>
+                  </Select>
                 ) : duesQuery.data ? (
                   <Select
                     className={styles.select}
                     onChange={(e) => onDuesSelect(e.currentTarget.value)}
                     value={selectedDues ? selectedDues : ""}
                   >
-                    {duesQuery.data.data.dues.map((val) => {
-                      const { id, date } = val;
-                      return (
-                        <option key={id} value={id}>
-                          {yyyyMm(new Date(date))}
-                        </option>
-                      );
-                    })}
+                    {duesQuery.data.data.dues.length === 0 ? (
+                      <option disabled value="">
+                        - Tidak Memiliki Tagihan -
+                      </option>
+                    ) : (
+                      duesQuery.data.data.dues.map((val) => {
+                        const { id, date } = val;
+                        return (
+                          <option key={id} value={id}>
+                            {yyyyMm(new Date(date))}
+                          </option>
+                        );
+                      })
+                    )}
                   </Select>
                 ) : (
                   <></>
@@ -226,7 +236,9 @@ const Dues = () => {
             <RiMore2Line />
           </IconButton>
         </div>
-        {membersDuesQuery.isLoading || membersDuesQuery.isIdle ? (
+        {membersDuesQuery.isIdle ? (
+          "Pilih tanggal terlebih dahulu!"
+        ) : membersDuesQuery.isLoading ? (
           "Loading..."
         ) : membersDuesQuery.error ? (
           <ErrMsg />

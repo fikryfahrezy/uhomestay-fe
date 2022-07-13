@@ -140,7 +140,9 @@ const DocFileEditForm = ({
         <div className={styles.drawerContent}>
           <div className={styles.inputGroup}>
             <InputFile
-              {...register("file", {})}
+              {...register("file", {
+                required: true,
+              })}
               id="file"
               label="File:"
               multiple={false}

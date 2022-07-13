@@ -44,8 +44,8 @@ export const getBlogMeta: (editorState: EditorState) => GetBlogMetaRet = (
   });
 
   const ret = {
-    title,
-    short_desc: shortDesc,
+    title: title.slice(0, 50),
+    short_desc: shortDesc.slice(0, 60),
     thumbnail_url: thumbnailUrl,
     content_text: contentText,
   };

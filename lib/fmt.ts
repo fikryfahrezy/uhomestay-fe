@@ -116,7 +116,7 @@ export const idrNumToWord = (idrNum: string) => {
           ? ""
           : huns === "1"
           ? "seratus "
-          : a[num(huns)] + " ratus",
+          : a[num(huns)] + " ratus ",
         num(ones) === 0
           ? b[num(tens)]
           : (b[num(tens)] && b[num(tens)] + " ") || "",

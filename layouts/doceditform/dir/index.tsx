@@ -73,12 +73,12 @@ const DocDirEditForm = ({
   };
 
   const onDelete = (id: number) => {
-    onLoading("deletedir", "Loading menghapus cashflow");
+    onLoading("deletedir", "Loading menghapus folder");
 
     removeDocumentMutation
       .mutateAsync(id)
       .then(() => {
-        onReset("deletedir", "Sukses menghapus cashflow");
+        onReset("deletedir", "Sukses menghapus folder");
       })
       .catch((e) => {
         onError("deletedir", "Error menghapus folder", e.message);

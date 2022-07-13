@@ -186,6 +186,7 @@ const MemberDuesEditForm = ({
               })}
               label="Bukti:"
               id="file"
+              required={true}
               multiple={false}
               value={isEditable ? "" : prevData["prove_file_url"]}
               src={isEditable ? "" : prevData["prove_file_url"]}

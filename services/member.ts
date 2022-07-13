@@ -183,7 +183,7 @@ export const registerMember = async (data: RegisterIn) => {
       },
     }
   ).then((res) => {
-    window.localStorage.setItem("mjwt", res.data.token);
+    // window.localStorage.setItem("mjwt", res.data.token);
   });
 
   return fetched;

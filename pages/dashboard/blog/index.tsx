@@ -64,6 +64,15 @@ const Blog = () => {
       .then(() => {
         setBlogId(0);
         setModalOpen(false);
+        updateToast(lastId, {
+          status: "success",
+          render: () => (
+            <ToastComponent
+              title="
+				Sukses menghapus blog"
+            />
+          ),
+        });
         blogsQuery.refetch();
       })
       .catch((e) => {

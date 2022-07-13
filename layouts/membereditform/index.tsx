@@ -76,6 +76,7 @@ const MemberEditForm = ({
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isEditPosition, setEditPostion] = useState(false);
+  const [isEditPeriod, setEditPeriod] = useState(false);
   const [positionCache, setPositionCache] = useState<Record<number, number>>(
     {}
   );
@@ -262,12 +263,23 @@ const MemberEditForm = ({
     });
   };
 
+  const onEditPeriod = () => {
+    setValue("period_id", "");
+    setEditPeriod(true);
+  };
+
+  const onCancelEditPeriod = (periodId: string) => {
+    setValue("period_id", periodId);
+    setEditPeriod(false);
+  };
+
   useEffect(() => {
     if (memberDetailQuery.data !== undefined) {
       const {
         id,
         period,
-        is_approved,
+        positions,
+        is_approved: isApproved,
         profile_pic_url: profile,
         period_id: perId,
         ...restData
@@ -281,6 +293,14 @@ const MemberEditForm = ({
         },
         { keepDefaultValues: true }
       );
+      setPositionCache(() => {
+        const newCache: Record<number, number> = {};
+        positions.forEach(({ id }) => {
+          newCache[id] = id;
+        });
+
+        return newCache;
+      });
     }
   }, [memberDetailQuery.data, reset]);
 
@@ -422,7 +442,7 @@ const MemberEditForm = ({
                 )
               ) : (
                 <DynamicSelect
-                  label="Jabatan Sekarang atau Sebelumnya:"
+                  label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
                   disabled={true}
                   selects={(memberDetailQuery.data?.data.positions || [])
                     .sort((a, b) => a.level - b.level)
@@ -472,73 +492,114 @@ const MemberEditForm = ({
               )}
             </div>
             <div className={styles.inputGroup}>
-              {periodQuery.isLoading ? (
-                "Loading..."
-              ) : periodQuery.error ? (
-                <Select
-                  {...register("period_id", {
-                    required: true,
-                    valueAsNumber: true,
-                  })}
-                  label="Periode Jabatan:"
-                  id="period"
-                  required={true}
-                  disabled={!isEditable}
-                  isInvalid={errors["period_id"] !== undefined}
-                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
-                ></Select>
+              {isEditPeriod ? (
+                periodQuery.isLoading ? (
+                  "Loading..."
+                ) : periodQuery.error ? (
+                  <Select
+                    {...register("period_id", {
+                      required: true,
+                    })}
+                    id="period"
+                    label="Ubah Periode Organisasi:"
+                    required={true}
+                    isInvalid={errors["period_id"] !== undefined}
+                    errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+                  >
+                    <option disabled value="">
+                      - Tidak Ada Periode Aktif -
+                    </option>
+                  </Select>
+                ) : (
+                  <Select
+                    {...register("period_id", {
+                      required: true,
+                    })}
+                    id="period"
+                    label="Ubah Periode Organisasi:"
+                    required={true}
+                    isInvalid={errors["period_id"] !== undefined}
+                    errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+                  >
+                    {periodQuery.data?.data.id === 0 ? (
+                      <option disabled value="">
+                        - Tidak Ada Periode Aktif -
+                      </option>
+                    ) : (
+                      <>
+                        <option disabled value="">
+                          Pilih Periode
+                        </option>
+                        <option value={periodQuery.data?.data.id}>
+                          {idDate(
+                            new Date(periodQuery.data?.data["start_date"] || "")
+                          )}{" "}
+                          /{" "}
+                          {idDate(
+                            new Date(periodQuery.data?.data["end_date"] || "")
+                          )}
+                        </option>
+                      </>
+                    )}
+                  </Select>
+                )
               ) : (
                 <Select
                   {...register("period_id", {
                     required: true,
-                    valueAsNumber: true,
                   })}
-                  label="Periode Jabatan:"
-                  id="period"
-                  required={true}
-                  disabled={!isEditable}
-                  isInvalid={errors["period_id"] !== undefined}
-                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+                  key="period_view"
+                  disabled={true}
+                  label="Periode Organisasi Sekarang atau Sebelumnya:"
+                  defaultValue={memberDetailQuery.data?.data["period_id"] || ""}
                 >
                   {memberDetailQuery.data?.data["period_id"] === 0 ? (
-                    <option value="">Pilih Periode</option>
+                    <option disabled value="">
+                      - Tidak Dalam Organisasi -
+                    </option>
                   ) : (
                     <option value={memberDetailQuery.data?.data["period_id"]}>
                       {idDate(
                         new Date(
-                          (memberDetailQuery.data?.data.period as string).split(
-                            " / "
-                          )[0]
+                          memberDetailQuery.data?.data.period.split(" / ")[0] ||
+                            ""
                         )
                       )}{" "}
                       /{" "}
                       {idDate(
                         new Date(
-                          (memberDetailQuery.data?.data.period as string).split(
-                            " / "
-                          )[1]
+                          memberDetailQuery.data?.data.period.split(" / ")[1] ||
+                            ""
                         )
                       )}
                     </option>
                   )}
-                  {memberDetailQuery.data?.data["period_id"] !==
-                  periodQuery.data?.data.id ? (
-                    <option
-                      key={periodQuery.data?.data.id}
-                      value={periodQuery.data?.data.id}
-                    >
-                      {idDate(
-                        new Date(periodQuery.data?.data["start_date"] as string)
-                      )}{" "}
-                      /{" "}
-                      {idDate(
-                        new Date(periodQuery.data?.data["end_date"] as string)
-                      )}
-                    </option>
-                  ) : (
-                    <></>
-                  )}
                 </Select>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              {isEditPeriod ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() =>
+                    onCancelEditPeriod(
+                      String(memberDetailQuery.data?.data["period_id"] || "")
+                    )
+                  }
+                >
+                  Batal Ubah Periode
+                </Button>
+              ) : isEditable ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() => onEditPeriod()}
+                >
+                  Ubah Periode
+                </Button>
+              ) : (
+                <></>
               )}
             </div>
             <div className={styles.inputGroup}>

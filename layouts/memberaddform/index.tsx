@@ -294,7 +294,11 @@ const MemberAddForm = ({
                 required={true}
                 isInvalid={errors["period_id"] !== undefined}
                 errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
-              ></Select>
+              >
+                <option disabled value="">
+                  - Tidak Ada Periode Aktif -
+                </option>
+              </Select>
             ) : (
               <Select
                 {...register("period_id", {
@@ -307,19 +311,29 @@ const MemberAddForm = ({
                 isInvalid={errors["period_id"] !== undefined}
                 errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
               >
-                <option value="">Pilih Periode</option>
-                <option
-                  key={periodQuery.data?.data.id}
-                  value={periodQuery.data?.data.id}
-                >
-                  {idDate(
-                    new Date(periodQuery.data?.data["start_date"] as string)
-                  )}{" "}
-                  /{" "}
-                  {idDate(
-                    new Date(periodQuery.data?.data["end_date"] as string)
-                  )}
-                </option>
+                {periodQuery.data?.data.id !== 0 ? (
+                  <>
+                    <option disabled value="">
+                      Pilih Periode
+                    </option>
+                    <option
+                      key={periodQuery.data?.data.id}
+                      value={periodQuery.data?.data.id}
+                    >
+                      {idDate(
+                        new Date(periodQuery.data?.data["start_date"] as string)
+                      )}{" "}
+                      /{" "}
+                      {idDate(
+                        new Date(periodQuery.data?.data["end_date"] as string)
+                      )}
+                    </option>
+                  </>
+                ) : (
+                  <option disabled value="">
+                    - Tidak Ada Periode Aktif -
+                  </option>
+                )}
               </Select>
             )}
           </div>
