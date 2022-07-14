@@ -239,48 +239,6 @@ const MemberAddForm = ({
             />
           </div>
           <div className={styles.inputGroup}>
-            {positionsQuery.isLoading ? (
-              "Loading..."
-            ) : positionsQuery.error ? (
-              <ErrMsg />
-            ) : (
-              <DynamicSelect
-                {...register("position_id", {
-                  required: true,
-                })}
-                id="position_id"
-                label="Jabatan:"
-                required={true}
-                isInvalid={errors["position_id"] !== undefined}
-                errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
-                onFieldDelete={(v) => onDeletePosition(Number(v))}
-                onFieldChange={(cv, pv) =>
-                  onSelectPosition(Number(cv), Number(pv))
-                }
-                selects={Object.keys(positionCache).map((key) => {
-                  return {
-                    key,
-                    value: key,
-                    defaultValue: key,
-                  };
-                })}
-              >
-                <option value="">Pilih Jabatan</option>
-                {positionsQuery.data?.data.positions
-                  .sort((a, b) => a.level - b.level)
-                  .map(({ id, name }) => (
-                    <option
-                      key={id}
-                      value={id}
-                      disabled={positionCache[id] !== undefined}
-                    >
-                      {name}
-                    </option>
-                  ))}
-              </DynamicSelect>
-            )}
-          </div>
-          <div className={styles.inputGroup}>
             {periodQuery.isLoading ? (
               "Loading..."
             ) : periodQuery.error ? (
@@ -289,7 +247,7 @@ const MemberAddForm = ({
                   required: true,
                   valueAsNumber: true,
                 })}
-                label="Periode Jabatan:"
+                label="Periode Organisasi:"
                 id="period"
                 required={true}
                 isInvalid={errors["period_id"] !== undefined}
@@ -305,7 +263,7 @@ const MemberAddForm = ({
                   required: true,
                   valueAsNumber: true,
                 })}
-                label="Periode Jabatan:"
+                label="Periode Organisasi:"
                 id="period"
                 required={true}
                 isInvalid={errors["period_id"] !== undefined}
@@ -335,6 +293,48 @@ const MemberAddForm = ({
                   </option>
                 )}
               </Select>
+            )}
+          </div>
+          <div className={styles.inputGroup}>
+            {positionsQuery.isLoading ? (
+              "Loading..."
+            ) : positionsQuery.error ? (
+              <ErrMsg />
+            ) : (
+              <DynamicSelect
+                {...register("position_id", {
+                  required: true,
+                })}
+                id="position_id"
+                label="Jabatan Organisasi:"
+                required={true}
+                isInvalid={errors["position_id"] !== undefined}
+                errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+                onFieldDelete={(v) => onDeletePosition(Number(v))}
+                onFieldChange={(cv, pv) =>
+                  onSelectPosition(Number(cv), Number(pv))
+                }
+                selects={Object.keys(positionCache).map((key) => {
+                  return {
+                    key,
+                    value: key,
+                    defaultValue: key,
+                  };
+                })}
+              >
+                <option value="">Pilih Jabatan</option>
+                {positionsQuery.data?.data.positions
+                  .sort((a, b) => a.level - b.level)
+                  .map(({ id, name }) => (
+                    <option
+                      key={id}
+                      value={id}
+                      disabled={positionCache[id] !== undefined}
+                    >
+                      {name}
+                    </option>
+                  ))}
+              </DynamicSelect>
             )}
           </div>
           <div className={styles.inputGroup}>

@@ -399,99 +399,6 @@ const MemberEditForm = ({
               />
             </div>
             <div className={styles.inputGroup}>
-              {isEditPosition ? (
-                positionsQuery.isLoading ? (
-                  "Loading..."
-                ) : positionsQuery.error ? (
-                  <ErrMsg />
-                ) : (
-                  <DynamicSelect
-                    {...register("position_id", {
-                      required: true,
-                    })}
-                    id="position_id"
-                    label="Ubah Jabatan:"
-                    disabled={false}
-                    isInvalid={errors["position_id"] !== undefined}
-                    errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
-                    onFieldDelete={(v) => onDeletePosition(Number(v))}
-                    onFieldChange={(cv, pv) =>
-                      onSelectPosition(Number(cv), Number(pv))
-                    }
-                    selects={Object.keys(positionCache).map((key) => {
-                      return {
-                        key,
-                        value: key,
-                        defaultValue: key,
-                      };
-                    })}
-                  >
-                    <option value="">Pilih Jabatan</option>
-                    {positionsQuery.data?.data.positions.map(({ id, name }) => {
-                      return (
-                        <option
-                          key={id}
-                          value={id}
-                          disabled={positionCache[id] !== undefined}
-                        >
-                          {name}
-                        </option>
-                      );
-                    })}
-                  </DynamicSelect>
-                )
-              ) : (
-                <DynamicSelect
-                  label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
-                  disabled={true}
-                  selects={(memberDetailQuery.data?.data.positions || [])
-                    .sort((a, b) => a.level - b.level)
-                    .map(({ id }) => {
-                      return {
-                        key: id,
-                        value: id,
-                        defaultValue: id,
-                      };
-                    })}
-                >
-                  {(memberDetailQuery.data?.data.positions || []).map(
-                    ({ id, name }) => {
-                      return (
-                        <option key={id} value={id}>
-                          {name}
-                        </option>
-                      );
-                    }
-                  )}
-                </DynamicSelect>
-              )}
-            </div>
-            <div className={styles.inputGroup}>
-              {isEditPosition ? (
-                <Button
-                  className={styles.formBtn}
-                  type="button"
-                  onClick={() =>
-                    onCancelEditPosition(
-                      memberDetailQuery.data?.data.positions || []
-                    )
-                  }
-                >
-                  Batal Ubah Jabatan
-                </Button>
-              ) : isEditable ? (
-                <Button
-                  className={styles.formBtn}
-                  type="button"
-                  onClick={() => onEditPosition()}
-                >
-                  Ubah Jabatan
-                </Button>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div className={styles.inputGroup}>
               {isEditPeriod ? (
                 periodQuery.isLoading ? (
                   "Loading..."
@@ -597,6 +504,99 @@ const MemberEditForm = ({
                   onClick={() => onEditPeriod()}
                 >
                   Ubah Periode
+                </Button>
+              ) : (
+                <></>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              {isEditPosition ? (
+                positionsQuery.isLoading ? (
+                  "Loading..."
+                ) : positionsQuery.error ? (
+                  <ErrMsg />
+                ) : (
+                  <DynamicSelect
+                    {...register("position_id", {
+                      required: true,
+                    })}
+                    id="position_id"
+                    label="Ubah Jabatan Organisasi:"
+                    required={true}
+                    isInvalid={errors["position_id"] !== undefined}
+                    errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+                    onFieldDelete={(v) => onDeletePosition(Number(v))}
+                    onFieldChange={(cv, pv) =>
+                      onSelectPosition(Number(cv), Number(pv))
+                    }
+                    selects={Object.keys(positionCache).map((key) => {
+                      return {
+                        key,
+                        value: key,
+                        defaultValue: key,
+                      };
+                    })}
+                  >
+                    <option value="">Pilih Jabatan</option>
+                    {positionsQuery.data?.data.positions.map(({ id, name }) => {
+                      return (
+                        <option
+                          key={id}
+                          value={id}
+                          disabled={positionCache[id] !== undefined}
+                        >
+                          {name}
+                        </option>
+                      );
+                    })}
+                  </DynamicSelect>
+                )
+              ) : (
+                <DynamicSelect
+                  label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
+                  disabled={true}
+                  selects={(memberDetailQuery.data?.data.positions || [])
+                    .sort((a, b) => a.level - b.level)
+                    .map(({ id }) => {
+                      return {
+                        key: id,
+                        value: id,
+                        defaultValue: id,
+                      };
+                    })}
+                >
+                  {(memberDetailQuery.data?.data.positions || []).map(
+                    ({ id, name }) => {
+                      return (
+                        <option key={id} value={id}>
+                          {name}
+                        </option>
+                      );
+                    }
+                  )}
+                </DynamicSelect>
+              )}
+            </div>
+            <div className={styles.inputGroup}>
+              {isEditPosition ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() =>
+                    onCancelEditPosition(
+                      memberDetailQuery.data?.data.positions || []
+                    )
+                  }
+                >
+                  Batal Ubah Jabatan
+                </Button>
+              ) : isEditable ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() => onEditPosition()}
+                >
+                  Ubah Jabatan
                 </Button>
               ) : (
                 <></>

@@ -1,15 +1,19 @@
 import type { ReactElement } from "react";
 import { Fragment } from "react";
 import { useRouter } from "next/router";
+import { RiCalendar2Fill, RiMore2Line } from "react-icons/ri";
 import Link from "next/link";
 import { idDate } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { usePeriodsQuery } from "@/services/period";
-import Chip from "cmnjg-sb/dist/chip";
+import Badge from "cmnjg-sb/dist/badge";
+import IconButton from "cmnjg-sb/dist/iconbutton";
+import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
 import AdminLayout from "@/layouts/adminpage";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
+import BadgeList from "@/layouts/badgelist";
 import styles from "./Styles.module.css";
 
 const Mission = () => {
@@ -47,20 +51,53 @@ const Mission = () => {
                     is_active: isActive,
                   } = val;
                   return (
-                    <Link
+                    // <Link
+                    //   key={id}
+                    //   href={{
+                    //     pathname: `${router.pathname}/view/[id]`,
+                    //     query: { id },
+                    //   }}
+                    // >
+                    //   <a className={styles.chipLink}>
+                    //     <Chip isActive={isActive} data-testid="period-chip">
+                    //       {idDate(new Date(startDate))} /{" "}
+                    //       {idDate(new Date(endDate))}
+                    //     </Chip>
+                    //   </a>
+                    // </Link>
+                    <BadgeList
                       key={id}
-                      href={{
-                        pathname: `${router.pathname}/view/[id]`,
-                        query: { id },
-                      }}
+                      icon={<RiCalendar2Fill />}
+                      badge={
+                        isActive ? (
+                          <Badge colorScheme="green">Periode Aktif</Badge>
+                        ) : (
+                          <></>
+                        )
+                      }
+                      moreBtn={
+                        <LinkBox key={id} className={styles.buttonNavLink}>
+                          <IconButton
+                            className={styles.moreBtn}
+                            data-testid="period-chip"
+                          >
+                            <RiMore2Line />
+                            <Link
+                              href={{
+                                pathname: `${router.pathname}/view/[id]`,
+                                query: { id },
+                              }}
+                              passHref
+                            >
+                              <LinkOverlay />
+                            </Link>
+                          </IconButton>
+                        </LinkBox>
+                      }
                     >
-                      <a className={styles.chipLink}>
-                        <Chip isActive={isActive} data-testid="period-chip">
-                          {idDate(new Date(startDate))} /{" "}
-                          {idDate(new Date(endDate))}
-                        </Chip>
-                      </a>
-                    </Link>
+                      {idDate(new Date(startDate))} /{" "}
+                      {idDate(new Date(endDate))}
+                    </BadgeList>
                   );
                 })}
               </Fragment>

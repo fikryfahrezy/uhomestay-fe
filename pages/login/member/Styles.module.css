@@ -74,12 +74,11 @@
 }
 
 .link {
-	display: flex;
-	width: max-content;
-	margin-top: 25px;
-	margin-left: auto;
-	color: #fff;
-	justify-content: center;
-	align-items: center;
-  }
-  
+  display: flex;
+  width: max-content;
+  margin-top: 25px;
+  margin-left: auto;
+  color: #fff;
+  justify-content: center;
+  align-items: center;
+}

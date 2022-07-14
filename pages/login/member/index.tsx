@@ -121,6 +121,9 @@ const Login = () => {
                 Login
               </Button>
             </form>
+            <Link href="/register">
+              <a className={styles.link}>Daftar</a>
+            </Link>
           </div>
         </div>
       </main>
