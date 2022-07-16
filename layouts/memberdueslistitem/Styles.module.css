@@ -1,0 +1,71 @@
+.green {
+  color: #50ac97;
+}
+
+.red {
+  color: #ff7474;
+}
+
+.yellow {
+  color: #d46b08;
+}
+
+.listItem {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: solid 2px #e5e5e5;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1ch;
+}
+
+.listIcon {
+  display: flex;
+  color: #777777;
+  font-size: 28px;
+  align-items: center;
+  justify-content: center;
+}
+
+.listContent {
+  display: flex;
+  gap: 2ch;
+  flex: 1;
+  overflow: hidden;
+}
+
+@media screen and (max-width: 500px) {
+  .listContent {
+    flex-direction: column;
+  }
+}
+
+.listBody {
+  overflow: hidden;
+}
+
+.listText {
+  margin-bottom: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.listCurrency {
+  display: flex;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: 18px;
+  flex: 1;
+}
+
+@media screen and (max-width: 500px) {
+  .listCurrency {
+    display: block;
+  }
+}

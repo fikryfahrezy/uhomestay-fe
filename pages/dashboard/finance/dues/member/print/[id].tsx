@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { idrCurrency, yyyyMm, idrNumToWord } from "@/lib/fmt";
+import { idrCurrency, idrNumToWord } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";
 import { useMemberDuesQuery, DUES_STATUS } from "@/services/member-dues";
 import PrintLayout from "@/layouts/printpage";
@@ -13,10 +13,10 @@ const MemberDues = () => {
   const router = useRouter();
   const { id } = router.query;
 
-  const memberDuesQuery = useMemberDuesQuery(id as string, {
+  const memberDuesQuery = useMemberDuesQuery(String(id), {
     enabled: !!id,
   });
-  const memberDetailQuery = useMemberDetailQuery(id as string, {
+  const memberDetailQuery = useMemberDetailQuery(String(id), {
     enabled: !!id,
   });
 
@@ -100,7 +100,7 @@ const MemberDues = () => {
               <tr>
                 <th>Tanggal</th>
                 <th>Status</th>
-                <th>Nama Anggota</th>
+                <th>Jumlah Iuran</th>
               </tr>
             </thead>
             <tbody>
@@ -108,7 +108,7 @@ const MemberDues = () => {
                 const { id, status, date, idr_amount: idr } = val;
                 return (
                   <tr key={id}>
-                    <td>{yyyyMm(new Date(date))}</td>
+                    <td>{date}</td>
                     <td>
                       {status === DUES_STATUS.PAID
                         ? "Sudah Lunas"

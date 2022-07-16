@@ -1,6 +1,5 @@
 import { MemberDuesOut } from "@/services/member-dues";
 import { RiTimeLine } from "react-icons/ri";
-import { yyyyMm } from "@/lib/fmt";
 import { DUES_STATUS } from "@/services/member-dues";
 import Input from "cmnjg-sb/dist/input";
 import InputFile from "cmnjg-sb/dist/inputfile";
@@ -40,7 +39,7 @@ const MemberDuesDetail = ({ prevData }: MemberDuesDetailProps) => {
             <Input
               autoComplete="off"
               type="month"
-              min={yyyyMm(new Date(prevData.date))}
+              min={prevData.date}
               required={true}
               label="Tanggal:"
               readOnly={true}

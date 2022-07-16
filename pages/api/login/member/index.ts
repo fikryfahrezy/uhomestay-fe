@@ -40,10 +40,18 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
       token,
       process.env.JWT_SECRET_KEY ?? ""
     ) as JwtPayload;
-    const member = { token, uid: decoded.uid, isLoggedIn: true };
+    const member = new User({
+      token,
+      isAdmin: false,
+      isLoggedIn: true,
+      uid: decoded.uid,
+      avatarUrl: "",
+      login: decoded.uid,
+    });
 
-    req.session.member = new User(true, decoded.uid, "");
+    req.session.member = member;
     await req.session.save();
+
     res.json(member);
   } catch (error) {
     res.status(500).json((error as FetchError).data);

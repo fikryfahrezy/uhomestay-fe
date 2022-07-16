@@ -2,7 +2,6 @@ import type { MemberDuesOut } from "@/services/member-dues";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { yyyyMm } from "@/lib/fmt";
 import { payDues } from "@/services/member-dues";
 import Button from "cmnjg-sb/dist/button";
 import Input from "cmnjg-sb/dist/input";
@@ -110,7 +109,7 @@ const MemberDuesPayForm = ({
               })}
               autoComplete="off"
               type="month"
-              min={yyyyMm(new Date(prevData.date))}
+              min={prevData.date}
               required={true}
               label="Tanggal:"
               id="date"

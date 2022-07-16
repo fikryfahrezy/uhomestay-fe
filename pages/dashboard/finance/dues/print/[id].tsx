@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { idrCurrency, yyyyMm, idrNumToWord } from "@/lib/fmt";
+import { idrCurrency, idrNumToWord } from "@/lib/fmt";
 import { useMembersDuesQuery, DUES_STATUS } from "@/services/member-dues";
 import PrintLayout from "@/layouts/printpage";
 import EmptyMsg from "@/layouts/emptymsg";
@@ -35,7 +35,7 @@ const Dues = () => {
         <div>
           <h1 className={styles.title}>Rakap Iuran Bulanan</h1>
           <h2 className={styles.title}>
-            Bulan {yyyyMm(new Date(membersDuesQuery.data?.data["dues_date"]))}
+            Bulan {membersDuesQuery.data?.data["dues_date"]}
           </h2>
           <p className={styles.date}>
             Per-tanggal {new Date().toLocaleString("id-ID")}

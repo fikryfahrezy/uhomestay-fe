@@ -157,7 +157,7 @@ const DuesEditForm = ({
               })}
               autoComplete="off"
               type="month"
-              min={yyyyMm(new Date(prevData.date))}
+              min={yyyyMm(new Date())}
               label="Tanggal:"
               id="date"
               required={true}
@@ -192,7 +192,7 @@ const DuesEditForm = ({
               ) : paidDuesQuery.data.data["is_paid"] ? (
                 <p>
                   <em data-testid="paid-dues-msg">
-                    Seseorang telah membayar iurang bulanan, tidak dapat diubah
+                    Seseorang telah membayar iuran bulanan, tidak dapat diubah
                     atau hapus
                   </em>
                 </p>

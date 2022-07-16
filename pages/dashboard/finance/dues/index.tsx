@@ -10,7 +10,7 @@ import {
   RiMore2Line,
   RiPrinterLine,
 } from "react-icons/ri";
-import { idrCurrency, yyyyMm } from "@/lib/fmt";
+import { idrCurrency } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
@@ -177,7 +177,7 @@ const Dues = () => {
                         const { id, date } = val;
                         return (
                           <option key={id} value={id}>
-                            {yyyyMm(new Date(date))}
+                            {date}
                           </option>
                         );
                       })

@@ -1,12 +1,17 @@
-class User {
+type UserProp = {
   isLoggedIn: boolean;
   login: string;
   avatarUrl: string;
+  uid: string;
+  token: string;
+  isAdmin: boolean;
+};
 
-  constructor(isLoggedIn: boolean, login: string, avatarUrl: string) {
-    this.isLoggedIn = isLoggedIn;
-    this.login = login;
-    this.avatarUrl = avatarUrl;
+class User {
+  prop: UserProp;
+
+  constructor(prop: UserProp) {
+    this.prop = prop;
   }
 }
 

@@ -335,12 +335,14 @@ export const useMember = ({
       return fetcher;
     }
   );
-  const { data: user } = memberQuery;
+  const { data } = memberQuery;
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-    if (!redirectTo || !user) return;
+    if (!redirectTo || !data) return;
+
+    const user = data.prop;
 
     if (
       // If redirectTo is set, redirect if the user was not found.
@@ -350,7 +352,7 @@ export const useMember = ({
     ) {
       Router.push(redirectTo);
     }
-  }, [user, redirectIfFound, redirectTo]);
+  }, [data, redirectIfFound, redirectTo]);
 
   return memberQuery;
 };
@@ -365,12 +367,14 @@ export const useAdmin = ({ redirectTo = "", redirectIfFound = false } = {}) => {
     const fetcher = fetchJson<User>("/api/user/admin");
     return fetcher;
   });
-  const { data: user } = memberQuery;
+  const { data } = memberQuery;
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-    if (!redirectTo || !user) return;
+    if (!redirectTo || !data) return;
+
+    const user = data.prop;
 
     if (
       // If redirectTo is set, redirect if the user was not found.
@@ -380,7 +384,7 @@ export const useAdmin = ({ redirectTo = "", redirectIfFound = false } = {}) => {
     ) {
       Router.push(redirectTo);
     }
-  }, [user, redirectIfFound, redirectTo]);
+  }, [data, redirectIfFound, redirectTo]);
 
   return memberQuery;
 };
@@ -414,4 +418,82 @@ export const updateProfile = async (data: FormData) => {
   });
 
   return fetched;
+};
+
+/**
+ * Ref:
+ * https://github.com/vercel/next.js/blob/canary/examples/with-iron-session/lib/useUser.ts
+ *
+ */
+export const useUser = ({
+  redirectTo = "",
+  identifier = "",
+  url = "/api/get-jwt/user",
+  redirectIfFound = false,
+  enabled = false,
+}: UseUserProps & {
+  identifier?: string;
+  enabled?: boolean;
+  url?: string;
+} = {}) => {
+  const memberQuery = useQuery<User, FetchError>(
+    "userUserQuery",
+    async () => {
+      const fetcher = fetchJson<User>(url, {
+        method: "POST",
+        body: JSON.stringify({ identifier }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      return fetcher;
+    },
+    {
+      enabled,
+      retry: false,
+    }
+  );
+  const { data, error } = memberQuery;
+
+  useEffect(() => {
+    if (error !== null) {
+      Router.push("/");
+      return;
+    }
+
+    let newRedirectTo: string = redirectTo || "/member";
+
+    // if no redirect needed, just return (example: already on /dashboard)
+    // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
+    if (!newRedirectTo || !data) return;
+
+    const isUat = process.env.NEXT_PUBLIC_ENVI === "uat";
+    if (!isUat) {
+      Router.push("/");
+      return;
+    }
+
+    const user = data.prop;
+
+    if (user.isAdmin) {
+      newRedirectTo = "/dashboard";
+    }
+
+    if (
+      // If redirectTo is set, redirect if the user was not found.
+      (newRedirectTo && !redirectIfFound && !user?.isLoggedIn) ||
+      // If redirectIfFound is also set, redirect if the user was found
+      (redirectIfFound && user?.isLoggedIn)
+    ) {
+      window.localStorage.setItem("muid", user.uid);
+      window.localStorage.setItem("mjwt", user.token);
+      if (user.isAdmin) {
+        window.localStorage.setItem("ajwt", user.token);
+      }
+
+      Router.push(newRedirectTo);
+    }
+  }, [data, error, redirectIfFound, redirectTo]);
+
+  return memberQuery;
 };

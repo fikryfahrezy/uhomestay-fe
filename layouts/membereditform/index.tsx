@@ -75,8 +75,7 @@ const MemberEditForm = ({
 
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [isEditPosition, setEditPostion] = useState(false);
-  const [isEditPeriod, setEditPeriod] = useState(false);
+  const [isEditOrg, setEditOrg] = useState(false);
   const [positionCache, setPositionCache] = useState<Record<number, number>>(
     {}
   );
@@ -226,21 +225,25 @@ const MemberEditForm = ({
     onCancel();
   };
 
-  const onEditPosition = () => {
+  const onEditOrg = () => {
+    setValue("period_id", "");
+    setValue("position_id", "");
     setPositionCache({});
-    setEditPostion(true);
+    setEditOrg(true);
   };
 
-  const onCancelEditPosition = (prev: MemberPosition[]) => {
-    setPositionCache(() => {
-      const newCache: Record<number, number> = {};
-      prev.forEach(({ id }) => {
-        newCache[id] = id;
-      });
-
-      return newCache;
+  const onCancelEditOrg = (periodId: string, prev: MemberPosition[]) => {
+    const newCache: Record<number, number> = {};
+    let newValue = "";
+    prev.forEach(({ id }) => {
+      newCache[id] = id;
+      newValue = `${newValue}${id}, `;
     });
-    setEditPostion(false);
+
+    setValue("period_id", periodId);
+    setValue("position_id", newValue);
+    setPositionCache(newCache);
+    setEditOrg(false);
   };
 
   const onSelectPosition = (currentValue: number, prevValue: number) => {
@@ -263,16 +266,6 @@ const MemberEditForm = ({
     });
   };
 
-  const onEditPeriod = () => {
-    setValue("period_id", "");
-    setEditPeriod(true);
-  };
-
-  const onCancelEditPeriod = (periodId: string) => {
-    setValue("period_id", periodId);
-    setEditPeriod(false);
-  };
-
   useEffect(() => {
     if (memberDetailQuery.data !== undefined) {
       const {
@@ -288,6 +281,10 @@ const MemberEditForm = ({
       reset(
         {
           profile,
+          position_id: positions.reduce(
+            (prevValue, { id }) => `${prevValue}${id}, `,
+            ""
+          ),
           period_id: perId === 0 ? "" : String(perId),
           ...restData,
         },
@@ -399,7 +396,7 @@ const MemberEditForm = ({
               />
             </div>
             <div className={styles.inputGroup}>
-              {isEditPeriod ? (
+              {isEditOrg ? (
                 periodQuery.isLoading ? (
                   "Loading..."
                 ) : periodQuery.error ? (
@@ -459,6 +456,8 @@ const MemberEditForm = ({
                   disabled={true}
                   label="Periode Organisasi Sekarang atau Sebelumnya:"
                   defaultValue={memberDetailQuery.data?.data["period_id"] || ""}
+                  isInvalid={errors["period_id"] !== undefined}
+                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
                 >
                   {memberDetailQuery.data?.data["period_id"] === 0 ? (
                     <option disabled value="">
@@ -485,32 +484,7 @@ const MemberEditForm = ({
               )}
             </div>
             <div className={styles.inputGroup}>
-              {isEditPeriod ? (
-                <Button
-                  className={styles.formBtn}
-                  type="button"
-                  onClick={() =>
-                    onCancelEditPeriod(
-                      String(memberDetailQuery.data?.data["period_id"] || "")
-                    )
-                  }
-                >
-                  Batal Ubah Periode
-                </Button>
-              ) : isEditable ? (
-                <Button
-                  className={styles.formBtn}
-                  type="button"
-                  onClick={() => onEditPeriod()}
-                >
-                  Ubah Periode
-                </Button>
-              ) : (
-                <></>
-              )}
-            </div>
-            <div className={styles.inputGroup}>
-              {isEditPosition ? (
+              {isEditOrg ? (
                 positionsQuery.isLoading ? (
                   "Loading..."
                 ) : positionsQuery.error ? (
@@ -520,9 +494,9 @@ const MemberEditForm = ({
                     {...register("position_id", {
                       required: true,
                     })}
+                    required={true}
                     id="position_id"
                     label="Ubah Jabatan Organisasi:"
-                    required={true}
                     isInvalid={errors["position_id"] !== undefined}
                     errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
                     onFieldDelete={(v) => onDeletePosition(Number(v))}
@@ -553,50 +527,64 @@ const MemberEditForm = ({
                 )
               ) : (
                 <DynamicSelect
-                  label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
+                  {...register("position_id", {
+                    required: true,
+                  })}
                   disabled={true}
-                  selects={(memberDetailQuery.data?.data.positions || [])
-                    .sort((a, b) => a.level - b.level)
-                    .map(({ id }) => {
-                      return {
-                        key: id,
-                        value: id,
-                        defaultValue: id,
-                      };
-                    })}
+                  label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
+                  isInvalid={errors["position_id"] !== undefined}
+                  errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
+                  selects={
+                    memberDetailQuery.data?.data.positions.length === 0
+                      ? [{ key: 0, value: "", defaultValue: "" }]
+                      : (memberDetailQuery.data?.data.positions || [])
+                          .sort((a, b) => a.level - b.level)
+                          .map(({ id }) => {
+                            return {
+                              key: id,
+                              value: id,
+                              defaultValue: id,
+                            };
+                          })
+                  }
                 >
-                  {(memberDetailQuery.data?.data.positions || []).map(
-                    ({ id, name }) => {
-                      return (
-                        <option key={id} value={id}>
-                          {name}
-                        </option>
-                      );
-                    }
+                  {memberDetailQuery.data?.data.positions.length === 0 ? (
+                    <option value="">Tidak memiliki jabatan</option>
+                  ) : (
+                    (memberDetailQuery.data?.data.positions || []).map(
+                      ({ id, name }) => {
+                        return (
+                          <option key={id} value={id}>
+                            {name}
+                          </option>
+                        );
+                      }
+                    )
                   )}
                 </DynamicSelect>
               )}
             </div>
             <div className={styles.inputGroup}>
-              {isEditPosition ? (
+              {isEditOrg ? (
                 <Button
                   className={styles.formBtn}
                   type="button"
                   onClick={() =>
-                    onCancelEditPosition(
+                    onCancelEditOrg(
+                      String(memberDetailQuery.data?.data["period_id"] || ""),
                       memberDetailQuery.data?.data.positions || []
                     )
                   }
                 >
-                  Batal Ubah Jabatan
+                  Batal Ubah Organisasi
                 </Button>
               ) : isEditable ? (
                 <Button
                   className={styles.formBtn}
                   type="button"
-                  onClick={() => onEditPosition()}
+                  onClick={() => onEditOrg()}
                 >
-                  Ubah Jabatan
+                  Ubah Organisasi
                 </Button>
               ) : (
                 <></>

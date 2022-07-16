@@ -12,10 +12,16 @@ import fetchJson, { FetchError } from "@/lib/fetchJson";
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
-  const { identifier, password } = await req.body;
+  const isUat = process.env.ENVI !== "uat";
+  if (!isUat) {
+    res.json({});
+    return;
+  }
 
-  if (!identifier || !password) {
-    res.status(500).json({ message: "identifier and password required" });
+  const { identifier } = await req.body;
+
+  if (!identifier) {
+    res.status(500).json({ message: "identifier required" });
     return;
   }
 
@@ -23,16 +29,9 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const {
       data: { token },
     } = await fetchJson<{ data: { token: string } }>(
-      `${process.env.MAIN_API_HOST_URL}/api/v1/login/admins`,
+      `${process.env.MAIN_API_HOST_URL}/api/v1/get-admin-jwt/${identifier}`,
       {
-        method: "POST",
-        body: JSON.stringify({
-          identifier,
-          password,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
+        method: "PATCH",
       }
     );
 
@@ -40,19 +39,24 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
       token,
       process.env.JWT_SECRET_KEY ?? ""
     ) as JwtPayload;
-    const admin = new User({
+    const isAdmin = decoded["is_admin"];
+    const user = new User({
+      isAdmin,
       token,
-      isAdmin: true,
       isLoggedIn: true,
       uid: decoded.uid,
       avatarUrl: "",
       login: decoded.uid,
     });
 
-    req.session.admin = admin;
-    await req.session.save();
+    if (isAdmin) {
+      req.session.admin = user;
+    } else {
+      req.session.member = user;
+    }
 
-    res.json(admin);
+    await req.session.save();
+    res.json({ ...user, isAdmin });
   } catch (error) {
     res.status(500).json((error as FetchError).data);
   }

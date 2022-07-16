@@ -4,23 +4,13 @@ import type { MemberDuesEditFormType } from "@/layouts/memberdueseditform";
 import { useState, Fragment, useRef } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  RiMoneyDollarCircleLine,
-  RiMore2Line,
-  RiPrinterLine,
-} from "react-icons/ri";
+import { RiMore2Line, RiPrinterLine } from "react-icons/ri";
 import Observe from "@/lib/use-observer";
 import { debounce } from "@/lib/perf";
-import { idrCurrency } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";
-import {
-  useInfiniteMemberDuesQuery,
-  DUES_STATUS,
-} from "@/services/member-dues";
+import { useInfiniteMemberDuesQuery } from "@/services/member-dues";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
-import Badge from "cmnjg-sb/dist/badge";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import LinkButton from "cmnjg-sb/dist/linkbutton";
@@ -29,7 +19,9 @@ import MemberDuesEditForm from "@/layouts/memberdueseditform";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
-import ProfileTable from "@/layouts/profiletable";
+import MemberDuesListItem from "@/layouts/memberdueslistitem";
+import MemberDuesAmount from "@/layouts/memberduesamount";
+import MemberDuesProfile from "@/layouts/memberduesprofile";
 import styles from "./Styles.module.css";
 
 type FormType = MemberDuesEditFormType;
@@ -40,12 +32,12 @@ const MemberDues = () => {
 
   const [open, setOpen] = useState(false);
   const [tempData, setTempData] = useState<MemberDuesOut | null>(null);
-  const memberDuesQuery = useInfiniteMemberDuesQuery(id as string, {
+  const memberDuesQuery = useInfiniteMemberDuesQuery(String(id), {
     enabled: !!id,
     getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
-  const memberDetailQuery = useMemberDetailQuery(id as string, {
+  const memberDetailQuery = useMemberDetailQuery(String(id), {
     enabled: !!id,
   });
 
@@ -126,25 +118,7 @@ const MemberDues = () => {
                 Cetak
               </LinkButton>
             </Link>
-            <div className={styles.profileContainer}>
-              <div className={styles.profileImgContainer}>
-                <Image
-                  src={
-                    memberDetailQuery.data.data["profile_pic_url"]
-                      ? memberDetailQuery.data.data["profile_pic_url"]
-                      : "/images/image/person.png"
-                  }
-                  layout="responsive"
-                  width={150}
-                  height={150}
-                  alt="Member profile pic"
-                />
-              </div>
-              <h2 className={styles.profileName}>
-                {memberDetailQuery.data.data.name}
-              </h2>
-            </div>
-			<ProfileTable data={memberDetailQuery.data.data} />
+            <MemberDuesProfile member={memberDetailQuery.data.data} />
           </div>
         )}
         {memberDuesQuery.isLoading || memberDuesQuery.isIdle ? (
@@ -152,37 +126,17 @@ const MemberDues = () => {
         ) : memberDuesQuery.error ? (
           <ErrMsg />
         ) : (
-          <div className={styles.contentHeadPart}>
-            <h2 className={styles.subHeadTitle}>Total Uang Iuran</h2>
-            <p className={styles.overallCurrency}>
-              {idrCurrency.format(
-                Number(memberDuesQuery.data?.pages[0].data["total_dues"])
-              )}
-            </p>
-            <div className={styles.currencyFlowContainer}>
-              <div>
-                <h3 className={styles.currencyFlowTitle}>Total Terbayar</h3>
-                <p className={`${styles.currency} ${styles.green}`}>
-                  {idrCurrency.format(
-                    Number(memberDuesQuery.data?.pages[0].data["paid_dues"])
-                  )}
-                </p>
-              </div>
-              <div>
-                <h3 className={styles.currencyFlowTitle}>
-                  Total Belum Terbayar
-                </h3>
-                <p className={`${styles.currency} ${styles.red}`}>
-                  {idrCurrency.format(
-                    Number(memberDuesQuery.data?.pages[0].data["unpaid_dues"])
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
+          <MemberDuesAmount
+            memberDues={{
+              total_dues: memberDuesQuery.data?.pages[0].data["total_dues"],
+              paid_dues: memberDuesQuery.data?.pages[0].data["paid_dues"],
+              unpaid_dues: memberDuesQuery.data?.pages[0].data["unpaid_dues"],
+            }}
+          />
         )}
       </div>
       <div className={styles.contentBodySection}>
+        <h2>Daftar Iuran Bulanan</h2>
         {memberDuesQuery.isLoading || memberDuesQuery.isIdle ? (
           "Loading..."
         ) : memberDuesQuery.error ? (
@@ -194,53 +148,20 @@ const MemberDues = () => {
             return (
               <Fragment key={page.data.cursor}>
                 {page.data.dues.map((val) => {
-                  const { date, id, idr_amount: idr, status } = val;
-                  const { badge, color } = (() => {
-                    switch (status) {
-                      case DUES_STATUS.PAID:
-                        return {
-                          badge: <Badge colorScheme="green">Sudah Lunas</Badge>,
-                          color: styles.green,
-                        };
-                      case DUES_STATUS.WAITING:
-                        return {
-                          badge: (
-                            <Badge colorScheme="yellow">
-                              Menunggu Konfirmasi
-                            </Badge>
-                          ),
-                          color: styles.yellow,
-                        };
-                      default:
-                        return {
-                          badge: <Badge colorScheme="red">Belum Lunas</Badge>,
-                          color: styles.red,
-                        };
-                    }
-                  })();
-
                   return (
-                    <div key={id} className={styles.listItem}>
-                      <span className={styles.listIcon}>
-                        <RiMoneyDollarCircleLine />
-                      </span>
-                      <div className={styles.listContent}>
-                        <div className={styles.listBody}>
-                          {badge}
-                          <p className={styles.listText}>{date}</p>
-                        </div>
-                        <span className={`${styles.listCurrency} ${color}`}>
-                          {idrCurrency.format(Number(idr))}
-                        </span>
-                      </div>
-                      <IconButton
-                        className={styles.moreBtn}
-                        onClick={() => onOptClick(val)}
-                        data-testid="member-dues-item-btn"
-                      >
-                        <RiMore2Line />
-                      </IconButton>
-                    </div>
+                    <MemberDuesListItem
+                      key={val.id}
+                      memberDues={val}
+                      moreBtn={
+                        <IconButton
+                          className={styles.moreBtn}
+                          onClick={() => onOptClick(val)}
+                          data-testid="member-dues-item-btn"
+                        >
+                          <RiMore2Line />
+                        </IconButton>
+                      }
+                    />
                   );
                 })}
               </Fragment>

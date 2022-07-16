@@ -2,7 +2,6 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { yyyyMm } from "@/lib/fmt";
 import { useDashboardQuery } from "@/services/dashboard";
 import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
 import EmptyMsg from "@/layouts/emptymsg";
@@ -123,19 +122,8 @@ const LandingPage = () => {
               <></>
             ) : (
               <a>
-                {yyyyMm(
-                  new Date(
-                    dasboardQuery.data.data["org_period_structures"][
-                      "start_date"
-                    ]
-                  )
-                )}
-                /
-                {yyyyMm(
-                  new Date(
-                    dasboardQuery.data.data["org_period_structures"]["end_date"]
-                  )
-                )}
+                {dasboardQuery.data.data["org_period_structures"]["start_date"]}
+                /{dasboardQuery.data.data["org_period_structures"]["end_date"]}
               </a>
             )}
           </h2>

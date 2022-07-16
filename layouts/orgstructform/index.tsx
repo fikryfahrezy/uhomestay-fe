@@ -126,11 +126,15 @@ const OrgStructAddForm = ({ onSave = defaultFunc }: OrgStructAddFormProps) => {
                       selects={selectList.current}
                     >
                       <option value="">Pilih Anggota</option>
-                      {membersQuery.data?.data.members.map(({ id, name }) => (
-                        <option key={id} value={id}>
-                          {name}
-                        </option>
-                      ))}
+                      {membersQuery.data?.data.members
+                        .filter(
+                          ({ is_approved: isApproved }) => isApproved === true
+                        )
+                        .map(({ id, name }) => (
+                          <option key={id} value={id}>
+                            {name}
+                          </option>
+                        ))}
                     </DynamicSelect>
                   )}
                 </div>

@@ -2,7 +2,6 @@ import type { PeriodRes } from "@/services/period";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { yyyyMm } from "@/lib/fmt";
 import { usePeriodStructureQuery, removePeriod } from "@/services/period";
 import Input from "cmnjg-sb/dist/input";
 import Button from "cmnjg-sb/dist/button";
@@ -111,8 +110,8 @@ const OrgEditForm = ({
 
       reset(
         {
-          start_date: yyyyMm(new Date(startDate)),
-          end_date: yyyyMm(new Date(endDate)),
+          start_date: startDate,
+          end_date: endDate,
         },
         { keepDefaultValues: true }
       );
@@ -133,7 +132,7 @@ const OrgEditForm = ({
               label="Awal Periode:"
               id="start_date"
               type="month"
-              min={yyyyMm(new Date(prevData["start_date"]))}
+              min={prevData["start_date"]}
               required={true}
               readOnly={true}
               isInvalid={errors["start_date"] !== undefined}

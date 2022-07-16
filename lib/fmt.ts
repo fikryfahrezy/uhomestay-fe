@@ -129,12 +129,14 @@ export const idrNumToWord = (idrNum: string) => {
 
     if (n === "0") return "nol ";
     else
-      return comp(chunk(3))(reverse)(arr(n))
-        .map(makeGroup)
-        .map(thousand)
-        .filter(comp(not)(isEmpty))
-        .reverse()
-        .join(" ");
+      return (
+        comp(chunk(3))(reverse)(arr(n))
+          .map(makeGroup)
+          .map(thousand)
+          .filter(comp(not)(isEmpty))
+          .reverse()
+          .join(" ") + " "
+      );
   };
 
   return numToWords(idrNum);

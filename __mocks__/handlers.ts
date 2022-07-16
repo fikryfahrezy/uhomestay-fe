@@ -60,7 +60,7 @@ const member = {
   homestay_longitude: "",
   profile_pic_url: "",
   is_admin: "",
-  is_approved: "",
+  is_approved: true,
 };
 
 const members = [member];

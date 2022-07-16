@@ -25,57 +25,6 @@
   flex: 1;
 }
 
-.profileContainer {
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  gap: 3ch;
-  flex: 1;
-}
-
-.profileImgContainer {
-  width: 100%;
-  height: 100%;
-  max-width: 50px;
-  max-height: 50px;
-  border-radius: 50%;
-  overflow: hidden;
-  aspect-ratio: 1;
-}
-
-.profileName {
-  font-size: 28px;
-}
-
-.subHeadTitle {
-  margin-top: 25px;
-  margin-bottom: 25px;
-}
-
-.currencyFlowContainer {
-  display: flex;
-  gap: 2ch;
-}
-
-.overallCurrency {
-  font-size: 24px;
-}
-
-@media screen and (max-width: 500px) {
-  .currencyFlowContainer {
-    flex-direction: column;
-  }
-}
-
-.currencyFlowTitle {
-  margin-top: 0;
-}
-
-.currency {
-  margin-bottom: 0;
-  font-size: 20px;
-}
-
 .contentBodySection {
   padding: 10px;
   margin-bottom: 25px;
@@ -84,80 +33,8 @@
   overflow: hidden;
 }
 
-.listIcon {
-  display: flex;
-  color: #777777;
-  font-size: 28px;
-  align-items: center;
-  justify-content: center;
-}
-
-.listItem {
-  display: flex;
-  width: 100%;
-  margin-bottom: 10px;
-  padding-bottom: 10px;
-  border-bottom: solid 2px #e5e5e5;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1ch;
-}
-
-.listContent {
-  display: flex;
-  gap: 2ch;
-  flex: 1;
-  overflow: hidden;
-}
-
-@media screen and (max-width: 500px) {
-  .listContent {
-    flex-direction: column;
-  }
-}
-
-.listBody {
-  overflow: hidden;
-}
-
-.listText {
-  margin-bottom: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.listCurrency {
-  display: flex;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  align-items: center;
-  justify-content: flex-end;
-  font-size: 18px;
-  flex: 1;
-}
-
-@media screen and (max-width: 500px) {
-  .listCurrency {
-    display: block;
-  }
-}
-
 .moreBtn,
 .moreBtn:hover,
 .moreBtn:active {
   background-color: transparent;
-}
-
-.green {
-  color: #50ac97;
-}
-
-.red {
-  color: #ff7474;
-}
-
-.yellow {
-  color: #d46b08;
 }
