@@ -45,7 +45,7 @@ test("Add new period success", async () => {
   const addStructForm = within(drwOrgStruct).getByTestId("add-struct-form");
   expect(addStructForm).toBeVisible();
 
-  const selectComp = screen.getByTestId("select-comp");
+  const selectComp = await screen.findByTestId("select-comp");
   await user.selectOptions(selectComp, "f79e82e8-c34a-4dc7-a49e-9fadc0979fda");
 
   const drwClose = within(drwOrgStruct).getByTestId("drawer-close-btn");

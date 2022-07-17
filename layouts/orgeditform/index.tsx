@@ -193,14 +193,18 @@ const OrgEditForm = ({
         withBackdrop={false}
         data-testid="drawer-org-struct"
       >
-        {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
-          "Loading..."
-        ) : periodStructureQuery.error ? (
-          "An error has occurred: " + periodStructureQuery.error.message
+        {structFormOpen ? (
+          periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (
+            "Loading..."
+          ) : periodStructureQuery.error ? (
+            "An error has occurred: " + periodStructureQuery.error.message
+          ) : (
+            <OrgStructDetail
+              prevData={periodStructureQuery.data.data.positions}
+            />
+          )
         ) : (
-          <OrgStructDetail
-            prevData={periodStructureQuery.data.data.positions}
-          />
+          <></>
         )}
       </Drawer>
       {periodStructureQuery.isLoading || periodStructureQuery.isIdle ? (

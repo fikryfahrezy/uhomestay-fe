@@ -256,9 +256,13 @@ const OrgAddForm = ({
         withBackdrop={false}
         data-testid="drawer-org-struct"
       >
-        <OrgStructForm
-          onSave={(positions) => onStructFormModified(positions)}
-        />
+        {structFormOpen ? (
+          <OrgStructForm
+            onSave={(positions) => onStructFormModified(positions)}
+          />
+        ) : (
+          <></>
+        )}
       </Drawer>
       <OrgGoalWrite
         isOpen={goalModalOpen}

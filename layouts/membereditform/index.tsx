@@ -1,7 +1,7 @@
 import type { MapMouseEvent, EventData } from "mapbox-gl";
 import type { MemberOut, MemberPosition } from "@/services/member";
 import dynamic from "next/dynamic";
-import { useState, useEffect } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { idDate } from "@/lib/fmt";
@@ -108,6 +108,22 @@ const MemberEditForm = ({
   const memberDetailQuery = useMemberDetailQuery(prevData.id, {
     enabled: !!prevData.id,
   });
+
+  const prevPos = useMemo(() => {
+    const data = memberDetailQuery.data;
+    if (data === undefined) {
+      return { str: "", obj: {} };
+    }
+
+    const prevPosObj: Record<number, number> = {};
+    let prevPosStr = "";
+    data.data.positions.forEach(({ id }) => {
+      prevPosObj[id] = id;
+      prevPosStr = `${prevPosStr}${id}, `;
+    });
+
+    return { str: prevPosStr, obj: prevPosObj };
+  }, [memberDetailQuery.data]);
 
   const approveMemberMutation = useMutation<
     unknown,
@@ -232,17 +248,10 @@ const MemberEditForm = ({
     setEditOrg(true);
   };
 
-  const onCancelEditOrg = (periodId: string, prev: MemberPosition[]) => {
-    const newCache: Record<number, number> = {};
-    let newValue = "";
-    prev.forEach(({ id }) => {
-      newCache[id] = id;
-      newValue = `${newValue}${id}, `;
-    });
-
+  const onCancelEditOrg = (periodId: string, { str, obj }: typeof prevPos) => {
     setValue("period_id", periodId);
-    setValue("position_id", newValue);
-    setPositionCache(newCache);
+    setValue("position_id", str);
+    setPositionCache(obj);
     setEditOrg(false);
   };
 
@@ -396,74 +405,62 @@ const MemberEditForm = ({
               />
             </div>
             <div className={styles.inputGroup}>
-              {isEditOrg ? (
-                periodQuery.isLoading ? (
-                  "Loading..."
-                ) : periodQuery.error ? (
-                  <Select
-                    {...register("period_id", {
-                      required: true,
-                    })}
-                    id="period"
-                    label="Ubah Periode Organisasi:"
-                    required={true}
-                    isInvalid={errors["period_id"] !== undefined}
-                    errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
-                  >
-                    <option disabled value="">
-                      - Tidak Ada Periode Aktif -
-                    </option>
-                  </Select>
-                ) : (
-                  <Select
-                    {...register("period_id", {
-                      required: true,
-                    })}
-                    id="period"
-                    label="Ubah Periode Organisasi:"
-                    required={true}
-                    isInvalid={errors["period_id"] !== undefined}
-                    errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
-                  >
-                    {periodQuery.data?.data.id === 0 ? (
-                      <option disabled value="">
-                        - Tidak Ada Periode Aktif -
-                      </option>
-                    ) : (
-                      <>
-                        <option disabled value="">
-                          Pilih Periode
-                        </option>
-                        <option value={periodQuery.data?.data.id}>
-                          {idDate(
-                            new Date(periodQuery.data?.data["start_date"] || "")
-                          )}{" "}
-                          /{" "}
-                          {idDate(
-                            new Date(periodQuery.data?.data["end_date"] || "")
-                          )}
-                        </option>
-                      </>
-                    )}
-                  </Select>
-                )
+              {periodQuery.isLoading ? (
+                "Loading..."
+              ) : periodQuery.error ? (
+                <Select
+                  {...register("period_id", {
+                    required: true,
+                  })}
+                  id="period_id"
+                  label="Ubah Periode Organisasi:"
+                  required={true}
+                  isInvalid={errors["period_id"] !== undefined}
+                  errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
+                >
+                  <option disabled value="">
+                    - Tidak Ada Periode Aktif -
+                  </option>
+                </Select>
               ) : (
                 <Select
                   {...register("period_id", {
                     required: true,
                   })}
-                  key="period_view"
-                  disabled={true}
-                  label="Periode Organisasi Sekarang atau Sebelumnya:"
-                  defaultValue={memberDetailQuery.data?.data["period_id"] || ""}
+                  id="period_id"
+                  label="Ubah Periode Organisasi:"
+                  disabled={!isEditOrg}
                   isInvalid={errors["period_id"] !== undefined}
                   errMsg={errors["period_id"] ? "Tidak boleh kosong" : ""}
                 >
-                  {memberDetailQuery.data?.data["period_id"] === 0 ? (
+                  {isEditOrg && periodQuery.data?.data.id !== 0 ? (
+                    <option disabled value="">
+                      Pilih Periode
+                    </option>
+                  ) : periodQuery.data?.data.id !== 0 ? (
                     <option disabled value="">
                       - Tidak Dalam Organisasi -
                     </option>
                   ) : (
+                    <option disabled value="">
+                      - Tidak Ada Periode Aktif -
+                    </option>
+                  )}
+                  {isEditOrg && periodQuery.data?.data.id !== 0 ? (
+                    <option value={periodQuery.data?.data.id}>
+                      {idDate(
+                        new Date(periodQuery.data?.data["start_date"] || "")
+                      )}{" "}
+                      /{" "}
+                      {idDate(
+                        new Date(periodQuery.data?.data["end_date"] || "")
+                      )}
+                    </option>
+                  ) : (
+                    <></>
+                  )}
+                  {!isEditOrg &&
+                  memberDetailQuery.data?.data["period_id"] !== 0 ? (
                     <option value={memberDetailQuery.data?.data["period_id"]}>
                       {idDate(
                         new Date(
@@ -479,6 +476,8 @@ const MemberEditForm = ({
                         )
                       )}
                     </option>
+                  ) : (
+                    <></>
                   )}
                 </Select>
               )}
@@ -511,7 +510,9 @@ const MemberEditForm = ({
                       };
                     })}
                   >
-                    <option value="">Pilih Jabatan</option>
+                    <option key="disabled" value="">
+                      Pilih Jabatan
+                    </option>
                     {positionsQuery.data?.data.positions.map(({ id, name }) => {
                       return (
                         <option
@@ -531,6 +532,7 @@ const MemberEditForm = ({
                     required: true,
                   })}
                   disabled={true}
+                  id="position_id"
                   label="Jabatan pada Periode Organiasi Sekarang atau Sebelumnya:"
                   isInvalid={errors["position_id"] !== undefined}
                   errMsg={errors["position_id"] ? "Tidak boleh kosong" : ""}
@@ -549,7 +551,9 @@ const MemberEditForm = ({
                   }
                 >
                   {memberDetailQuery.data?.data.positions.length === 0 ? (
-                    <option value="">Tidak memiliki jabatan</option>
+                    <option key="disabled" value="">
+                      Tidak memiliki jabatan
+                    </option>
                   ) : (
                     (memberDetailQuery.data?.data.positions || []).map(
                       ({ id, name }) => {
@@ -572,7 +576,7 @@ const MemberEditForm = ({
                   onClick={() =>
                     onCancelEditOrg(
                       String(memberDetailQuery.data?.data["period_id"] || ""),
-                      memberDetailQuery.data?.data.positions || []
+                      prevPos
                     )
                   }
                 >

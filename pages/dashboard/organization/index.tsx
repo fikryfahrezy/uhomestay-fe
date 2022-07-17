@@ -345,9 +345,38 @@ const Organization = () => {
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={onClose} data-testid="doc-drawer">
-        {docType === DOC_TYPE.FILE ? (
-          tempData === null ? (
-            <DocFileAddForm
+        {open ? (
+          docType === DOC_TYPE.FILE ? (
+            tempData === null ? (
+              <DocFileAddForm
+                onCancel={() => onClose()}
+                onSubmited={(type, title, message) =>
+                  onModified(type, title, message)
+                }
+                onError={(type, title, message) =>
+                  onError(type, title, message)
+                }
+                onLoading={(type, title, message) =>
+                  onLoading(type, title, message)
+                }
+              />
+            ) : (
+              <DocFileEditForm
+                prevData={tempData}
+                onCancel={() => onClose()}
+                onSubmited={(type, title, message) =>
+                  onModified(type, title, message)
+                }
+                onError={(type, title, message) =>
+                  onError(type, title, message)
+                }
+                onLoading={(type, title, message) =>
+                  onLoading(type, title, message)
+                }
+              />
+            )
+          ) : tempData === null ? (
+            <DocDirAddForm
               onCancel={() => onClose()}
               onSubmited={(type, title, message) =>
                 onModified(type, title, message)
@@ -358,7 +387,7 @@ const Organization = () => {
               }
             />
           ) : (
-            <DocFileEditForm
+            <DocDirEditForm
               prevData={tempData}
               onCancel={() => onClose()}
               onSubmited={(type, title, message) =>
@@ -370,29 +399,8 @@ const Organization = () => {
               }
             />
           )
-        ) : tempData === null ? (
-          <DocDirAddForm
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
         ) : (
-          <DocDirEditForm
-            prevData={tempData}
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+          <></>
         )}
       </Drawer>
       <Toast {...props} />

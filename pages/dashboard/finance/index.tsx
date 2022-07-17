@@ -236,29 +236,33 @@ const Finance = () => {
         onClose={() => onClose()}
         data-testid="cashflow-drawer"
       >
-        {tempData === null ? (
-          <CashflowAddForm
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+        {open ? (
+          tempData === null ? (
+            <CashflowAddForm
+              onCancel={() => onClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          ) : (
+            <CashflowEditForm
+              prevData={tempData}
+              onCancel={() => onClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          )
         ) : (
-          <CashflowEditForm
-            prevData={tempData}
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+          <></>
         )}
       </Drawer>
       <Toast {...props} />

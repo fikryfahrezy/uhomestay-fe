@@ -155,30 +155,34 @@ const Organization = () => {
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
-        {tempData === null ? (
-          <OrgAddForm
-            isOpen={open}
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+        {open ? (
+          tempData === null ? (
+            <OrgAddForm
+              isOpen={open}
+              onCancel={() => onClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          ) : (
+            <OrgEditForm
+              prevData={tempData}
+              onCancel={() => onClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          )
         ) : (
-          <OrgEditForm
-            prevData={tempData}
-            onCancel={() => onClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+          <></>
         )}
       </Drawer>
       <Toast {...props} />

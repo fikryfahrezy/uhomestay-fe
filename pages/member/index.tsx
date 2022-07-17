@@ -176,20 +176,26 @@ const Member = () => {
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
       <Drawer isOpen={open} onClose={() => onClose()}>
-        {tempData !== null && duesStatus !== "" ? (
-          duesStatus === DUES_STATUS.UNPAID ? (
-            <MemberDuesPayForm
-              prevData={tempData}
-              onSubmited={(type, title, message) =>
-                onModified(type, title, message)
-              }
-              onError={(type, title, message) => onError(type, title, message)}
-              onLoading={(type, title, message) =>
-                onLoading(type, title, message)
-              }
-            />
+        {open ? (
+          tempData !== null && duesStatus !== "" ? (
+            duesStatus === DUES_STATUS.UNPAID ? (
+              <MemberDuesPayForm
+                prevData={tempData}
+                onSubmited={(type, title, message) =>
+                  onModified(type, title, message)
+                }
+                onError={(type, title, message) =>
+                  onError(type, title, message)
+                }
+                onLoading={(type, title, message) =>
+                  onLoading(type, title, message)
+                }
+              />
+            ) : (
+              <MemberDuesDetail prevData={tempData} />
+            )
           ) : (
-            <MemberDuesDetail prevData={tempData} />
+            <></>
           )
         ) : (
           <></>

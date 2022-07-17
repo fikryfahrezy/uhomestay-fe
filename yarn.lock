@@ -2200,10 +2200,10 @@ clone@^1.0.2:
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
 
-cmnjg-sb@^0.1.16:
-  version "0.1.16"
-  resolved "https://registry.yarnpkg.com/cmnjg-sb/-/cmnjg-sb-0.1.16.tgz#8b128916eee06803af07cecf60405657a3b63d18"
-  integrity sha512-XdPT6YcQla5XpgREadkyxqkjRTsXbbBQqFYRARFYcLgX7cFcrPE0VW8sm33SHJUHEiHz5linxaEK+npds7dgLQ==
+cmnjg-sb@^0.1.19:
+  version "0.1.19"
+  resolved "https://registry.yarnpkg.com/cmnjg-sb/-/cmnjg-sb-0.1.19.tgz#67722f966562990c8d93aeb47f94ad7bfae370d1"
+  integrity sha512-HuPJlw/+u/wFwVprg9I2bvGSrmL2T48ADbaP3XKBaly56wny7H4MZw6X7k/4+9YmR+/SRw8ztXQeTEjIIGmyOQ==
   dependencies:
     cheerio "^1.0.0-rc.12"
     react-icons "^4.4.0"

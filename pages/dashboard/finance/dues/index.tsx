@@ -282,29 +282,33 @@ const Dues = () => {
         onClose={() => onDrawerClose()}
         data-testid="dues-drawer"
       >
-        {tempData === null ? (
-          <DuesAddForm
-            onCancel={() => onDrawerClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+        {isDrawerOpen ? (
+          tempData === null ? (
+            <DuesAddForm
+              onCancel={() => onDrawerClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          ) : (
+            <DuesEditForm
+              prevData={tempData}
+              onCancel={() => onDrawerClose()}
+              onSubmited={(type, title, message) =>
+                onModified(type, title, message)
+              }
+              onError={(type, title, message) => onError(type, title, message)}
+              onLoading={(type, title, message) =>
+                onLoading(type, title, message)
+              }
+            />
+          )
         ) : (
-          <DuesEditForm
-            prevData={tempData}
-            onCancel={() => onDrawerClose()}
-            onSubmited={(type, title, message) =>
-              onModified(type, title, message)
-            }
-            onError={(type, title, message) => onError(type, title, message)}
-            onLoading={(type, title, message) =>
-              onLoading(type, title, message)
-            }
-          />
+          <></>
         )}
       </Drawer>
       <Toast {...props} />

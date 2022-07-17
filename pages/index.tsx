@@ -144,31 +144,29 @@ const LandingPage = () => {
                   <div key={id}>
                     <h3 className={styles.heading3}>{name}</h3>
                     <div className={styles.avatarsContainer}>
-                      {members
-                        .filter(({ id }) => id !== "")
-                        .map(({ id, name, profile_pic_url: picUrl }) => {
-                          return (
-                            <div
-                              key={id}
-                              className={`${styles.avatarContainer} ${
-                                level <= 1 ? styles.levelOne : styles.levelTwo
-                              }`}
-                            >
-                              <div className={styles.avatarImgContainer}>
-                                <Image
-                                  src={
-                                    typeof picUrl === "string" && picUrl !== ""
-                                      ? picUrl
-                                      : "/images/image/person.png"
-                                  }
-                                  layout="fill"
-                                  alt="hfisfjs"
-                                />
-                              </div>
-                              <span className={styles.avatarName}>{name}</span>
+                      {members.map(({ id, name, profile_pic_url: picUrl }) => {
+                        return (
+                          <div
+                            key={id}
+                            className={`${styles.avatarContainer} ${
+                              level <= 1 ? styles.levelOne : styles.levelTwo
+                            }`}
+                          >
+                            <div className={styles.avatarImgContainer}>
+                              <Image
+                                src={
+                                  typeof picUrl === "string" && picUrl !== ""
+                                    ? picUrl
+                                    : "/images/image/person.png"
+                                }
+                                layout="fill"
+                                alt="hfisfjs"
+                              />
                             </div>
-                          );
-                        })}
+                            <span className={styles.avatarName}>{name}</span>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
                 );

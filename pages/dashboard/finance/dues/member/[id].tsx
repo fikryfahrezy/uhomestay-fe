@@ -175,7 +175,7 @@ const MemberDues = () => {
         onClose={() => onClose()}
         data-testid="member-dues-drawer"
       >
-        {tempData !== null ? (
+        {open && tempData !== null ? (
           <MemberDuesEditForm
             prevData={tempData}
             onCancel={() => onClose()}
