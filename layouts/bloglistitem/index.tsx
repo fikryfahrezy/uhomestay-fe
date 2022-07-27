@@ -38,7 +38,8 @@ const BlogListItem = ({ blog, popUp }: BlogListItem) => {
             }
             priority={true}
             layout="fill"
-            alt="Test"
+            objectFit="cover"
+            alt="Blog Thumbnail"
           />
         }
       />

@@ -23,7 +23,7 @@ const MemberItem = ({
             layout="responsive"
             width={150}
             height={150}
-            alt="Member profile pic"
+            alt="Member Profile Picture"
           />
         </div>
         <div className={styles.profileBody}>

@@ -12,6 +12,7 @@ export type PeriodRes = {
 type UsePeriodsQueryData = {
   data: {
     cursor: number;
+    total: number;
     periods: PeriodRes[];
   };
 };

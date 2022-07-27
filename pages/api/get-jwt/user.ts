@@ -56,7 +56,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     }
 
     await req.session.save();
-    res.json({ ...user, isAdmin });
+    res.json({ ...user.prop, isAdmin });
   } catch (error) {
     res.status(500).json((error as FetchError).data);
   }

@@ -40,69 +40,61 @@ const Mission = () => {
         ) : periodsQuery.data?.pages[0].data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.periods.map((val) => {
-                  const {
-                    id,
-                    start_date: startDate,
-                    end_date: endDate,
-                    is_active: isActive,
-                  } = val;
-                  return (
-                    // <Link
-                    //   key={id}
-                    //   href={{
-                    //     pathname: `${router.pathname}/view/[id]`,
-                    //     query: { id },
-                    //   }}
-                    // >
-                    //   <a className={styles.chipLink}>
-                    //     <Chip isActive={isActive} data-testid="period-chip">
-                    //       {idDate(new Date(startDate))} /{" "}
-                    //       {idDate(new Date(endDate))}
-                    //     </Chip>
-                    //   </a>
-                    // </Link>
-                    <BadgeList
-                      key={id}
-                      icon={<RiCalendar2Fill />}
-                      badge={
-                        isActive ? (
-                          <Badge colorScheme="green">Periode Aktif</Badge>
-                        ) : (
-                          <></>
-                        )
-                      }
-                      moreBtn={
-                        <LinkBox key={id} className={styles.buttonNavLink}>
-                          <IconButton
-                            className={styles.moreBtn}
-                            data-testid="period-chip"
-                          >
-                            <RiMore2Line />
-                            <Link
-                              href={{
-                                pathname: `${router.pathname}/view/[id]`,
-                                query: { id },
-                              }}
-                              passHref
+          <>
+            <h3>
+              Jumlah Total Periode Organisasi:{" "}
+              {periodsQuery.data?.pages[0].data.total} periode
+            </h3>
+            {periodsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.periods.map((val) => {
+                    const {
+                      id,
+                      start_date: startDate,
+                      end_date: endDate,
+                      is_active: isActive,
+                    } = val;
+                    return (
+                      <BadgeList
+                        key={id}
+                        icon={<RiCalendar2Fill />}
+                        badge={
+                          isActive ? (
+                            <Badge colorScheme="green">Periode Aktif</Badge>
+                          ) : (
+                            <></>
+                          )
+                        }
+                        moreBtn={
+                          <LinkBox key={id} className={styles.buttonNavLink}>
+                            <IconButton
+                              className={styles.moreBtn}
+                              data-testid="period-chip"
                             >
-                              <LinkOverlay />
-                            </Link>
-                          </IconButton>
-                        </LinkBox>
-                      }
-                    >
-                      {idDate(new Date(startDate))} /{" "}
-                      {idDate(new Date(endDate))}
-                    </BadgeList>
-                  );
-                })}
-              </Fragment>
-            );
-          })
+                              <RiMore2Line />
+                              <Link
+                                href={{
+                                  pathname: `${router.pathname}/view/[id]`,
+                                  query: { id },
+                                }}
+                                passHref
+                              >
+                                <LinkOverlay />
+                              </Link>
+                            </IconButton>
+                          </LinkBox>
+                        }
+                      >
+                        {idDate(new Date(startDate))} /{" "}
+                        {idDate(new Date(endDate))}
+                      </BadgeList>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />

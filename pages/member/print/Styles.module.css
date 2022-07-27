@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 3px;
+  font-size: 22px;
+}
+
+.date {
+  margin-top: 0;
+}
+
+.title,
+.date {
+  text-align: end;
+}
+
+.contentTitle {
+  text-align: center;
+  margin-top: 25px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #111;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 5px;
+}
+
+.table,
+.table th,
+.table td {
+  border: 1px solid #111;
+}

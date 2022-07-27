@@ -18,7 +18,7 @@ const MemberDuesListItem = ({
   memberDues,
   moreBtn,
 }: MemberDuesListItemProps) => {
-  const { date, id, idr_amount: idr, status } = memberDues;
+  const { date, id, status, pay_date: payDate, idr_amount: idr } = memberDues;
   const { badge, color } = (() => {
     switch (status) {
       case DUES_STATUS.PAID:
@@ -47,7 +47,10 @@ const MemberDuesListItem = ({
       <div className={styles.listContent}>
         <div className={styles.listBody}>
           {badge}
-          <p className={styles.listText}>{date}</p>
+          <p className={styles.listTextLabel}>Tanggal iuran:</p>
+          <p className={styles.listTextContent}>{date}</p>
+          <p className={styles.listTextLabel}>Tanggal Bayar:</p>
+          <p className={styles.listTextContent}>{payDate}</p>
         </div>
         <span className={`${styles.listCurrency} ${color}`}>
           {idrCurrency.format(Number(idr))}

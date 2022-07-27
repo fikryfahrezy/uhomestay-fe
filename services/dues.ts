@@ -10,7 +10,6 @@ export type DuesOut = {
 
 type UseDuesQueryData = {
   data: {
-    cursor: number;
     dues: DuesOut[];
   };
 };

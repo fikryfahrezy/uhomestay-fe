@@ -48,6 +48,9 @@ window.IntersectionObserver = jest.fn(() => ({
   disconnect: jest.fn(),
 }));
 
+window.URL.createObjectURL = jest.fn();
+window.URL.revokeObjectURL = jest.fn();
+
 // https://github.com/vercel/next.js/issues/7479#issuecomment-568431869
 jest.mock("next/router", () => ({
   useRouter() {

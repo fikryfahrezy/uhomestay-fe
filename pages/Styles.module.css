@@ -114,6 +114,10 @@
   flex-direction: column;
 }
 
+.welcomeSection {
+  margin-bottom: 100px;
+}
+
 .subTitle {
   position: relative;
   margin-bottom: 25px;
@@ -152,6 +156,16 @@
   right: 35%;
   height: 5px;
   background-color: #2a6877;
+}
+
+.welcomeSectionTitle {
+  margin-bottom: 50px;
+}
+
+.welcomeParagraph {
+  margin-top: 0;
+  font-size: 20px;
+  text-align: center;
 }
 
 .periodSubTitle {

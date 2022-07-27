@@ -25,6 +25,11 @@
   flex: 1;
 }
 
+.printBtn {
+  width: fit-content;
+  margin-bottom: 10px;
+}
+
 .contentBodySection {
   padding: 10px;
   margin-bottom: 25px;

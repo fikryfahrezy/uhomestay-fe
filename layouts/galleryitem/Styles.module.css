@@ -1,0 +1,18 @@
+.cardContent {
+  position: relative;
+  width: 100%;
+  max-width: 250px;
+  min-height: 250px;
+  cursor: pointer;
+  aspect-ratio: 1;
+}
+
+.cardContent:hover {
+  filter: brightness(70%);
+}
+
+.bannerImg {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}

@@ -17,9 +17,6 @@ export type CashflowOut = {
 };
 
 export type CashflowRes = {
-  total_cash: string;
-  income_cash: string;
-  outcome_cash: string;
   cursor: number;
   cashflows: CashflowOut[];
 };
@@ -138,4 +135,39 @@ export const removeCashflow = (id: number) => {
   });
 
   return fetched;
+};
+
+type CashflowStatsRes = {
+  income_total: number;
+  outcome_total: number;
+  total_cash: string;
+  income_cash: string;
+  outcome_cash: string;
+};
+
+type UseCashflowStatsQueryData = {
+  data: CashflowStatsRes;
+};
+
+export const useCashflowStatsQuery = <
+  D = UseCashflowStatsQueryData,
+  E = FetchError
+>(
+  option?: UseQueryOptions<D, E>
+) => {
+  const query = useQuery<D, E>(
+    "cashflowStatsQuery",
+    async () => {
+      const fetched = fetchJson<D>(
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows/stats`
+      ).then((res) => {
+        return res;
+      });
+
+      return fetched;
+    },
+    option
+  );
+
+  return query;
 };

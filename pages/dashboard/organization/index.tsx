@@ -295,52 +295,58 @@ const Organization = () => {
         ) : documentChildsQuery.data?.pages[0].data.documents.length === 0 ? (
           <EmptyMsg />
         ) : (
-          documentChildsQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.documents.map((val) => {
-                  const { id, type, url } = val;
+          <>
+            <h3>
+              Jumlah Total File: {documentChildsQuery.data?.pages[0].data.total}{" "}
+              file
+            </h3>
+            {documentChildsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.documents.map((val) => {
+                    const { id, type, url } = val;
 
-                  const child = (
-                    <DocListItem
-                      document={val}
-                      moreBtn={
-                        <IconButton
-                          className={styles.moreBtn}
-                          onClick={(e) => onChipOptClick(val, e)}
-                          data-testid="docs-detail-btn"
-                        >
-                          <RiMore2Line />
-                        </IconButton>
-                      }
-                    />
-                  );
+                    const child = (
+                      <DocListItem
+                        document={val}
+                        moreBtn={
+                          <IconButton
+                            className={styles.moreBtn}
+                            onClick={(e) => onChipOptClick(val, e)}
+                            data-testid="docs-detail-btn"
+                          >
+                            <RiMore2Line />
+                          </IconButton>
+                        }
+                      />
+                    );
 
-                  return type === DOC_TYPE.DIR ? (
-                    <Link
-                      key={id}
-                      href={{
-                        pathname: router.pathname,
-                        query: { dir_id: id },
-                      }}
-                    >
-                      <a className={styles.documentLink}>{child}</a>
-                    </Link>
-                  ) : (
-                    <a
-                      key={id}
-                      target="_blank"
-                      rel="noreferrer"
-                      href={url}
-                      className={styles.documentLink}
-                    >
-                      {child}
-                    </a>
-                  );
-                })}
-              </Fragment>
-            );
-          })
+                    return type === DOC_TYPE.DIR ? (
+                      <Link
+                        key={id}
+                        href={{
+                          pathname: router.pathname,
+                          query: { dir_id: id },
+                        }}
+                      >
+                        <a className={styles.documentLink}>{child}</a>
+                      </Link>
+                    ) : (
+                      <a
+                        key={id}
+                        target="_blank"
+                        rel="noreferrer"
+                        href={url}
+                        className={styles.documentLink}
+                      >
+                        {child}
+                      </a>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />

@@ -15,6 +15,7 @@ export type MemberDuesOut = {
   idr_amount: string;
   prove_file_url: string;
   status: string;
+  pay_date: string;
 };
 
 export type MemberDuesRes = {
@@ -22,6 +23,7 @@ export type MemberDuesRes = {
   paid_dues: string;
   unpaid_dues: string;
   cursor: number;
+  total: number;
   dues: MemberDuesOut[];
 };
 
@@ -102,12 +104,14 @@ export type MembersDuesOut = {
   status: string;
   name: string;
   profile_pic_url: string;
+  pay_date: string;
 };
 
 type UseMembersDuesQueryData = {
   data: {
     dues_id: number;
     cursor: number;
+    total: number;
     dues_date: string;
     dues_amount: string;
     paid_dues: string;
@@ -145,13 +149,15 @@ export const useMembersDuesQuery = <
   E = FetchError
 >(
   id: number,
+  startDate: string,
+  endDate: string,
   option?: UseQueryOptions<D, E>
 ) => {
   const query = useQuery<D, E>(
     ["membersDeusQuery", id],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/members?limit=999`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dues/${id}/members?limit=999&start_date=${startDate}&end_date=${endDate}`
       ).then((res) => {
         return res;
       });

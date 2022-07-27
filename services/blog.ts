@@ -14,6 +14,7 @@ export type BlogOut = {
 
 type UseBlogsQueryData = {
   data: {
+    total: number;
     cursor: number;
     blogs: BlogOut[];
   };

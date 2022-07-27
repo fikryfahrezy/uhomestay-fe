@@ -1,6 +1,6 @@
 import { RiAlertLine } from "react-icons/ri";
-import { UniversalPortal } from "@/lib/react-portal-universal";
 import Button from "cmnjg-sb/dist/button";
+import ModalContainer from "@/layouts/modalcontainer";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -22,38 +22,32 @@ const Modal = ({
   onConfirm = defaultFunc,
   onCancel = defaultFunc,
 }: ModalProps) => {
-  return isOpen ? (
-    <UniversalPortal selector="#modal">
-      <div className={styles.modal}>
-        <div className={styles.modalBody}>
-          {heading ? <h3>{heading}</h3> : <></>}
-          <div className={styles.modalContent}>
-            <span className={styles.modalIcon}>
-              {icon ? icon : <RiAlertLine />}
-            </span>
-            {children}
-          </div>
-          <div className={styles.buttonContainer}>
-            <Button
-              colorScheme="green"
-              onClick={onConfirm}
-              data-testid="popup-modal-conf-btn"
-            >
-              Iya
-            </Button>
-            <Button
-              colorScheme="red"
-              onClick={onCancel}
-              data-testid="popup-modal-conf-n-btn"
-            >
-              Tidak
-            </Button>
-          </div>
-        </div>
+  return (
+    <ModalContainer isOpen={isOpen} onClose={onCancel}>
+      {heading ? <h3>{heading}</h3> : <></>}
+      <div className={styles.modalContent}>
+        <span className={styles.modalIcon}>
+          {icon ? icon : <RiAlertLine />}
+        </span>
+        {children}
       </div>
-    </UniversalPortal>
-  ) : (
-    <></>
+      <div className={styles.buttonContainer}>
+        <Button
+          colorScheme="green"
+          onClick={onConfirm}
+          data-testid="popup-modal-conf-btn"
+        >
+          Iya
+        </Button>
+        <Button
+          colorScheme="red"
+          onClick={onCancel}
+          data-testid="popup-modal-conf-n-btn"
+        >
+          Tidak
+        </Button>
+      </div>
+    </ModalContainer>
   );
 };
 

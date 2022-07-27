@@ -102,62 +102,68 @@ const Position = () => {
         Buat
       </Button>
       <h1 className={styles.pageTitle}>Jabatan Tersedia</h1>
-      <div className={styles.contentContainer}>
-        {positionsQuery.isLoading ? (
-          "Loading..."
-        ) : positionsQuery.error ? (
-          <ErrMsg />
-        ) : positionsQuery.data?.pages[0].data.positions.length === 0 ? (
-          <EmptyMsg />
-        ) : (
-          positionsQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {Object.entries(
-                  page.data.positions.reduce<{
-                    [k: number]: PositionOut[];
-                  }>((prevValue, currentValue) => {
-                    const prev = prevValue[currentValue.level];
-                    if (prev !== undefined) {
-                      prev.push(currentValue);
-                      return prevValue;
-                    }
+      {positionsQuery.isLoading ? (
+        "Loading..."
+      ) : positionsQuery.error ? (
+        <ErrMsg />
+      ) : positionsQuery.data?.pages[0].data.positions.length === 0 ? (
+        <EmptyMsg />
+      ) : (
+        <>
+          <h3>
+            Jumlah Total Jabatan: {positionsQuery.data?.pages[0].data.total}{" "}
+            jabatan
+          </h3>
+          <div className={styles.contentContainer}>
+            {positionsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {Object.entries(
+                    page.data.positions.reduce<{
+                      [k: number]: PositionOut[];
+                    }>((prevValue, currentValue) => {
+                      const prev = prevValue[currentValue.level];
+                      if (prev !== undefined) {
+                        prev.push(currentValue);
+                        return prevValue;
+                      }
 
-                    prevValue[currentValue.level] = [currentValue];
-                    return prevValue;
-                  }, {})
-                ).map(([level, positions]) => {
-                  return (
-                    <Fragment key={level}>
-                      <h2 className={styles.levelSubtitle}>Level {level}</h2>
-                      {positions.map((val) => {
-                        const { id, name } = val;
-                        return (
-                          <BadgeList
-                            key={id}
-                            icon={<RiMedal2Fill />}
-                            moreBtn={
-                              <IconButton
-                                className={styles.moreBtn}
-                                onClick={() => onChipClick(val)}
-                                data-testid="position-list-item"
-                              >
-                                <RiMore2Line />
-                              </IconButton>
-                            }
-                          >
-                            {name}
-                          </BadgeList>
-                        );
-                      })}
-                    </Fragment>
-                  );
-                })}
-              </Fragment>
-            );
-          })
-        )}
-      </div>
+                      prevValue[currentValue.level] = [currentValue];
+                      return prevValue;
+                    }, {})
+                  ).map(([level, positions]) => {
+                    return (
+                      <Fragment key={level}>
+                        <h2 className={styles.levelSubtitle}>Level {level}</h2>
+                        {positions.map((val) => {
+                          const { id, name } = val;
+                          return (
+                            <BadgeList
+                              key={id}
+                              icon={<RiMedal2Fill />}
+                              moreBtn={
+                                <IconButton
+                                  className={styles.moreBtn}
+                                  onClick={() => onChipClick(val)}
+                                  data-testid="position-list-item"
+                                >
+                                  <RiMore2Line />
+                                </IconButton>
+                              }
+                            >
+                              {name}
+                            </BadgeList>
+                          );
+                        })}
+                      </Fragment>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </div>
+        </>
+      )}
       <Observe callback={debounce(observeCallback, 500)} />
       <Drawer
         isOpen={open}

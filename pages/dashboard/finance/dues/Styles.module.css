@@ -114,3 +114,16 @@
 .red {
   color: #ff7474;
 }
+
+.printInputDate {
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.printButtonContainer {
+  display: grid;
+  width: fit-content;
+  margin-left: auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 1ch;
+}

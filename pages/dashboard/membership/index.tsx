@@ -137,30 +137,36 @@ const Member = () => {
         ) : membersQuery.data?.pages[0].data.members.length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.members.map((member) => {
-                  return (
-                    <MemberListItem
-                      key={member.id}
-                      member={member}
-                      moreBtn={
-                        <IconButton
-                          className={styles.moreBtn}
-                          onClick={() => {
-                            openDrawer(member);
-                          }}
-                        >
-                          <RiMore2Line />
-                        </IconButton>
-                      }
-                    />
-                  );
-                })}
-              </Fragment>
-            );
-          })
+          <>
+            <h3>
+              Jumlah Total Anggota: {membersQuery.data?.pages[0].data.total}{" "}
+              anggota
+            </h3>
+            {membersQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.members.map((member) => {
+                    return (
+                      <MemberListItem
+                        key={member.id}
+                        member={member}
+                        moreBtn={
+                          <IconButton
+                            className={styles.moreBtn}
+                            onClick={() => {
+                              openDrawer(member);
+                            }}
+                          >
+                            <RiMore2Line />
+                          </IconButton>
+                        }
+                      />
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />

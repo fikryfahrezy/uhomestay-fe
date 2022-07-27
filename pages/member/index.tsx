@@ -2,7 +2,8 @@ import type { ReactElement } from "react";
 import type { MemberDuesOut } from "@/services/member-dues";
 import type { MemberDuesPayType } from "@/layouts/memberduespayform";
 import { useState, useEffect, Fragment, useRef } from "react";
-import { RiMore2Line } from "react-icons/ri";
+import Link from "next/link";
+import { RiMore2Line, RiPrinterLine } from "react-icons/ri";
 import Observe from "@/lib/use-observer";
 import { debounce } from "@/lib/perf";
 import {
@@ -14,6 +15,7 @@ import IconButton from "cmnjg-sb/dist/iconbutton";
 import Drawer from "cmnjg-sb/dist/drawer";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
+import LinkButton from "cmnjg-sb/dist/linkbutton";
 import MemberDuesPayForm from "@/layouts/memberduespayform";
 import MemberDuesDetail from "@/layouts/memberduesdetail";
 import MemberLayout from "@/layouts/memberpage";
@@ -122,6 +124,20 @@ const Member = () => {
             <ErrMsg />
           ) : (
             <div className={styles.contentHeadPart}>
+              <Link
+                href={{
+                  pathname: `./member/print/[id]`,
+                  query: { id: muid },
+                }}
+                passHref
+              >
+                <LinkButton
+                  leftIcon={<RiPrinterLine />}
+                  className={styles.printBtn}
+                >
+                  Cetak
+                </LinkButton>
+              </Link>
               <MemberDuesProfile member={memberDetailQuery.data.data} />
             </div>
           )}

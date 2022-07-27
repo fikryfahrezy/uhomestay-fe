@@ -74,7 +74,7 @@ const Login = () => {
               src="/images/image/login-bg.png"
               layout="fill"
               objectFit="cover"
-              alt="blsa"
+              alt="Website Logo"
               priority={true}
             />
           </div>

@@ -1,9 +1,7 @@
 import type { ReactElement } from "react";
-import type { DuesOut } from "@/services/dues";
 import { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import { idrCurrency } from "@/lib/fmt";
-import { DOC_TYPE } from "@/services/document";
 import { usePrivateDashboardQuery } from "@/services/dashboard";
 import MoreLink from "@/layouts/morelink";
 import AdminLayout from "@/layouts/adminpage";
@@ -16,6 +14,7 @@ import PositionListItem from "@/layouts/positionlistitem";
 import GoalView from "@/layouts/goalview";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
+import GalleryListItem from "@/layouts/gallerylistitem";
 import styles from "./Styles.module.css";
 
 const RichText = dynamic(() => import("@/layouts/richtext/read"));
@@ -57,19 +56,25 @@ const Dashboard = () => {
           </div>
           <MoreLink href="/dashboard/membership/org">Lebih lanjut</MoreLink>
           <h2>Jabatan Tersedia</h2>
-          <div className={styles.positionSection}>
-            {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
-              "Loading..."
-            ) : dashboardQuery.error ? (
-              <ErrMsg />
-            ) : dashboardQuery.data.data.positions.length === 0 ? (
-              <EmptyMsg />
-            ) : (
-              dashboardQuery.data.data.positions.slice(0, 5).map((val) => {
-                return <PositionListItem key={val.id} position={val} />;
-              })
-            )}
-          </div>
+          {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
+            "Loading..."
+          ) : dashboardQuery.error ? (
+            <ErrMsg />
+          ) : dashboardQuery.data.data.positions.length === 0 ? (
+            <EmptyMsg />
+          ) : (
+            <>
+              <h4>
+                Jumlah Total Jabatan:{" "}
+                {dashboardQuery.data.data["position_total"]} jabatan
+              </h4>
+              <div className={styles.positionSection}>
+                {dashboardQuery.data.data.positions.slice(0, 5).map((val) => {
+                  return <PositionListItem key={val.id} position={val} />;
+                })}
+              </div>
+            </>
+          )}
           <MoreLink href="/dashboard/membership/position">
             Lebih lanjut
           </MoreLink>
@@ -116,12 +121,37 @@ const Dashboard = () => {
                 Number(dashboardQuery.data.data.dues["idr_amount"])
               )}
             </h2>
+            <h4>
+              Jumlah Total Anggota Teragih:{" "}
+              {dashboardQuery.data.data["member_dues_total"]} anggota
+            </h4>
             {dashboardQuery.data.data["member_dues"].map((val) => {
               return <MemberDuesItem key={val.id} member={val} />;
             })}
           </>
         )}
         <MoreLink href="/dashboard/finance/dues">Lebih lanjut</MoreLink>
+      </section>
+      <section className={styles.contentSection}>
+        <h2>Anggota</h2>
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
+          "Loading..."
+        ) : dashboardQuery.error ? (
+          <ErrMsg />
+        ) : dashboardQuery.data.data.members.length === 0 ? (
+          <EmptyMsg />
+        ) : (
+          <>
+            <h4>
+              Jumlah Total Anggota: {dashboardQuery.data.data["member_total"]}{" "}
+              anggota
+            </h4>
+            {dashboardQuery.data.data.members.map((member) => {
+              return <MemberListItem key={member.id} member={member} />;
+            })}
+          </>
+        )}
+        <MoreLink href="/dashboard/membership">Lebih lanjut</MoreLink>
       </section>
       <section className={styles.contentSection}>
         <h2>Visi &amp; Misi</h2>
@@ -143,63 +173,6 @@ const Dashboard = () => {
         )}
       </section>
       <section className={styles.contentSection}>
-        <h2>Anggota</h2>
-        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
-          "Loading..."
-        ) : dashboardQuery.error ? (
-          <ErrMsg />
-        ) : dashboardQuery.data.data.members.length === 0 ? (
-          <EmptyMsg />
-        ) : (
-          dashboardQuery.data.data.members.map((member) => {
-            return <MemberListItem key={member.id} member={member} />;
-          })
-        )}
-        <MoreLink href="/dashboard/membership">Lebih lanjut</MoreLink>
-      </section>
-      <section className={styles.contentSection}>
-        <h2>Dokumen</h2>
-        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
-          "Loading..."
-        ) : dashboardQuery.error ? (
-          <ErrMsg />
-        ) : dashboardQuery.data.data.documents.length === 0 ? (
-          <EmptyMsg />
-        ) : (
-          dashboardQuery.data.data.documents.map((val) => {
-            return (
-              <a
-                key={val.id}
-                target="_blank"
-                rel="noreferrer"
-                href={val.url}
-                className={styles.documentLink}
-              >
-                <DocListItem document={val} />
-              </a>
-            );
-          })
-        )}
-        <MoreLink href="/dashboard/organization">Lebih lanjut</MoreLink>
-      </section>
-      <section className={styles.contentSection}>
-        <h2>Blog</h2>
-        <div className={styles.blogSection}>
-          {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
-            "Loading..."
-          ) : dashboardQuery.error ? (
-            <ErrMsg />
-          ) : dashboardQuery.data.data.blogs.length === 0 ? (
-            <EmptyMsg />
-          ) : (
-            dashboardQuery.data.data.blogs.map((blog) => {
-              return <BlogListItem key={blog.id} blog={blog} />;
-            })
-          )}
-        </div>
-        <MoreLink href="/dashboard/blog">Lebih lanjut</MoreLink>
-      </section>
-      <section className={styles.contentSection}>
         <h2>Sejarah</h2>
         {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
@@ -211,6 +184,81 @@ const Dashboard = () => {
           />
         )}
         <MoreLink href="/dashboard/organization/history">Lebih lanjut</MoreLink>
+      </section>
+      <section className={styles.contentSection}>
+        <h2>Dokumen</h2>
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
+          "Loading..."
+        ) : dashboardQuery.error ? (
+          <ErrMsg />
+        ) : dashboardQuery.data.data.documents.length === 0 ? (
+          <EmptyMsg />
+        ) : (
+          <>
+            <h4>
+              Jumlah Total File: {dashboardQuery.data.data["document_total"]}{" "}
+              file
+            </h4>
+            {dashboardQuery.data.data.documents.map((val) => {
+              return (
+                <a
+                  key={val.id}
+                  target="_blank"
+                  rel="noreferrer"
+                  href={val.url}
+                  className={styles.documentLink}
+                >
+                  <DocListItem document={val} />
+                </a>
+              );
+            })}
+          </>
+        )}
+        <MoreLink href="/dashboard/organization">Lebih lanjut</MoreLink>
+      </section>
+      <section className={styles.contentSection}>
+        <h2>Blog</h2>
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
+          "Loading..."
+        ) : dashboardQuery.error ? (
+          <ErrMsg />
+        ) : dashboardQuery.data.data.blogs.length === 0 ? (
+          <EmptyMsg />
+        ) : (
+          <>
+            <h4>
+              Jumlah Total Blog: {dashboardQuery.data.data["blog_total"]} blog
+            </h4>
+            <div className={styles.blogSection}>
+              {dashboardQuery.data.data.blogs.map((blog) => {
+                return <BlogListItem key={blog.id} blog={blog} />;
+              })}
+            </div>
+          </>
+        )}
+        <MoreLink href="/dashboard/blog">Lebih lanjut</MoreLink>
+      </section>
+      <section className={styles.contentSection}>
+        <h2>Galeri</h2>
+        {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
+          "Loading..."
+        ) : dashboardQuery.error ? (
+          <ErrMsg />
+        ) : dashboardQuery.data.data.images.length === 0 ? (
+          <EmptyMsg />
+        ) : (
+          <>
+            <h4>
+              Jumlah Total Foto: {dashboardQuery.data.data["image_total"]} foto
+            </h4>
+            <div className={styles.blogSection}>
+              {dashboardQuery.data.data.images.map((image) => {
+                return <GalleryListItem key={image.id} imgData={image} />;
+              })}
+            </div>
+          </>
+        )}
+        <MoreLink href="/dashboard/gallery">Lebih lanjut</MoreLink>
       </section>
     </main>
   );

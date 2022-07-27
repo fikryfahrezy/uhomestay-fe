@@ -46,11 +46,20 @@
   overflow: hidden;
 }
 
-.listText {
-  margin-bottom: 0;
+.listTextLabel,
+.listTextContent {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.listTextLabel {
+  margin-bottom: 0;
+}
+
+.listTextContent {
+  margin-top: 10px;
+  margin-bottom: 0;
 }
 
 .listCurrency {

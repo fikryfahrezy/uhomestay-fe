@@ -1,20 +1,26 @@
 import type { ReactElement } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { idrCurrency, idrNumToWord } from "@/lib/fmt";
+import { idrCurrency, idrNumToWord, yyyyMm } from "@/lib/fmt";
 import { useMembersDuesQuery, DUES_STATUS } from "@/services/member-dues";
-import PrintLayout from "@/layouts/printpage";
+import PrintLayout from "@/layouts/adminprintpage";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Dues = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id, start_date: startDate, end_date: endDate } = router.query;
 
-  const membersDuesQuery = useMembersDuesQuery(Number(id), {
-    enabled: !!id,
-  });
+  const membersDuesQuery = useMembersDuesQuery(
+    Number(id),
+    String(startDate) || "",
+    String(endDate) || "",
+    {
+      enabled: !!id && !!startDate && !!endDate,
+      retry: false,
+    }
+  );
 
   return membersDuesQuery.isLoading || membersDuesQuery.isIdle ? (
     <EmptyMsg />
@@ -30,12 +36,13 @@ const Dues = () => {
           layout="fixed"
           width="300"
           height="35"
-          alt="Logo Img"
+          alt="Website Logo"
         />
         <div>
-          <h1 className={styles.title}>Rakap Iuran Bulanan</h1>
+          <h1 className={styles.title}>Rekap Iuran Bulanan</h1>
           <h2 className={styles.title}>
-            Bulan {membersDuesQuery.data?.data["dues_date"]}
+            Bulan{" "}
+            {yyyyMm(new Date(membersDuesQuery.data?.data["dues_date"] || ""))}
           </h2>
           <p className={styles.date}>
             Per-tanggal {new Date().toLocaleString("id-ID")}
@@ -88,16 +95,24 @@ const Dues = () => {
         </em>
       </p>
       <h2 className={styles.contentTitle}>Daftar Anggota</h2>
+      <h4>
+        Jumlah Total Anggota Teragih:{" "}
+        {membersDuesQuery.data?.data["total"] || "0"} anggota
+      </h4>
+      <h4>
+        Rentang pembayaran dari {startDate} sampai {endDate}
+      </h4>
       <table className={styles.table}>
         <thead>
           <tr>
             <th>Status</th>
+            <th>Tanggal Pembayaran</th>
             <th>Nama Anggota</th>
           </tr>
         </thead>
         <tbody>
           {membersDuesQuery.data?.data["member_dues"].map((val) => {
-            const { id, name, status } = val;
+            const { id, name, status, pay_date: payDate } = val;
             return (
               <tr key={id}>
                 <td>
@@ -107,6 +122,7 @@ const Dues = () => {
                     ? "Belum Lunas"
                     : "Menunggu Konfirmasi"}
                 </td>
+                <td>{payDate}</td>
                 <td>{name}</td>
               </tr>
             );

@@ -1,17 +1,22 @@
 import type { ReactElement } from "react";
 import Image from "next/image";
 import { idrCurrency, idrNumToWord } from "@/lib/fmt";
-import { CASHFLOW_TYPE, useCashflowsQuery } from "@/services/cashflow";
-import PrintLayout from "@/layouts/printpage";
+import {
+  CASHFLOW_TYPE,
+  useCashflowsQuery,
+  useCashflowStatsQuery,
+} from "@/services/cashflow";
+import PrintLayout from "@/layouts/adminprintpage";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 const Finance = () => {
   const cashflowsQuery = useCashflowsQuery();
+  const cashflowStatsQuery = useCashflowStatsQuery();
 
-  return cashflowsQuery.isLoading ? (
+  return cashflowsQuery.isLoading || cashflowStatsQuery.isLoading ? (
     "Loading..."
-  ) : cashflowsQuery.error ? (
+  ) : cashflowsQuery.error || cashflowStatsQuery.error ? (
     <ErrMsg />
   ) : (
     <div>
@@ -21,10 +26,10 @@ const Finance = () => {
           layout="fixed"
           width="300"
           height="35"
-          alt="Logo Img"
+          alt="Website Logo"
         />
         <div>
-          <h1 className={styles.title}>Rakap Uang Kas</h1>
+          <h1 className={styles.title}>Rekap Uang Kas</h1>
           <p className={styles.date}>
             Per-tanggal {new Date().toLocaleString("id-ID")}
           </p>
@@ -33,14 +38,14 @@ const Finance = () => {
       <h2>Total Uang Kas</h2>
       <p>
         {idrCurrency.format(
-          Number(cashflowsQuery.data?.data["total_cash"] || 0)
+          Number(cashflowStatsQuery.data?.data["total_cash"] || 0)
         )}
       </p>
       <span>Terbilang:</span>
       <p>
         <em>
           <strong>
-            {idrNumToWord(cashflowsQuery.data?.data["total_cash"] || "0")}
+            {idrNumToWord(cashflowStatsQuery.data?.data["total_cash"] || "0")}
             rupiah
           </strong>
         </em>
@@ -48,14 +53,14 @@ const Finance = () => {
       <h3>Total Pemasukan</h3>
       <p>
         {idrCurrency.format(
-          Number(cashflowsQuery.data?.data["income_cash"] || 0)
+          Number(cashflowStatsQuery.data?.data["income_cash"] || 0)
         )}
       </p>
       <span>Terbilang:</span>
       <p>
         <em>
           <strong>
-            {idrNumToWord(cashflowsQuery.data?.data["income_cash"] || "0")}
+            {idrNumToWord(cashflowStatsQuery.data?.data["income_cash"] || "0")}
             rupiah
           </strong>
         </em>
@@ -63,19 +68,27 @@ const Finance = () => {
       <h3>Total Pengeluaran</h3>
       <p>
         {idrCurrency.format(
-          Number(cashflowsQuery.data?.data["outcome_cash"] || 0)
+          Number(cashflowStatsQuery.data?.data["outcome_cash"] || 0)
         )}
       </p>
       <span>Terbilang:</span>
       <p>
         <em>
           <strong>
-            {idrNumToWord(cashflowsQuery.data?.data["outcome_cash"] || "0")}
+            {idrNumToWord(cashflowStatsQuery.data?.data["outcome_cash"] || "0")}
             rupiah
           </strong>
         </em>
       </p>
       <h2 className={styles.contentTitle}>Riwayat Uang Kas</h2>
+      <h4>
+        Jumlah Total Pemasukan: {cashflowStatsQuery.data?.data["income_total"]}{" "}
+        pemasukan
+      </h4>
+      <h4>
+        Jumlah Total Pengeluran:{" "}
+        {cashflowStatsQuery.data?.data["outcome_total"]} pengeluaran
+      </h4>
       <table className={styles.table}>
         <thead>
           <tr>

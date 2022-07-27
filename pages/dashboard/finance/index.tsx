@@ -14,7 +14,10 @@ import {
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { idrCurrency } from "@/lib/fmt";
-import { useInfiniteCashflowsQuery } from "@/services/cashflow";
+import {
+  useInfiniteCashflowsQuery,
+  useCashflowStatsQuery,
+} from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
 import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
@@ -33,9 +36,14 @@ import styles from "./Styles.module.css";
 
 type FormType = CashflowAddFormType | CasflowEditFormType;
 
-const inOutField = Object.freeze({
+const inOutCashField = Object.freeze({
   income: "income_cash",
   outcome: "outcome_cash",
+});
+
+const inOutTotalField = Object.freeze({
+  income: "income_total",
+  outcome: "outcome_total",
 });
 
 const Finance = () => {
@@ -46,6 +54,7 @@ const Finance = () => {
   >(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
 
+  const cashflowStatsQuery = useCashflowStatsQuery();
   const cashflowsQuery = useInfiniteCashflowsQuery({
     getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
@@ -84,6 +93,7 @@ const Finance = () => {
     setTempData(null);
     setOpen(false);
     cashflowsQuery.refetch();
+    cashflowStatsQuery.refetch();
 
     updateToast(toastId.current[type], {
       status: "success",
@@ -137,20 +147,20 @@ const Finance = () => {
             Cetak
           </LinkButton>
         </Link>
-        {cashflowsQuery.isLoading || cashflowsQuery.isIdle ? (
+        {cashflowStatsQuery.isLoading ? (
           "Loading..."
-        ) : cashflowsQuery.error ? (
+        ) : cashflowStatsQuery.error ? (
           <ErrMsg />
         ) : (
           <CashflowSummary
             income={idrCurrency.format(
-              Number(cashflowsQuery.data?.pages[0].data["income_cash"])
+              Number(cashflowStatsQuery.data?.data["income_cash"])
             )}
             outcome={idrCurrency.format(
-              Number(cashflowsQuery.data?.pages[0].data["outcome_cash"])
+              Number(cashflowStatsQuery.data?.data["outcome_cash"])
             )}
             total={idrCurrency.format(
-              Number(cashflowsQuery.data?.pages[0].data["total_cash"])
+              Number(cashflowStatsQuery.data?.data["total_cash"])
             )}
           />
         )}
@@ -177,12 +187,29 @@ const Finance = () => {
           </button>
         </div>
         <div className={styles.contentContainer}>
-          {cashflowsQuery.isLoading ? (
+          {cashflowStatsQuery.isLoading ? (
             "Loading..."
-          ) : cashflowsQuery.error ? (
+          ) : cashflowStatsQuery.error ? (
+            <ErrMsg />
+          ) : cashflowStatus === CASHFLOW_TYPE.INCOME ? (
+            <h3>
+              Jumlah Total Pemasukan:{" "}
+              {cashflowStatsQuery.data?.data[inOutTotalField[cashflowStatus]]}{" "}
+              pemasukan
+            </h3>
+          ) : (
+            <h3>
+              Jumlah Total Pengeluran:{" "}
+              {cashflowStatsQuery.data?.data[inOutTotalField[cashflowStatus]]}{" "}
+              pengeluaran
+            </h3>
+          )}
+          {cashflowsQuery.isLoading || cashflowStatsQuery.isLoading ? (
+            "Loading..."
+          ) : cashflowsQuery.error || cashflowStatsQuery.error ? (
             <ErrMsg />
           ) : cashflowsQuery.data?.pages[0].data.cashflows.length === 0 ||
-            cashflowsQuery.data?.pages[0].data[inOutField[cashflowStatus]] ===
+            cashflowStatsQuery.data?.data[inOutCashField[cashflowStatus]] ===
               "0" ? (
             <EmptyMsg />
           ) : (

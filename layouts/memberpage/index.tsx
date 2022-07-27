@@ -56,7 +56,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
               src="/images/image/logo.png"
               width={329}
               height={42}
-              alt="Test"
+              alt="Website Logo"
             />
           </a>
         </Link>
@@ -90,7 +90,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
           {children}
         </main>
       </div>
-      {bottomNavBlockList.some((blockList) => {
+      {/* {bottomNavBlockList.some((blockList) => {
         return router.asPath.includes(blockList);
       }) ? (
         <></>
@@ -112,7 +112,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
             })}
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

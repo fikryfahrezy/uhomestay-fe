@@ -112,45 +112,51 @@ const Organization = () => {
         ) : periodsQuery.data?.pages[0].data.periods.length === 0 ? (
           <EmptyMsg />
         ) : (
-          periodsQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.periods.map((val) => {
-                  const {
-                    id,
-                    start_date: startDate,
-                    end_date: endDate,
-                    is_active: isActive,
-                  } = val;
-                  return (
-                    <BadgeList
-                      key={id}
-                      icon={<RiCalendar2Fill />}
-                      badge={
-                        isActive ? (
-                          <Badge colorScheme="green">Periode Aktif</Badge>
-                        ) : (
-                          <></>
-                        )
-                      }
-                      moreBtn={
-                        <IconButton
-                          className={styles.moreBtn}
-                          onClick={() => onChipClick(val)}
-                          data-testid="period-chip"
-                        >
-                          <RiMore2Line />
-                        </IconButton>
-                      }
-                    >
-                      {idDate(new Date(startDate))} /{" "}
-                      {idDate(new Date(endDate))}
-                    </BadgeList>
-                  );
-                })}
-              </Fragment>
-            );
-          })
+          <>
+            <h3>
+              Jumlah Total Periode Organisasi:{" "}
+              {periodsQuery.data?.pages[0].data.total} periode
+            </h3>
+            {periodsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.periods.map((val) => {
+                    const {
+                      id,
+                      start_date: startDate,
+                      end_date: endDate,
+                      is_active: isActive,
+                    } = val;
+                    return (
+                      <BadgeList
+                        key={id}
+                        icon={<RiCalendar2Fill />}
+                        badge={
+                          isActive ? (
+                            <Badge colorScheme="green">Periode Aktif</Badge>
+                          ) : (
+                            <></>
+                          )
+                        }
+                        moreBtn={
+                          <IconButton
+                            className={styles.moreBtn}
+                            onClick={() => onChipClick(val)}
+                            data-testid="period-chip"
+                          >
+                            <RiMore2Line />
+                          </IconButton>
+                        }
+                      >
+                        {idDate(new Date(startDate))} /{" "}
+                        {idDate(new Date(endDate))}
+                      </BadgeList>
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />

@@ -11,7 +11,7 @@ const PageNav = ({ className }: JSX.IntrinsicElements["div"]) => {
           src="/images/image/logo.png"
           width={329}
           height={42}
-          alt="Test"
+          alt="Website Logo"
         />
         <Link href="/" passHref>
           <LinkOverlay />

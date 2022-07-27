@@ -141,3 +141,22 @@ export const idrNumToWord = (idrNum: string) => {
 
   return numToWords(idrNum);
 };
+
+/**
+ * Ref: Format JavaScript date as yyyy-mm-dd
+ * https://stackoverflow.com/a/29774197/12976234
+ *
+
+ */
+export const yyyyMmDd = (currentDate: Date) => {
+  if (currentDate.toString() === "Invalid Date") {
+    return "";
+  }
+
+  const offset = currentDate.getTimezoneOffset();
+
+  currentDate = new Date(currentDate.getTime() - offset * 60 * 1000);
+  const newDate = currentDate.toISOString().split("T")[0];
+
+  return newDate;
+};

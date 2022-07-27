@@ -10,6 +10,7 @@ export type PositionOut = {
 
 type UsePositionsQueryData = {
   data: {
+    total: number;
     cursor: number;
     positions: PositionOut[];
   };

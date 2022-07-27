@@ -18,7 +18,7 @@ const MemberDuesProfile = ({ member }: MemberDuesProfileProps) => {
             layout="responsive"
             width={150}
             height={150}
-            alt="Member profile pic"
+            alt="Member Profile Picture"
           />
         </div>
         <h2 className={styles.profileName}>{name}</h2>

@@ -1,4 +1,4 @@
-type UserProp = {
+export type UserProp = {
   isLoggedIn: boolean;
   login: string;
   avatarUrl: string;

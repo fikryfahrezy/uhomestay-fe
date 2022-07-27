@@ -10,6 +10,7 @@ import MoreLink from "@/layouts/morelink";
 import DocListItem from "@/layouts/doclistitem";
 import GoalView from "@/layouts/goalview";
 import BlogListItem from "@/layouts/bloglistitem";
+import GalleryListItem from "@/layouts/gallerylistitem";
 import styles from "./Styles.module.css";
 
 const RichText = dynamic(() => import("@/layouts/richtext/read"));
@@ -53,7 +54,7 @@ const LandingPage = () => {
           src="/images/image/logo.png"
           width={329}
           height={42}
-          alt="Test"
+          alt="Website Logo"
         />
         <ul className={styles.ul}>
           <li>
@@ -69,6 +70,11 @@ const LandingPage = () => {
           <li>
             <a className={styles.navLink} href="#history">
               Sejarah
+            </a>
+          </li>
+          <li>
+            <a className={styles.navLink} href="#gallery">
+              Galeri
             </a>
           </li>
           <li>
@@ -103,7 +109,7 @@ const LandingPage = () => {
           src="/images/image/lp-bg.png"
           layout="fill"
           objectFit="cover"
-          alt="blsa"
+          alt="Website Thumbnail"
           priority={true}
         />
         <div className={styles.titleContainer}>
@@ -111,6 +117,26 @@ const LandingPage = () => {
         </div>
       </header>
       <main className={styles.contentContainer}>
+        <section className={`${styles.section} ${styles.welcomeSection}`}>
+          <h2 className={`${styles.periodTitle} ${styles.welcomeSectionTitle}`}>
+            Wilujeung Sumping
+          </h2>
+          <p className={styles.welcomeParagraph}>
+            Website ini dibuat sebagai sarana untuk memberikan beragam informasi
+            khususnya yang berkaitan dengan paguyuban homestay desa kamojang.
+          </p>
+          <p className={styles.welcomeParagraph}>
+            Kami secara aktif terus berinovasi untuk memberikan informasi yang
+            relevan demi untuk peningkatan kepuasan dalam mendapatkan informasi
+            khususnya dari Desa Wisata Kamojang.
+          </p>
+          <p className={styles.welcomeParagraph}>
+            Terima kasih anda telah berkunjung di website kami. Harapan kami,
+            website ini bisa menjadi referensi bagi siapapun yang ingin
+            mendapatkan informasi tentang Paguyuban Homestay Desa Kamojang.
+          </p>
+          <p className={styles.welcomeParagraph}>Hatur Nuhun</p>
+        </section>
         <section className={`${styles.section} ${styles.periodTitle}`}>
           <h2 className={styles.periodSubTitle}>
             <a id="organization">Struktur Organiasi Periode </a>
@@ -160,7 +186,7 @@ const LandingPage = () => {
                                     : "/images/image/person.png"
                                 }
                                 layout="fill"
-                                alt="hfisfjs"
+                                alt="Member Profile Picture"
                               />
                             </div>
                             <span className={styles.avatarName}>{name}</span>
@@ -213,6 +239,25 @@ const LandingPage = () => {
               }
             />
           )}
+        </section>
+        <section className={styles.section}>
+          <h2 className={styles.subTitle}>
+            <a id="gallery">Galeri</a>
+          </h2>
+          <div className={styles.blogsContainer}>
+            {dasboardQuery.isLoading ? (
+              "Loading..."
+            ) : dasboardQuery.error ? (
+              <ErrMsg />
+            ) : dasboardQuery.data?.data.images.length === 0 ? (
+              <EmptyMsg />
+            ) : (
+              dasboardQuery.data?.data.images.map((image) => {
+                return <GalleryListItem key={image.id} imgData={image} />;
+              })
+            )}
+          </div>
+          <MoreLink href="/gallery">Lebih banyak</MoreLink>
         </section>
         <section className={styles.section}>
           <h2 className={styles.subTitle}>

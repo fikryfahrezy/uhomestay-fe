@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { ReactElement, ChangeEvent } from "react";
 import type { DuesOut } from "@/services/dues";
 import type { DuesAddFormType } from "@/layouts/duesaddform";
 import type { DuesEditFormType } from "@/layouts/dueseditform";
@@ -10,7 +10,7 @@ import {
   RiMore2Line,
   RiPrinterLine,
 } from "react-icons/ri";
-import { idrCurrency } from "@/lib/fmt";
+import { idrCurrency, yyyyMmDd } from "@/lib/fmt";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useDuesQuery } from "@/services/dues";
@@ -20,6 +20,7 @@ import Button from "cmnjg-sb/dist/button";
 import IconButton from "cmnjg-sb/dist/iconbutton";
 import Select from "cmnjg-sb/dist/select";
 import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Input from "cmnjg-sb/dist/input";
 import Toast from "cmnjg-sb/dist/toast";
 import useToast from "cmnjg-sb/dist/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
@@ -29,11 +30,81 @@ import EmptyMsg from "@/layouts/emptymsg";
 import MemberDuesItem from "@/layouts/memberduesitem";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
+import ModalContainer from "@/layouts/modalcontainer";
 import styles from "./Styles.module.css";
+
+const defaultFunc = () => {};
+
+type ModalDatePickerProps = {
+  onCancelPrint?: () => void;
+  selectedDues: number;
+};
+
+const ModalDatePicker = ({
+  onCancelPrint = defaultFunc,
+  selectedDues,
+}: ModalDatePickerProps) => {
+  const router = useRouter();
+  const [startDate, setStartDate] = useState(yyyyMmDd(new Date()));
+  const [endDate, setEndDate] = useState(yyyyMmDd(new Date()));
+
+  const onStartDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setStartDate(e.currentTarget.value);
+    setEndDate(e.currentTarget.value);
+  };
+
+  const onEndDateChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setEndDate(e.currentTarget.value);
+  };
+
+  return (
+    <>
+      <h3>Pilih rentang tanggal!</h3>
+      <div>
+        <Input
+          label="Tanggal awal:"
+          id="start_date"
+          type="date"
+          value={startDate}
+          onChange={onStartDateChange}
+          className={styles.printInputDate}
+        />
+        <Input
+          label="Tanggal akhir:"
+          id="end_date"
+          type="date"
+          min={startDate}
+          value={endDate}
+          onChange={onEndDateChange}
+          className={styles.printInputDate}
+        />
+      </div>
+      <div className={styles.printButtonContainer}>
+        <Link
+          href={{
+            pathname: `${router.pathname}/print/[id]`,
+            query: {
+              id: selectedDues,
+              start_date: startDate,
+              end_date: endDate,
+            },
+          }}
+          passHref
+        >
+          <LinkButton leftIcon={<RiPrinterLine />}>Cetak</LinkButton>
+        </Link>
+        <Button onClick={() => onCancelPrint()} colorScheme="red">
+          Batal
+        </Button>
+      </div>
+    </>
+  );
+};
 
 type FormType = DuesAddFormType | DuesEditFormType;
 
 const Dues = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [selectedDues, setSelectedDues] = useState<number>(0);
   const [tempData, setTempData] = useState<DuesOut | null>(null);
@@ -118,6 +189,14 @@ const Dues = () => {
     });
   };
 
+  const onPrint = () => {
+    setModalOpen(true);
+  };
+
+  const onCancelPrint = () => {
+    setModalOpen(false);
+  };
+
   useEffect(() => {
     const duesData = duesQuery.data;
     if (duesData !== undefined && duesData.data.dues.length != 0) {
@@ -138,17 +217,13 @@ const Dues = () => {
         Buat Tagihan
       </Button>
       <div className={styles.tableContainer}>
-        <Link
-          href={{
-            pathname: `${router.pathname}/print/[id]`,
-            query: { id: selectedDues },
-          }}
-          passHref
+        <Button
+          leftIcon={<RiPrinterLine />}
+          className={styles.printBtn}
+          onClick={() => onPrint()}
         >
-          <LinkButton leftIcon={<RiPrinterLine />} className={styles.printBtn}>
-            Cetak
-          </LinkButton>
-        </Link>
+          Cetak
+        </Button>
         <div className={styles.groupHeader}>
           <div className={styles.groupTitle}>
             <div className={styles.groupTitleBody}>
@@ -245,35 +320,41 @@ const Dues = () => {
         ) : membersDuesQuery.data?.pages[0].data["member_dues"].length === 0 ? (
           <EmptyMsg />
         ) : (
-          membersDuesQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data["member_dues"].map((val) => {
-                  return (
-                    <MemberDuesItem
-                      key={val.id}
-                      member={val}
-                      moreBtn={
-                        <Link
-                          href={{
-                            pathname: `${router.pathname}/member/[id]`,
-                            query: { id: val["member_id"] },
-                          }}
-                          passHref
-                        >
-                          <LinkButton
-                            colorScheme="green"
-                            leftIcon={<RiMore2Line />}
-                            className={styles.moreBtn}
-                          />
-                        </Link>
-                      }
-                    />
-                  );
-                })}
-              </Fragment>
-            );
-          })
+          <>
+            <h3>
+              Jumlah Total Anggota Teragih:{" "}
+              {membersDuesQuery.data?.pages[0].data["total"] || "0"} anggota
+            </h3>
+            {membersDuesQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data["member_dues"].map((val) => {
+                    return (
+                      <MemberDuesItem
+                        key={val.id}
+                        member={val}
+                        moreBtn={
+                          <Link
+                            href={{
+                              pathname: `${router.pathname}/member/[id]`,
+                              query: { id: val["member_id"] },
+                            }}
+                            passHref
+                          >
+                            <LinkButton
+                              colorScheme="green"
+                              leftIcon={<RiMore2Line />}
+                              className={styles.moreBtn}
+                            />
+                          </Link>
+                        }
+                      />
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />
@@ -311,6 +392,12 @@ const Dues = () => {
           <></>
         )}
       </Drawer>
+      <ModalContainer isOpen={isModalOpen}>
+        <ModalDatePicker
+          onCancelPrint={() => onCancelPrint()}
+          selectedDues={selectedDues}
+        />
+      </ModalContainer>
       <Toast {...props} />
     </>
   );

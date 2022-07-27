@@ -65,28 +65,31 @@ const member = {
 
 const members = [member];
 
-const cashflow = {
+const cashflows = [
+  {
+    id: 1,
+    date: "",
+    note: "",
+    type: "income",
+    idr_amount: "124",
+    prove_file_url: "https://localhost:5000",
+  },
+  {
+    id: 2,
+    date: "",
+    note: "",
+    type: "outcome",
+    idr_amount: "124",
+    prove_file_url: "https://localhost:5000",
+  },
+];
+
+const cashflowStat = {
+  income_total: 0,
+  outcome_total: 0,
   total_cash: "",
   income_cash: "",
   outcome_cash: "",
-  cashflows: [
-    {
-      id: 1,
-      date: "",
-      note: "",
-      type: "income",
-      idr_amount: "124",
-      prove_file_url: "https://localhost:5000",
-    },
-    {
-      id: 2,
-      date: "",
-      note: "",
-      type: "outcome",
-      idr_amount: "124",
-      prove_file_url: "https://localhost:5000",
-    },
-  ],
 };
 
 const dues = {
@@ -105,16 +108,26 @@ const positions = [position];
 
 const member_d = {
   id: 1,
-  dues_id: 1,
-  idr_amount: "0",
-  date: "2022-01-02",
   member_id: "f79e82e8-c34a-4dc7-a49e-9fadc0979fda",
   status: "unpaid",
   name: "",
   profile_pic_url: "http://localhost",
+  pay_date: "2022-02-01",
 };
 
 const member_dues = [member_d];
+
+const dues_member = {
+  date: "2022-01-01",
+  dues_id: 1,
+  id: 1,
+  idr_amount: "1000",
+  prove_file_url: "http://localhost",
+  status: "unpaid",
+  pay_date: "2022-01-01",
+};
+
+const dues_members = [dues_member];
 
 const org_period_goal = {
   id: 1,
@@ -165,6 +178,15 @@ const uidres = {
   id: "f79e82e8-c34a-4dc7-a49e-9fadc0979fda",
 };
 
+const image = {
+  id: 0,
+  name: "image name",
+  url: "http://string",
+  description: "description",
+};
+
+const images = [image];
+
 export const handlers = [
   rest.post("/api/login/member", (req, res, ctx) => {
     return res(ctx.json(user));
@@ -187,6 +209,7 @@ export const handlers = [
           blogs,
           latest_history,
           org_period_structures,
+          images,
         })
       );
     }
@@ -194,8 +217,15 @@ export const handlers = [
   rest.get(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/dashboard/private`,
     (req, res, ctx) => {
+      const { income_total, outcome_total, ...cashflow } = cashflowStat;
       return res(
         ctx.json({
+          member_total: members.length,
+          document_total: documents.length,
+          blog_total: blogs.length,
+          position_total: positions.length,
+          member_dues_total: member_dues.length,
+          image_total: images.length,
           documents,
           blogs,
           latest_history,
@@ -206,6 +236,7 @@ export const handlers = [
           member_dues,
           org_period_goal,
           active_period,
+          images,
         })
       );
     }
@@ -217,6 +248,7 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: 0,
+            total: positions.length,
             positions,
           },
         })
@@ -269,6 +301,7 @@ export const handlers = [
       return res(
         ctx.json({
           data: {
+            total: blogs.length,
             cursor: 0,
             blogs,
           },
@@ -334,7 +367,7 @@ export const handlers = [
       return res(
         ctx.json({
           data: {
-            ...cashflow,
+            cashflows,
             cursor: 0,
           },
         })
@@ -372,12 +405,25 @@ export const handlers = [
     }
   ),
   rest.get(
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/cashflows/stats`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: {
+            ...cashflowStat,
+          },
+        })
+      );
+    }
+  ),
+  rest.get(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/documents`,
     (req, res, ctx) => {
       return res(
         ctx.json({
           data: {
             cursor: 0,
+            total: documents.length,
             documents,
           },
         })
@@ -391,6 +437,7 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: 0,
+            total: documents.length,
             documents,
           },
         })
@@ -455,7 +502,6 @@ export const handlers = [
       return res(
         ctx.json({
           data: {
-            cursor: 0,
             dues: [dues],
           },
         })
@@ -534,7 +580,8 @@ export const handlers = [
             total_dues: "",
             paid_dues: "",
             unpaid_dues: "",
-            dues: member_dues,
+            total: member_dues.length,
+            dues: dues_members,
           },
         })
       );
@@ -557,6 +604,12 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: 0,
+            dues_id: 0,
+            total: member_dues.length,
+            dues_date: "2020-01-01",
+            dues_amount: "10000",
+            paid_dues: "5000",
+            unpaid_dues: "5000",
             member_dues,
           },
         })
@@ -590,6 +643,7 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: "",
+            total: members.length,
             members,
           },
         })
@@ -668,6 +722,7 @@ export const handlers = [
         ctx.json({
           data: {
             cursor: 1,
+            total: periods.length,
             periods,
           },
         })
@@ -768,6 +823,40 @@ export const handlers = [
       return res(
         ctx.json({
           data: org_period_goal,
+        })
+      );
+    }
+  ),
+  rest.delete(
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/images/:id`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: idres,
+        })
+      );
+    }
+  ),
+  rest.post(
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/images`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: idres,
+        })
+      );
+    }
+  ),
+  rest.get(
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/images`,
+    (req, res, ctx) => {
+      return res(
+        ctx.json({
+          data: {
+            cursor: 0,
+            total: images.length,
+            images,
+          },
         })
       );
     }

@@ -2,20 +2,10 @@ import type { UseQueryOptions } from "react-query";
 import { useQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
-export type CashflowOut = {
-  id: number;
-  date: string;
-  note: string;
-  type: string;
-  idr_amount: string;
-  prove_file_url: string;
-};
-
 export type CashflowRes = {
   total_cash: string;
   income_cash: string;
   outcome_cash: string;
-  cashflows: CashflowOut[];
 };
 
 export type DocumentOut = {
@@ -76,6 +66,7 @@ export type MembersDuesOut = {
   status: string;
   name: string;
   profile_pic_url: string;
+  pay_date: string;
 };
 
 export type FindOrgPeriodGoalRes = {
@@ -115,7 +106,20 @@ export type PeriodRes = {
   is_active: boolean;
 };
 
+export type ImageOut = {
+  id: number;
+  name: string;
+  url: string;
+  description: string;
+};
+
 type PrivateRes = {
+  member_total: number;
+  document_total: number;
+  blog_total: number;
+  position_total: number;
+  member_dues_total: number;
+  image_total: number;
   documents: DocumentOut[];
   members: MemberOut[];
   cashflow: CashflowRes;
@@ -126,6 +130,7 @@ type PrivateRes = {
   member_dues: MembersDuesOut[];
   org_period_goal: FindOrgPeriodGoalRes;
   active_period: PeriodRes;
+  images: ImageOut[];
 };
 
 type UsePrivateDashboardData = {
@@ -167,6 +172,7 @@ type PublicRes = {
   blogs: BlogOut[];
   latest_history: LatestHistoryRes;
   org_period_structures: StructureRes;
+  images: ImageOut[];
 };
 
 type UsePublicDashboardData = {

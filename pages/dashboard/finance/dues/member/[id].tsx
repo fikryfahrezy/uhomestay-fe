@@ -144,29 +144,35 @@ const MemberDues = () => {
         ) : memberDuesQuery.data?.pages[0].data.dues.length === 0 ? (
           <EmptyMsg />
         ) : (
-          memberDuesQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.dues.map((val) => {
-                  return (
-                    <MemberDuesListItem
-                      key={val.id}
-                      memberDues={val}
-                      moreBtn={
-                        <IconButton
-                          className={styles.moreBtn}
-                          onClick={() => onOptClick(val)}
-                          data-testid="member-dues-item-btn"
-                        >
-                          <RiMore2Line />
-                        </IconButton>
-                      }
-                    />
-                  );
-                })}
-              </Fragment>
-            );
-          })
+          <>
+            <h3>
+              Jumlah Total Tagihan:{" "}
+              {memberDuesQuery.data?.pages[0].data["total"] || "0"} tagihan
+            </h3>
+            {memberDuesQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.dues.map((val) => {
+                    return (
+                      <MemberDuesListItem
+                        key={val.id}
+                        memberDues={val}
+                        moreBtn={
+                          <IconButton
+                            className={styles.moreBtn}
+                            onClick={() => onOptClick(val)}
+                            data-testid="member-dues-item-btn"
+                          >
+                            <RiMore2Line />
+                          </IconButton>
+                        }
+                      />
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </>
         )}
       </div>
       <Observe callback={debounce(observeCallback, 500)} />

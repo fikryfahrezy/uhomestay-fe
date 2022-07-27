@@ -52,7 +52,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     req.session.member = member;
     await req.session.save();
 
-    res.json(member);
+    res.json(member.prop);
   } catch (error) {
     res.status(500).json((error as FetchError).data);
   }

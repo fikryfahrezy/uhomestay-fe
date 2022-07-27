@@ -1,4 +1,5 @@
 import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
+import type { UserProp } from "@/model/user";
 import Router from "next/router";
 import { useEffect } from "react";
 import { useQuery, useInfiniteQuery } from "react-query";
@@ -22,6 +23,7 @@ export type MemberOut = {
 
 type UseMembersQueryData = {
   data: {
+    total: number;
     cursor: string;
     members: MemberOut[];
   };
@@ -328,21 +330,19 @@ export const useMember = ({
   redirectTo = "",
   redirectIfFound = false,
 }: UseUserProps = {}) => {
-  const memberQuery = useQuery<User, FetchError>(
+  const memberQuery = useQuery<UserProp, FetchError>(
     "memberUserQuery",
     async () => {
-      const fetcher = fetchJson<User>("/api/user/member");
+      const fetcher = fetchJson<UserProp>("/api/user/member");
       return fetcher;
     }
   );
-  const { data } = memberQuery;
+  const { data: user } = memberQuery;
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-    if (!redirectTo || !data) return;
-
-    const user = data.prop;
+    if (!redirectTo || !user) return;
 
     if (
       // If redirectTo is set, redirect if the user was not found.
@@ -352,7 +352,7 @@ export const useMember = ({
     ) {
       Router.push(redirectTo);
     }
-  }, [data, redirectIfFound, redirectTo]);
+  }, [user, redirectIfFound, redirectTo]);
 
   return memberQuery;
 };
@@ -363,18 +363,19 @@ export const useMember = ({
  *
  */
 export const useAdmin = ({ redirectTo = "", redirectIfFound = false } = {}) => {
-  const memberQuery = useQuery<User, FetchError>("adminUserQuery", async () => {
-    const fetcher = fetchJson<User>("/api/user/admin");
-    return fetcher;
-  });
-  const { data } = memberQuery;
+  const memberQuery = useQuery<UserProp, FetchError>(
+    "adminUserQuery",
+    async () => {
+      const fetcher = fetchJson<UserProp>("/api/user/admin");
+      return fetcher;
+    }
+  );
+  const { data: user } = memberQuery;
 
   useEffect(() => {
     // if no redirect needed, just return (example: already on /dashboard)
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
-    if (!redirectTo || !data) return;
-
-    const user = data.prop;
+    if (!redirectTo || !user) return;
 
     if (
       // If redirectTo is set, redirect if the user was not found.
@@ -384,7 +385,7 @@ export const useAdmin = ({ redirectTo = "", redirectIfFound = false } = {}) => {
     ) {
       Router.push(redirectTo);
     }
-  }, [data, redirectIfFound, redirectTo]);
+  }, [user, redirectIfFound, redirectTo]);
 
   return memberQuery;
 };

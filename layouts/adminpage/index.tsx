@@ -17,6 +17,7 @@ import {
   RiLogoutBoxRLine,
   RiExchangeDollarFill,
   RiCurrencyLine,
+  RiGalleryLine,
 } from "react-icons/ri";
 import { useAdmin, memberLogout } from "@/services/member";
 import Avatar from "cmnjg-sb/dist/avatar";
@@ -259,6 +260,24 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
           </ActiveLink>
         ),
       },
+      {
+        key: "6",
+        isLink: true,
+        element: (
+          <ActiveLink
+            href="/dashboard/gallery"
+            activeClassName={styles.activeLink}
+            passHref
+          >
+            <LinkButton
+              className={styles.sideLink}
+              leftIcon={<RiGalleryLine />}
+            >
+              <span className={styles.sideLinkText}>Galeri</span>
+            </LinkButton>
+          </ActiveLink>
+        ),
+      },
     ];
 
     return links;
@@ -280,7 +299,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
               src="/images/image/logo.png"
               width={329}
               height={42}
-              alt="Test"
+              alt="Website Logo"
             />
           </a>
         </Link>

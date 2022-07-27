@@ -114,85 +114,90 @@ const Blog = () => {
         </LinkButton>
       </Link>
       <h1 className={styles.pageTitle}>Blog</h1>
-      <div className={styles.contentContainer}>
-        {blogsQuery.isLoading ? (
-          "Loading..."
-        ) : blogsQuery.error ? (
-          <ErrMsg />
-        ) : blogsQuery.data?.pages[0].data.blogs.length === 0 ? (
-          <EmptyMsg />
-        ) : (
-          blogsQuery.data?.pages.map((page) => {
-            return (
-              <Fragment key={page.data.cursor}>
-                {page.data.blogs.map((blog) => {
-                  return (
-                    <BlogListItem
-                      key={blog.id}
-                      blog={blog}
-                      popUp={
-                        <PopUp
-                          popUpPosition="bottom-right"
-                          className={styles.popup}
-                          popUpContent={
-                            <ul className={styles.addBtnOptions}>
-                              <li data-testid="blog-detail-popup">
-                                <Link
-                                  href={{
-                                    pathname: `${router.pathname}/view/[id]`,
-                                    query: { id: blog.id },
-                                  }}
-                                >
-                                  <a
-                                    className={`${styles.addBtnOption} ${styles.optionLink}`}
+      {blogsQuery.isLoading ? (
+        "Loading..."
+      ) : blogsQuery.error ? (
+        <ErrMsg />
+      ) : blogsQuery.data?.pages[0].data.blogs.length === 0 ? (
+        <EmptyMsg />
+      ) : (
+        <>
+          <h3>
+            Jumlah Total Blog: {blogsQuery.data?.pages[0].data.total} blog
+          </h3>
+          <div className={styles.contentContainer}>
+            {blogsQuery.data?.pages.map((page) => {
+              return (
+                <Fragment key={page.data.cursor}>
+                  {page.data.blogs.map((blog) => {
+                    return (
+                      <BlogListItem
+                        key={blog.id}
+                        blog={blog}
+                        popUp={
+                          <PopUp
+                            popUpPosition="bottom-right"
+                            className={styles.popup}
+                            popUpContent={
+                              <ul className={styles.addBtnOptions}>
+                                <li data-testid="blog-detail-popup">
+                                  <Link
+                                    href={{
+                                      pathname: `${router.pathname}/view/[id]`,
+                                      query: { id: blog.id },
+                                    }}
                                   >
-                                    <RiArrowRightLine />
-                                    Lihat Detail
-                                  </a>
-                                </Link>
-                              </li>
-                              <li data-testid="blog-edit-popup">
-                                <Link
-                                  href={{
-                                    pathname: `${router.pathname}/edit/[id]`,
-                                    query: { id: blog.id },
-                                  }}
-                                >
-                                  <a
-                                    className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                    <a
+                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                    >
+                                      <RiArrowRightLine />
+                                      Lihat Detail
+                                    </a>
+                                  </Link>
+                                </li>
+                                <li data-testid="blog-edit-popup">
+                                  <Link
+                                    href={{
+                                      pathname: `${router.pathname}/edit/[id]`,
+                                      query: { id: blog.id },
+                                    }}
                                   >
-                                    <RiFileSettingsLine />
-                                    Ubah
-                                  </a>
-                                </Link>
-                              </li>
-                              <li
-                                onClick={() => onConfirmDelete(blog.id)}
-                                className={`${styles.addBtnOption} ${styles.danger}`}
-                                data-testid="blog-remove-popup"
-                              >
-                                <RiDeleteBin6Line />
-                                Hapus
-                              </li>
-                            </ul>
-                          }
-                        >
-                          <IconButton
-                            className={styles.cardBtn}
-                            data-testid="blog-popup-btn"
+                                    <a
+                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                    >
+                                      <RiFileSettingsLine />
+                                      Ubah
+                                    </a>
+                                  </Link>
+                                </li>
+                                <li
+                                  onClick={() => onConfirmDelete(blog.id)}
+                                  className={`${styles.addBtnOption} ${styles.danger}`}
+                                  data-testid="blog-remove-popup"
+                                >
+                                  <RiDeleteBin6Line />
+                                  Hapus
+                                </li>
+                              </ul>
+                            }
                           >
-                            <RiArrowDownSLine />
-                          </IconButton>
-                        </PopUp>
-                      }
-                    />
-                  );
-                })}
-              </Fragment>
-            );
-          })
-        )}
-      </div>
+                            <IconButton
+                              className={styles.cardBtn}
+                              data-testid="blog-popup-btn"
+                            >
+                              <RiArrowDownSLine />
+                            </IconButton>
+                          </PopUp>
+                        }
+                      />
+                    );
+                  })}
+                </Fragment>
+              );
+            })}
+          </div>
+        </>
+      )}
       <Observe callback={debounce(observeCallback, 500)} />
       <Modal
         isOpen={isModalOpen}
