@@ -96,8 +96,8 @@ const MemberDues = () => {
           </p>
           <h2 className={styles.contentTitle}>Daftar Iuran Bulanan</h2>
           <h4>
-            Jumlah Total Tagihan: {memberDuesQuery.data?.data["total"] || "0"}{" "}
-            tagihan
+            Jumlah Total Iuran: {memberDuesQuery.data?.data["total"] || "0"}{" "}
+            iuran
           </h4>
           <table className={styles.table}>
             <thead>

@@ -164,29 +164,35 @@ const Member = () => {
           ) : memberDuesQuery.data?.pages[0].data.dues.length === 0 ? (
             <EmptyMsg />
           ) : (
-            memberDuesQuery.data?.pages.map((page) => {
-              return (
-                <Fragment key={page.data.cursor}>
-                  {page.data.dues.map((val) => {
-                    return (
-                      <MemberDuesListItem
-                        key={val.id}
-                        memberDues={val}
-                        moreBtn={
-                          <IconButton
-                            className={styles.moreBtn}
-                            onClick={() => onOptClick(val)}
-                            data-testid="dues-detail-btn"
-                          >
-                            <RiMore2Line />
-                          </IconButton>
-                        }
-                      />
-                    );
-                  })}
-                </Fragment>
-              );
-            })
+            <>
+              <h3>
+                Jumlah Total Iuran:{" "}
+                {memberDuesQuery.data?.pages[0].data["total"] || "0"} iuran
+              </h3>
+              {memberDuesQuery.data?.pages.map((page) => {
+                return (
+                  <Fragment key={page.data.cursor}>
+                    {page.data.dues.map((val) => {
+                      return (
+                        <MemberDuesListItem
+                          key={val.id}
+                          memberDues={val}
+                          moreBtn={
+                            <IconButton
+                              className={styles.moreBtn}
+                              onClick={() => onOptClick(val)}
+                              data-testid="dues-detail-btn"
+                            >
+                              <RiMore2Line />
+                            </IconButton>
+                          }
+                        />
+                      );
+                    })}
+                  </Fragment>
+                );
+              })}
+            </>
           )}
         </div>
       </div>

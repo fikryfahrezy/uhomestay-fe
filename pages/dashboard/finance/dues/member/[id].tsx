@@ -146,8 +146,8 @@ const MemberDues = () => {
         ) : (
           <>
             <h3>
-              Jumlah Total Tagihan:{" "}
-              {memberDuesQuery.data?.pages[0].data["total"] || "0"} tagihan
+              Jumlah Total Iuran:{" "}
+              {memberDuesQuery.data?.pages[0].data["total"] || "0"} iuran
             </h3>
             {memberDuesQuery.data?.pages.map((page) => {
               return (
