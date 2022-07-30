@@ -83,20 +83,20 @@ const MemberDuesEditForm = ({
         }
       });
 
-      onLoading("edit", "Loading mengubah tagihan anggota");
+      onLoading("edit", "Loading mengubah pembayaran iuran anggota");
 
       editDuesMutation
         .mutateAsync({ id, data: formData })
         .then(() => {
-          onReset("edit", "Sukses mengubah tagihan anggota");
+          onReset("edit", "Sukses mengubah pembayaran iuran anggota");
         })
         .catch((e) => {
-          onError("edit", "Error mengubah tagihan anggota", e.message);
+          onError("edit", "Error mengubah pembayaran iuran anggota", e.message);
         });
     });
 
   const onApprove = (id: number) => {
-    onLoading("approve", "Loading menyetujui tagihan anggota");
+    onLoading("approve", "Loading menyetujui pembayaran iuran anggota");
 
     paidDuesMutation
       .mutateAsync({
@@ -106,10 +106,10 @@ const MemberDuesEditForm = ({
         },
       })
       .then(() => {
-        onReset("approve", "Sukses menyetujui tagihan anggota");
+        onReset("approve", "Sukses menyetujui pembayaran iuran anggota");
       })
       .catch((e) => {
-        onError("approve", "Error menyetujui tagihan anggota", e.message);
+        onError("approve", "Error menyetujui pembayaran iuran anggota", e.message);
       });
   };
 

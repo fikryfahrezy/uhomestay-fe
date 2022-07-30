@@ -163,7 +163,7 @@ const MemberAddForm = ({
           <AvatarPicker
             {...register("profile")}
             text="Ubah"
-            defaultSrc={"/images/image/grey.png"}
+            defaultSrc={"/images/image/person.png"}
             className={styles.avatarPicker}
             value={
               getValues().profile.length === 0

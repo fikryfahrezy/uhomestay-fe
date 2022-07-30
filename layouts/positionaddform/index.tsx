@@ -53,7 +53,7 @@ const PositionAddForm = ({
   });
 
   const onSubmit = handleSubmit(({ name, level }) => {
-    onLoading("add", "Loading menambahkan jabatan");
+    onLoading("add", "Loading membuat jabatan");
 
     addPositionMutation
       .mutateAsync({
@@ -63,10 +63,10 @@ const PositionAddForm = ({
       .then(() => {
         queryClient.invalidateQueries("positionLevelsQuery");
         reset(defaultValues, { keepDefaultValues: true });
-        onSubmited("add", "Sukses menambahkan jabatan");
+        onSubmited("add", "Sukses membuat jabatan");
       })
       .catch((e) => {
-        onError("add", "Error menambahkan jabatan", e.message);
+        onError("add", "Error membuat jabatan", e.message);
       });
   });
 

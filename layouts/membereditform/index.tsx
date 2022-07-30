@@ -330,7 +330,7 @@ const MemberEditForm = ({
             <AvatarPicker
               {...register("profile")}
               text="Ubah"
-              defaultSrc={"/images/image/grey.png"}
+              defaultSrc={"/images/image/person.png"}
               className={styles.avatarPicker}
               disabled={!isEditable}
               src={prevData["profile_pic_url"]}

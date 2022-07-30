@@ -64,7 +64,7 @@ const Register = () => {
         updateToast(lastId, {
           status: "success",
           render: () => (
-            <>Registratsi berhasil, menunggu konfirmasi pengelola. </>
+            <>Registratsi berhasil, menunggu konfirmasi admin. </>
           ),
         });
       })

@@ -96,7 +96,7 @@ const Gallery = () => {
         onClick={() => onOpen()}
         data-testid="add-gallery-btn"
       >
-        Tambah
+        Unggah
       </Button>
       <h1 className={styles.pageTitle}>Galeri</h1>
       {imagesQuery.isLoading ? (

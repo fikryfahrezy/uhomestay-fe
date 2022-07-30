@@ -59,7 +59,7 @@ const ModalDatePicker = ({
 
   return (
     <>
-      <h3>Pilih rentang tanggal!</h3>
+      <h3>Pilih rentang tanggal pembayaran!</h3>
       <div>
         <Input
           label="Tanggal awal:"
