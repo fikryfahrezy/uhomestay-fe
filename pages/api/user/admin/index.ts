@@ -7,21 +7,22 @@ import { sessionOptions } from "@/lib/session";
 export default withIronSessionApiRoute(userRoute, sessionOptions);
 
 async function userRoute(req: NextApiRequest, res: NextApiResponse) {
-  if (req.session.admin) {
+  if (req.session.user && req.session.user.prop.isAdmin) {
     // in a real world application you might read the user id from the session and then do a database request
     // to get more information on the user if needed
     res.json({
-      ...req.session.admin.prop,
+      ...req.session.user.prop,
       isLoggedIn: true,
     });
-  } else {
-    res.json({
-      isAdmin: false,
-      isLoggedIn: false,
-      token: "",
-      uid: "",
-      avatarUrl: "",
-      login: "",
-    });
+    return;
   }
+
+  res.json({
+    isAdmin: false,
+    isLoggedIn: false,
+    token: "",
+    uid: "",
+    avatarUrl: "",
+    login: "",
+  });
 }

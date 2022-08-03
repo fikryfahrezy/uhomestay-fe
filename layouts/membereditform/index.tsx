@@ -183,7 +183,11 @@ const MemberEditForm = ({
       });
   };
 
-  const onSubmit = (id: string, position: Record<number, number>) =>
+  const onSubmit = (
+    id: string,
+    position: Record<number, number>,
+    { lat, lng }: { lat: number; lng: number }
+  ) =>
     handleSubmit((data) => {
       const { position_id: posId, ...restData } = data;
       const formData = new FormData();
@@ -200,6 +204,9 @@ const MemberEditForm = ({
       Object.entries(position).forEach(([_, v]) => {
         formData.append("position_ids", String(v));
       });
+
+      formData.set("homestay_latitude", String(lat));
+      formData.set("homestay_longitude", String(lng));
 
       onLoading("edit", "Loading mengubah anggota");
 
@@ -222,9 +229,6 @@ const MemberEditForm = ({
 
     setLng(lng);
     setLat(lat);
-
-    setValue("homestay_latitude", String(lat));
-    setValue("homestay_longitude", String(lng));
   };
 
   const onConfirmDelete = () => {
@@ -273,6 +277,10 @@ const MemberEditForm = ({
 
       return newState;
     });
+  };
+
+  const onPickErr = () => {
+    onError("edit", "Error tipe file", "File bukan bertipe gambar");
   };
 
   useEffect(() => {
@@ -324,7 +332,7 @@ const MemberEditForm = ({
       ) : (
         <form
           className={styles.drawerBody}
-          onSubmit={onSubmit(prevData.id, positionCache)}
+          onSubmit={onSubmit(prevData.id, positionCache, { lat, lng })}
         >
           <div className={styles.drawerContent}>
             <AvatarPicker
@@ -333,6 +341,7 @@ const MemberEditForm = ({
               defaultSrc={"/images/image/person.png"}
               className={styles.avatarPicker}
               disabled={!isEditable}
+              onErr={() => onPickErr()}
               src={prevData["profile_pic_url"]}
             />
             <div className={styles.inputGroup}>

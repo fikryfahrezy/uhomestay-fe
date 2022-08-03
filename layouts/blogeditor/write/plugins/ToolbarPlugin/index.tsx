@@ -362,9 +362,30 @@ function InsertImageUploadedDialogBody({
   const isDisabled = src === null;
 
   const loadImage = (files: FileList | null) => {
-    if (files !== null) {
-      setSrc(files[0]);
+    if (files === null || files.length === 0) {
+      return;
     }
+    const file = files[0];
+
+    // https://developer.mozilla.org/en-US/docs/Web/Media/Formats/Image_types
+    const fileTypes = [
+      "image/apng",
+      "image/bmp",
+      "image/gif",
+      "image/jpeg",
+      "image/pjpeg",
+      "image/png",
+      "image/svg+xml",
+      "image/tiff",
+      "image/webp",
+      "image/x-icon",
+    ];
+
+    if (!fileTypes.includes(file.type)) {
+      return;
+    }
+
+    setSrc(file);
   };
 
   return (
@@ -387,9 +408,10 @@ function InsertImageUploadedDialogBody({
           data-test-id="image-modal-file-upload-btn"
           disabled={isDisabled}
           onClick={() => {
-            if (src !== null) {
-              onClick({ altText, src });
+            if (src === null) {
+              return;
             }
+            onClick({ altText, src });
           }}
         >
           Confirm
@@ -415,19 +437,6 @@ function InsertImageDialog({
   onClose,
 }: InsertImageDialog) {
   const [mode, setMode] = useState<null | "url" | "file">(null);
-
-  const onImgUriClick = (payload: InsertImagePayload) => {
-    const embed = (cb: () => void) => {
-      activeEditor.dispatchCommand(INSERT_IMAGE_COMMAND, undefined);
-      setTimeout(cb, 0);
-    };
-
-    embed(() => {
-      activeEditor.dispatchCommand(REPLACE_IMAGE_COMMAND, payload);
-    });
-
-    onClose();
-  };
 
   const onImgFileClick = (payload: { altText: string; src: File }) => {
     const { altText, src } = payload;
@@ -455,12 +464,6 @@ function InsertImageDialog({
     <>
       {!mode && (
         <div className={styles["ToolbarPlugin__dialogButtonsList"]}>
-          {/* <Button
-            data-test-id="image-modal-option-url"
-            onClick={() => setMode("url")}
-          >
-            URL
-          </Button> */}
           <Button
             data-test-id="image-modal-option-file"
             onClick={() => setMode("file")}
@@ -469,7 +472,6 @@ function InsertImageDialog({
           </Button>
         </div>
       )}
-      {/* {mode === "url" && <InsertImageUriDialogBody onClick={onImgUriClick} />} */}
       {mode === "file" && (
         <InsertImageUploadedDialogBody onClick={onImgFileClick} />
       )}

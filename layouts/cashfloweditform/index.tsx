@@ -54,6 +54,7 @@ const CasflowEditForm = ({
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -214,8 +215,20 @@ const CasflowEditForm = ({
               id="file"
               multiple={false}
               disabled={!isEditable}
-              src={prevData["prove_file_url"]}
-              value={prevData["prove_file_url"]}
+              value={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData["prove_file_url"]
+                    : (getValues().file as File[])[0].name
+                  : prevData["prove_file_url"]
+              }
+              src={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData["prove_file_url"]
+                    : ""
+                  : prevData["prove_file_url"]
+              }
               isInvalid={errors.file !== undefined}
               errMsg={errors.file ? "Tidak boleh kosong" : ""}
             >

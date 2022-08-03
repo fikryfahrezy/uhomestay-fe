@@ -52,7 +52,6 @@ const UpdateProfile = () => {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -66,11 +65,7 @@ const UpdateProfile = () => {
     return updateProfile(data);
   });
 
-  /**
-   *
-   * @return {typeof handleSubmit}
-   */
-  const onSubmit = () =>
+  const onSubmit = ({ lat, lng }: { lat: number; lng: number }) =>
     handleSubmit((data) => {
       const formData = new FormData();
       Object.entries(data).forEach(([k, v]) => {
@@ -81,6 +76,9 @@ const UpdateProfile = () => {
           formData.append(k, String(v));
         }
       });
+
+      formData.set("homestay_latitude", String(lat));
+      formData.set("homestay_longitude", String(lng));
 
       const lastId = toast({
         status: "info",
@@ -120,13 +118,23 @@ const UpdateProfile = () => {
 
     setLng(lng);
     setLat(lat);
-
-    setValue("homestay_latitude", String(lat));
-    setValue("homestay_longitude", String(lng));
   };
 
   const onCancelUpdate = () => {
     router.back();
+  };
+
+  const onPickErr = () => {
+    toast({
+      status: "error",
+      duration: 5000,
+      render: () => (
+        <ToastComponent
+          title="Error tipe file"
+          message="File bukan bertipe gambar"
+        />
+      ),
+    });
   };
 
   useEffect(() => {
@@ -157,7 +165,7 @@ const UpdateProfile = () => {
   return (
     <div className={styles.mainContainer}>
       <h2 className={styles.drawerTitle}>Ubah Profile</h2>
-      <form className={styles.drawerBody} onSubmit={onSubmit()}>
+      <form className={styles.drawerBody} onSubmit={onSubmit({ lat, lng })}>
         <div className={styles.avatarContainer}>
           {memberDetailQuery.isLoading || memberDetailQuery.isIdle ? (
             "Loading..."
@@ -168,6 +176,7 @@ const UpdateProfile = () => {
               {...register("profile")}
               text="Ubah"
               defaultSrc={"/images/image/person.png"}
+              onErr={() => onPickErr()}
               className={styles.avatarPicker}
               src={memberDetailQuery.data.data["profile_pic_url"]}
             />

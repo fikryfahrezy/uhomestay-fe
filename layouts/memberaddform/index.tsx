@@ -72,7 +72,6 @@ const MemberAddForm = ({
     register,
     handleSubmit,
     reset,
-    setValue,
     getValues,
     formState: { errors },
   } = useForm({ defaultValues });
@@ -88,7 +87,10 @@ const MemberAddForm = ({
     return addMember(data);
   });
 
-  const onSubmit = (position: Record<number, number>) =>
+  const onSubmit = (
+    position: Record<number, number>,
+    { lat, lng }: { lat: number; lng: number }
+  ) =>
     handleSubmit((data) => {
       const { position_id: posId, ...restData } = data;
       const formData = new FormData();
@@ -105,6 +107,9 @@ const MemberAddForm = ({
       Object.entries(position).forEach(([_, v]) => {
         formData.append("position_ids", String(v));
       });
+
+      formData.set("homestay_latitude", String(lat));
+      formData.set("homestay_longitude", String(lng));
 
       onLoading("add", "Loading menambahkan anggota");
 
@@ -130,9 +135,6 @@ const MemberAddForm = ({
 
     setLng(lng);
     setLat(lat);
-
-    setValue("homestay_latitude", String(lat));
-    setValue("homestay_longitude", String(lng));
   };
 
   const onSelectPosition = (currentValue: number, prevValue: number) => {
@@ -155,16 +157,24 @@ const MemberAddForm = ({
     });
   };
 
+  const onPickErr = () => {
+    onError("add", "Error tipe file", "File bukan bertipe gambar");
+  };
+
   return (
     <>
       <h2 className={styles.drawerTitle}>Tambah Anggota</h2>
-      <form className={styles.drawerBody} onSubmit={onSubmit(positionCache)}>
+      <form
+        className={styles.drawerBody}
+        onSubmit={onSubmit(positionCache, { lat, lng })}
+      >
         <div className={styles.drawerContent}>
           <AvatarPicker
             {...register("profile")}
             text="Ubah"
             defaultSrc={"/images/image/person.png"}
             className={styles.avatarPicker}
+            onErr={() => onPickErr()}
             value={
               getValues().profile.length === 0
                 ? ""

@@ -38,7 +38,6 @@ const Register = () => {
     register,
     handleSubmit,
     reset,
-    setValue,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -50,46 +49,47 @@ const Register = () => {
     return registerMember(data);
   });
 
-  const onSubmit = handleSubmit((data) => {
-    const lastId = toast({
-      status: "info",
-      duration: 999999,
-      render: () => <ToastComponent title="Loading register" />,
-    });
-
-    registerMemberMutation
-      .mutateAsync(data)
-      .then(() => {
-        reset(defaultValues, { keepDefaultValues: true });
-        updateToast(lastId, {
-          status: "success",
-          render: () => (
-            <>Registratsi berhasil, menunggu konfirmasi admin. </>
-          ),
-        });
-      })
-      .catch((e) => {
-        updateToast(lastId, {
-          status: "error",
-          render: () => (
-            <ToastComponent
-              title="Error register"
-              message={e.message}
-              data-testid="toast-modal"
-            />
-          ),
-        });
+  const onSubmit = ({ lat, lng }: { lat: number; lng: number }) =>
+    handleSubmit((data) => {
+      const lastId = toast({
+        status: "info",
+        duration: 999999,
+        render: () => <ToastComponent title="Loading register" />,
       });
-  });
+
+      data["homestay_latitude"] = String(lat);
+      data["homestay_longitude"] = String(lng);
+
+      registerMemberMutation
+        .mutateAsync(data)
+        .then(() => {
+          reset(defaultValues, { keepDefaultValues: true });
+          updateToast(lastId, {
+            status: "success",
+            render: () => (
+              <>Registratsi berhasil, menunggu konfirmasi admin. </>
+            ),
+          });
+        })
+        .catch((e) => {
+          updateToast(lastId, {
+            status: "error",
+            render: () => (
+              <ToastComponent
+                title="Error register"
+                message={e.message}
+                data-testid="toast-modal"
+              />
+            ),
+          });
+        });
+    });
 
   const onMapClick = (e: MapMouseEvent & EventData) => {
     const { lng, lat } = e.lngLat;
 
     setLng(lng);
     setLat(lat);
-
-    setValue("homestay_latitude", String(lat));
-    setValue("homestay_longitude", String(lng));
   };
 
   return (
@@ -101,7 +101,7 @@ const Register = () => {
             <a className={`${styles.link} ${styles.leftLink}`}>Kembali</a>
           </Link>
           <h1>Daftar Menjadi Anggota</h1>
-          <form onSubmit={onSubmit}>
+          <form onSubmit={onSubmit({ lat, lng })}>
             <div className={styles.verticalGroup}>
               <div className={styles.inputGroup}>
                 <Input

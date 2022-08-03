@@ -13,7 +13,7 @@ type ModalProps = DetailedHTMLProps<
   onClose?: () => void;
 };
 
-const Modal = ({
+const ModalContainer = ({
   isOpen = false,
   onClose = defaultFunc,
   children,
@@ -34,4 +34,4 @@ const Modal = ({
   );
 };
 
-export default Modal;
+export default ModalContainer;

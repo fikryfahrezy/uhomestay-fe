@@ -64,7 +64,7 @@ const CreateMission = () => {
       const lastId = toast({
         status: "info",
         duration: 999999,
-        render: () => <ToastComponent title={`Loading visi & misi`} />,
+        render: () => <ToastComponent title={`Loading mengubah visi & misi`} />,
       });
 
       addGoalMutation

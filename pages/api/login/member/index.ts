@@ -42,16 +42,15 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     ) as JwtPayload;
     const member = new User({
       token,
-      isAdmin: false,
+      isAdmin: decoded["is_admin"],
       isLoggedIn: true,
       uid: decoded.uid,
       avatarUrl: "",
       login: decoded.uid,
     });
 
-    req.session.member = member;
+    req.session.user = member;
     await req.session.save();
-
     res.json(member.prop);
   } catch (error) {
     res.status(500).json((error as FetchError).data);

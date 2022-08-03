@@ -45,6 +45,7 @@ const DocFileEditForm = ({
     register,
     handleSubmit,
     reset,
+    getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -140,15 +141,25 @@ const DocFileEditForm = ({
         <div className={styles.drawerContent}>
           <div className={styles.inputGroup}>
             <InputFile
-              {...register("file", {
-                required: true,
-              })}
+              {...register("file")}
               id="file"
               label="File:"
               multiple={false}
               required={true}
-              value={isEditable ? "" : prevData.name}
-              src={isEditable ? "" : prevData.url}
+              value={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData.name
+                    : (getValues().file as File[])[0].name
+                  : prevData.name
+              }
+              src={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData.url
+                    : ""
+                  : prevData.url
+              }
               disabled={!isEditable}
               isInvalid={errors.file !== undefined}
               errMsg={errors.file ? "Tidak boleh kosong" : ""}

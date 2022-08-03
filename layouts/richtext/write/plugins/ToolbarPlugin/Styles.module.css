@@ -285,10 +285,12 @@
   background-image: url(/images/icons/type-h3.svg);
 }
 
+.icon-ul,
 .icon-bullet-list {
   background-image: url(/images/icons/list-ul.svg);
 }
 
+.icon-ol,
 .icon-numbered-list {
   background-image: url(/images/icons/list-ol.svg);
 }
