@@ -22,13 +22,13 @@ import {
   useDocumentsQuery,
   useDocumentChildsQuery,
 } from "@/services/document";
-import Button from "cmnjg-sb/dist/button";
-import IconButton from "cmnjg-sb/dist/iconbutton";
-import Drawer from "cmnjg-sb/dist/drawer";
-import Input from "cmnjg-sb/dist/input";
-import Popup from "cmnjg-sb/dist/popup";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
+import Button from "@/components/button";
+import IconButton from "@/components/iconbutton";
+import Drawer from "@/components/drawer";
+import Input from "@/components/input";
+import Popup from "@/components/popup";
+import Toast from "@/components/toast";
+import useToast from "@/components/toast/useToast";
 import AdminLayout from "@/layouts/adminpage";
 import DocFileAddForm from "@/layouts/docaddform/file";
 import DocFileEditForm from "@/layouts/doceditform/file";

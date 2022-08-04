@@ -1,0 +1,42 @@
+.errorMsg {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  color: #ff7474;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  padding: 0 20px;
+  color: #111;
+  background-color: transparent;
+  border: solid 1px #c6d8e4;
+  border-radius: 6px;
+  font-size: 18px;
+  outline: none;
+}
+
+.input,
+.input * {
+  box-sizing: border-box;
+}
+
+.readOnlyInput {
+  border-top: none;
+  border-right: none;
+  border-left: none;
+  border-radius: unset;
+}
+
+.invalidInput {
+  border: solid 3px #ff7474;
+}
+
+/* Ref: https://stackoverflow.com/a/2610741/12976234 */
+.input::-webkit-input-placeholder,
+.input:-moz-placeholder,
+.input::-moz-placeholder,
+.input::placeholder {
+  color: #c6d8e4;
+}

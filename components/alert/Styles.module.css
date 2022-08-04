@@ -1,0 +1,36 @@
+.container {
+  display: flex;
+  padding: 10px;
+  align-items: center;
+  gap: 1ch;
+  word-break: break-all;
+}
+
+.container,
+.container * {
+  box-sizing: border-box;
+}
+
+.success {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.error {
+  color: #fff;
+  background-color: #ff7474;
+}
+
+.info {
+  color: #fff;
+  background-color: #00a3ff;
+}
+
+.warning {
+  color: #fff;
+  background-color: #d46b08;
+}
+
+.icon {
+  font-size: 24px;
+}

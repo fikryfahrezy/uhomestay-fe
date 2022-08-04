@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useDashboardQuery } from "@/services/dashboard";
-import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
+import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import MoreLink from "@/layouts/morelink";

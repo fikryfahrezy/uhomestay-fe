@@ -1,0 +1,67 @@
+.container {
+  --size: 300px;
+  position: relative;
+  width: 100%;
+  max-width: var(--size);
+  border-radius: 50%;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+}
+
+.container,
+.container * {
+  box-sizing: border-box;
+}
+
+.inputWrapper {
+  opacity: 0;
+}
+
+.inputWrapper,
+.editBtn {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.editBtn {
+  color: #fff;
+  border-radius: unset;
+  flex-direction: column;
+  font-size: 44px;
+}
+
+.editBtn,
+.editBtn:hover,
+.editBtn:active {
+  background-color: transparent;
+}
+
+.active {
+}
+
+.editBtn.active {
+  opacity: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: all 1s;
+}
+
+.editBtn.active:hover {
+  opacity: 1;
+}
+
+.editBtnDisabled {
+  opacity: 0;
+}
+
+.btnText {
+  font-size: 33px;
+}
+
+.img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}

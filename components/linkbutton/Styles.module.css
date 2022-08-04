@@ -1,0 +1,60 @@
+.link {
+  display: flex;
+  min-height: 44px;
+  padding: 0 10px;
+  color: #111;
+  border-radius: 6px;
+  border-color: transparent;
+  font-size: 18px;
+  overflow: hidden;
+  white-space: nowrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1ch;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.link,
+.link * {
+  box-sizing: border-box;
+}
+
+.defaultScheme {
+  color: #111;
+  background-color: #c6d8e4;
+}
+
+.defaultScheme:hover {
+  background-color: #bcd0dd;
+}
+
+.defaultScheme:active {
+  background-color: #aec3d1;
+}
+
+.greenScheme {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.greenScheme:hover {
+  background-color: #489f8b;
+}
+
+.greenScheme:active {
+  background-color: #3f8d7b;
+}
+
+.redScheme {
+  color: #fff;
+  background-color: #ff7474;
+}
+
+.redScheme:hover {
+  background-color: #e96666;
+}
+
+.redScheme:active {
+  background-color: #ff7474;
+}

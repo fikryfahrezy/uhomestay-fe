@@ -1,6 +1,6 @@
 import type { MemberDuesOut } from "@/services/member-dues";
 import { RiMoneyDollarCircleLine } from "react-icons/ri";
-import Badge from "cmnjg-sb/dist/badge";
+import Badge from "@/components/badge";
 import { idrCurrency } from "@/lib/fmt";
 import { DUES_STATUS } from "@/services/member-dues";
 import styles from "./Styles.module.css";

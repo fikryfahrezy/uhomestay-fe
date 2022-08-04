@@ -1,0 +1,26 @@
+.open {
+}
+
+.backdrop {
+  position: absolute;
+  width: 100%;
+  height: 0;
+  left: 0;
+  top: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s linear, height 0s ease 0.3s;
+}
+
+.backdrop,
+.backdrop * {
+  box-sizing: border-box;
+}
+
+.backdrop.open {
+  height: 100%;
+  opacity: 1;
+  pointer-events: auto;
+  transition: none;
+}

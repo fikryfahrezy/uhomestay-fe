@@ -2100,7 +2100,7 @@ cheerio-select@^2.1.0:
     domhandler "^5.0.3"
     domutils "^3.0.1"
 
-cheerio@^1.0.0-rc.10, cheerio@^1.0.0-rc.12:
+cheerio@^1.0.0-rc.10:
   version "1.0.0-rc.12"
   resolved "https://registry.yarnpkg.com/cheerio/-/cheerio-1.0.0-rc.12.tgz#788bf7466506b1c6bf5fae51d24a2c4d62e47683"
   integrity sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==
@@ -2199,14 +2199,6 @@ clone@^1.0.2:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
-
-cmnjg-sb@^0.1.22:
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/cmnjg-sb/-/cmnjg-sb-0.1.22.tgz#675434174f04b5665b205ae88af99c2fb6034bf8"
-  integrity sha512-7AtvU/E/wtyA2dGmG2SLeBOjz8k2NuX4Lx2Pq0ItgKMH/Lqq5PTNeOCj3rTIp/O/tBlNvpTd1GeqFdDtxwRtFg==
-  dependencies:
-    cheerio "^1.0.0-rc.12"
-    react-icons "^4.4.0"
 
 co@^4.6.0:
   version "4.6.0"
@@ -5307,7 +5299,7 @@ react-hook-form@^7.31.1:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.33.1.tgz#8c4410e3420788d3b804d62cc4c142915c2e46d0"
   integrity sha512-ydTfTxEJdvgjCZBj5DDXRc58oTEfnFupEwwTAQ9FSKzykEJkX+3CiAkGtAMiZG7IPWHuzgT6AOBfogiKhUvKgg==
 
-react-icons@^4.3.1, react-icons@^4.4.0:
+react-icons@^4.3.1:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/react-icons/-/react-icons-4.4.0.tgz#a13a8a20c254854e1ec9aecef28a95cdf24ef703"
   integrity sha512-fSbvHeVYo/B5/L4VhB7sBA1i2tS8MkT0Hb9t2H1AVPkwGfVHLJCqyr2Py9dKMxsyM63Eng1GkdZfbWj+Fmv8Rg==

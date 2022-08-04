@@ -1,0 +1,35 @@
+.badge {
+  display: inline-flex;
+  padding: 5px;
+  border-radius: 5px;
+  font-size: 12px;
+  text-align: center;
+  word-break: break-word;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge,
+.badge * {
+  box-sizing: border-box;
+}
+
+.defaultBadge {
+  color: #111;
+  background-color: #c6d8e4;
+}
+
+.greenBadge {
+  color: #fff;
+  background-color: #50ac97;
+}
+
+.redBadge {
+  color: #fff;
+  background-color: #ff7474;
+}
+
+.yellowBadge {
+  color: #fff;
+  background-color: #d46b08;
+}

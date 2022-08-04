@@ -1,0 +1,38 @@
+.alertContainer {
+  position: fixed;
+  display: flex;
+  width: 100%;
+  bottom: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  grid-gap: 1ch;
+  gap: 1ch;
+  z-index: 999;
+  pointer-events: none;
+}
+
+.alertContainer,
+.alertContainer * {
+  box-sizing: border-box;
+}
+
+.alert {
+  width: 100%;
+  max-width: 500px;
+  margin-right: 10px;
+  margin-left: 10px;
+  border-radius: 5px;
+  pointer-events: auto;
+}
+
+.alertBody {
+  flex: 1;
+}
+
+.closeButton,
+.closeButton:active,
+.closeButton:hover {
+  color: #fff;
+  background-color: transparent;
+}

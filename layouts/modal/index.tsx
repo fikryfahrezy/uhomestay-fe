@@ -1,5 +1,5 @@
 import { RiAlertLine } from "react-icons/ri";
-import Button from "cmnjg-sb/dist/button";
+import Button from "@/components/button";
 import ModalContainer from "@/layouts/modalcontainer";
 import styles from "./Styles.module.css";
 

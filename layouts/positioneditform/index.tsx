@@ -7,9 +7,9 @@ import {
   editPosition,
   removePosition,
 } from "@/services/position";
-import Button from "cmnjg-sb/dist/button";
-import Input from "cmnjg-sb/dist/input";
-import Select from "cmnjg-sb/dist/select";
+import Button from "@/components/button";
+import Input from "@/components/input";
+import Select from "@/components/select";
 import Modal from "@/layouts/modal";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";

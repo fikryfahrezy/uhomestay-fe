@@ -11,11 +11,11 @@ import {
   DUES_STATUS,
 } from "@/services/member-dues";
 import { useMemberDetailQuery } from "@/services/member";
-import IconButton from "cmnjg-sb/dist/iconbutton";
-import Drawer from "cmnjg-sb/dist/drawer";
-import Toast from "cmnjg-sb/dist/toast";
-import useToast from "cmnjg-sb/dist/toast/useToast";
-import LinkButton from "cmnjg-sb/dist/linkbutton";
+import IconButton from "@/components/iconbutton";
+import Drawer from "@/components/drawer";
+import Toast from "@/components/toast";
+import useToast from "@/components/toast/useToast";
+import LinkButton from "@/components/linkbutton";
 import MemberDuesPayForm from "@/layouts/memberduespayform";
 import MemberDuesDetail from "@/layouts/memberduesdetail";
 import MemberLayout from "@/layouts/memberpage";

@@ -1,0 +1,57 @@
+.contentContainer {
+  position: relative;
+}
+
+.contentContainer,
+.contentContainer * {
+  box-sizing: border-box;
+}
+
+.errorMsg {
+  margin-top: 3px;
+  margin-bottom: 3px;
+  color: #ff7474;
+}
+
+.selectContainer {
+  display: flex;
+  margin-bottom: 10px;
+  align-items: center;
+  gap: 10px;
+}
+
+.select {
+  flex: 1;
+}
+
+.selectBtn {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .selectBtn {
+    display: inline-flex;
+  }
+}
+
+.selectContainer:hover .selectBtn {
+  display: inline-flex;
+}
+
+.input {
+  position: absolute;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0;
+}
+
+.btn {
+  width: 100%;
+  color: #dbe6ed;
+  background-color: transparent;
+  border: dashed;
+}

@@ -1,5 +1,5 @@
 import type { MouseEvent } from "react";
-import type { LinkTreeProps } from "cmnjg-sb/dist/aside";
+import type { LinkTreeProps } from "@/components/aside";
 import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,10 +20,10 @@ import {
   RiGalleryLine,
 } from "react-icons/ri";
 import { useAdmin, memberLogout } from "@/services/member";
-import Avatar from "cmnjg-sb/dist/avatar";
-import PopUp from "cmnjg-sb/dist/popup";
-import Aside from "cmnjg-sb/dist/aside";
-import LinkButton from "cmnjg-sb/dist/linkbutton";
+import Avatar from "@/components/avatar";
+import PopUp from "@/components/popup";
+import Aside from "@/components/aside";
+import LinkButton from "@/components/linkbutton";
 import ActiveLink from "@/layouts/activelink";
 import styles from "./Styles.module.css";
 

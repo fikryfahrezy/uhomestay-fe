@@ -1,7 +1,7 @@
 import type { MembersDuesOut } from "@/services/member-dues";
 import Image from "next/image";
 import { DUES_STATUS } from "@/services/member-dues";
-import Badge from "cmnjg-sb/dist/badge";
+import Badge from "@/components/badge";
 import styles from "./Styles.module.css";
 
 type MemberDuesItemProps = {

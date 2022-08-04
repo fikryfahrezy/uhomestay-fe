@@ -2,11 +2,11 @@ import type { CashflowOut } from "@/services/cashflow";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import Button from "cmnjg-sb/dist/button";
-import Input from "cmnjg-sb/dist/input";
-import TextArea from "cmnjg-sb/dist/textarea";
-import InputFile from "cmnjg-sb/dist/inputfile";
-import Select from "cmnjg-sb/dist/select";
+import Button from "@/components/button";
+import Input from "@/components/input";
+import TextArea from "@/components/textarea";
+import InputFile from "@/components/inputfile";
+import Select from "@/components/select";
 import {
   editCashflow,
   removeCashflow,

@@ -2,7 +2,7 @@ import type { ImageOut } from "@/services/images";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { removeImage } from "@/services/images";
-import Button from "cmnjg-sb/dist/button";
+import Button from "@/components/button";
 import GalleryViewModal from "@/layouts/galleryviewmodal";
 import Modal from "@/layouts/modal";
 

@@ -10,9 +10,9 @@ import {
   RiUserSettingsFill,
 } from "react-icons/ri";
 import { useMember, memberLogout } from "@/services/member";
-import Avatar from "cmnjg-sb/dist/avatar";
-import PopUp from "cmnjg-sb/dist/popup";
-import { LinkBox, LinkOverlay } from "cmnjg-sb/dist/linkoverlay";
+import Avatar from "@/components/avatar";
+import PopUp from "@/components/popup";
+import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
 import styles from "./Styles.module.css";
 
 const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {

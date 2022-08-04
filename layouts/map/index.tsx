@@ -3,7 +3,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { useRef, useEffect } from "react";
 import mapboxgl, { Map } from "mapbox-gl";
 import { RiMapPinFill } from "react-icons/ri";
-import IconButton from "cmnjg-sb/dist/iconbutton";
+import IconButton from "@/components/iconbutton";
 import styles from "./Styles.module.css";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESSTOKEN ?? "";

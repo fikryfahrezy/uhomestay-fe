@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { addImage } from "@/services/images";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import Button from "cmnjg-sb/dist/button";
-import IconButton from "cmnjg-sb/dist/iconbutton";
-import ImagePicker from "cmnjg-sb/dist/imagepicker";
-import TextArea from "cmnjg-sb/dist/textarea";
+import Button from "@/components/button";
+import IconButton from "@/components/iconbutton";
+import ImagePicker from "@/components/imagepicker";
+import TextArea from "@/components/textarea";
 import styles from "./Styles.module.css";
 
 export type GalleryAddModalType = "add";

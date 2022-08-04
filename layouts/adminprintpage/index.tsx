@@ -1,8 +1,8 @@
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 import Router from "next/router";
 import { RiPrinterLine, RiArrowLeftSLine } from "react-icons/ri";
-import IconButton from "cmnjg-sb/dist/iconbutton";
-import Button from "cmnjg-sb/dist/button";
+import IconButton from "@/components/iconbutton";
+import Button from "@/components/button";
 import { useAdmin } from "@/services/member";
 import styles from "./Styles.module.css";
 

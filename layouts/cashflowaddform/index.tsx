@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import Select from "cmnjg-sb/dist/select";
-import InputFile from "cmnjg-sb/dist/inputfile";
-import Button from "cmnjg-sb/dist/button";
-import Input from "cmnjg-sb/dist/input";
-import TextArea from "cmnjg-sb/dist/textarea";
+import Select from "@/components/select";
+import InputFile from "@/components/inputfile";
+import Button from "@/components/button";
+import Input from "@/components/input";
+import TextArea from "@/components/textarea";
 import { addCashflow, CASHFLOW_TYPE } from "@/services/cashflow";
 import styles from "./Styles.module.css";
 

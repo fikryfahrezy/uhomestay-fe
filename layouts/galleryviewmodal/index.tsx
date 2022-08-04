@@ -2,7 +2,7 @@ import type { ImageOut } from "@/services/images";
 import Image from "next/image";
 import { RiCloseLine } from "react-icons/ri";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import IconButton from "cmnjg-sb/dist/iconbutton";
+import IconButton from "@/components/iconbutton";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
