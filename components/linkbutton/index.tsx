@@ -1,5 +1,5 @@
 import type { ComponentProps, ForwardedRef } from "react";
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import { chakra } from "@chakra-ui/system";
 import styles from "./Styles.module.css";
 

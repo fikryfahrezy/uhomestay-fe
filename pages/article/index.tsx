@@ -3,7 +3,7 @@ import Link from "next/link";
 import { RiSearch2Line } from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
-import { useBlogsQuery } from "@/services/blog";
+import { useArticlesQuery } from "@/services/article";
 import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
 import PageNav from "@/layouts/pagenav";
 import EmptyMsg from "@/layouts/emptymsg";
@@ -13,7 +13,7 @@ import styles from "./Styles.module.css";
 
 const Blog = () => {
   const [q, setQ] = useState("");
-  const blogsQuery = useBlogsQuery(q, {
+  const blogsQuery = useArticlesQuery(q, {
     getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
@@ -35,7 +35,7 @@ const Blog = () => {
       <PageNav />
       <div className={styles.pageWrapper}>
         <h2 className={styles.subTitle}>
-          <a id="blog">Blog</a>
+          <a>Artikel</a>
         </h2>
         <div className={styles.form}>
           <input
@@ -58,13 +58,13 @@ const Blog = () => {
             "Loading..."
           ) : blogsQuery.error ? (
             <ErrMsg />
-          ) : blogsQuery.data?.pages[0].data.blogs.length === 0 ? (
+          ) : blogsQuery.data?.pages[0].data.articles.length === 0 ? (
             <EmptyMsg />
           ) : (
             blogsQuery.data?.pages.map((page) => {
               return (
                 <Fragment key={page.data.cursor}>
-                  {page.data.blogs.map((blog) => {
+                  {page.data.articles.map((blog) => {
                     return (
                       <LinkBox key={blog.id}>
                         <BlogListItem blog={blog} />

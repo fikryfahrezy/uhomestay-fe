@@ -1,4 +1,4 @@
-import React, { cloneElement } from "react";
+import { cloneElement } from "react";
 import styles from "./Styles.module.css";
 
 type CardProps = JSX.IntrinsicElements["div"] & {

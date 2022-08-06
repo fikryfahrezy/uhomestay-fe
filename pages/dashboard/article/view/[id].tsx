@@ -5,11 +5,10 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { RiFileSettingsLine, RiDeleteBin6Line } from "react-icons/ri";
-import { useFindBlog, removeBlog } from "@/services/blog";
+import { useFindArticle, removeArticle } from "@/services/article";
 import LinkButton from "@/components/linkbutton";
 import Button from "@/components/button";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import Toast, { useToast } from "@/components/toast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import AdminLayout from "@/layouts/adminpage";
@@ -23,16 +22,16 @@ const ViewBlog = () => {
   const { toast, updateToast, props } = useToast();
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(Number(id), {
+  const blog = useFindArticle(Number(id), {
     enabled: !!id,
   });
 
   const removeBlogMutation = useMutation<
     unknown,
     unknown,
-    Parameters<typeof removeBlog>[0]
+    Parameters<typeof removeArticle>[0]
   >((id) => {
-    return removeBlog(id);
+    return removeArticle(id);
   });
 
   /**

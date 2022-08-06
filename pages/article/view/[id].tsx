@@ -1,6 +1,6 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useFindBlog } from "@/services/blog";
+import { useFindArticle } from "@/services/article";
 import PageNav from "@/layouts/pagenav";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
@@ -10,7 +10,7 @@ const Editor = dynamic(() => import("@/layouts/blogeditor/read"));
 const ViewBlog = () => {
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(Number(id), {
+  const blog = useFindArticle(Number(id), {
     enabled: !!id,
   });
 

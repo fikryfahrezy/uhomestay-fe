@@ -8,13 +8,21 @@ import styles from "./Styles.module.css";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESSTOKEN ?? "";
 
+const defaultFunc = () => {};
+
 type MapLayoutProps = {
   lng: number;
   lat: number;
-  onClick: (e: MapMouseEvent & EventData) => void;
+  isEditable?: boolean;
+  onClick?: (e: MapMouseEvent & EventData) => void;
 };
 
-const MapLayout = ({ lng, lat, onClick }: MapLayoutProps) => {
+const MapLayout = ({
+  lng,
+  lat,
+  onClick = defaultFunc,
+  isEditable = true,
+}: MapLayoutProps) => {
   const zoom = 9;
 
   const mapContainer = useRef<HTMLDivElement | null>(null);
@@ -54,7 +62,7 @@ const MapLayout = ({ lng, lat, onClick }: MapLayoutProps) => {
   });
 
   useEffect(() => {
-    if (!map.current) return; // wait for map to initialize
+    if (!map.current || !isEditable) return; // wait for map to initialize
 
     map.current.on("click", (e) => {
       const { lng, lat } = e.lngLat;

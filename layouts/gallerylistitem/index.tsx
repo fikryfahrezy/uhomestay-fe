@@ -5,9 +5,15 @@ import GalleryViewModal from "@/layouts/galleryviewmodal";
 
 type GalleryListItemProps = {
   imgData: ImageOut;
+  removeBtn?: JSX.Element;
+  withDescription?: boolean;
 };
 
-const GalleryListItem = ({ imgData }: GalleryListItemProps) => {
+const GalleryListItem = ({
+  imgData,
+  removeBtn,
+  withDescription,
+}: GalleryListItemProps) => {
   const [isOpen, setOpen] = useState(false);
 
   const onOpen = () => {
@@ -21,11 +27,17 @@ const GalleryListItem = ({ imgData }: GalleryListItemProps) => {
   return (
     <>
       <GalleryItem imgData={imgData} onClick={() => onOpen()} />
-      <GalleryViewModal
-        isOpen={isOpen}
-        prevData={imgData}
-        onCancel={() => onClose()}
-      />
+      {isOpen ? (
+        <GalleryViewModal
+          isOpen={isOpen}
+          prevData={imgData}
+          removeBtn={removeBtn}
+          withDescription={withDescription}
+          onCancel={() => onClose()}
+        />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

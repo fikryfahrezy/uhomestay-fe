@@ -1,5 +1,5 @@
 import type { HTMLAttributes, Key } from "react";
-import React, { cloneElement, useState, useEffect } from "react";
+import { cloneElement, useState, useEffect } from "react";
 import styles from "./Styles.module.css";
 
 export type LinkTreeProps = HTMLAttributes<HTMLElement> & {

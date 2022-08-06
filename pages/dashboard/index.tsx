@@ -217,26 +217,27 @@ const Dashboard = () => {
         <MoreLink href="/dashboard/organization">Lebih lanjut</MoreLink>
       </section>
       <section className={styles.contentSection}>
-        <h2>Blog</h2>
+        <h2>Artikel</h2>
         {dashboardQuery.isLoading || dashboardQuery.isIdle ? (
           "Loading..."
         ) : dashboardQuery.error ? (
           <ErrMsg />
-        ) : dashboardQuery.data.data.blogs.length === 0 ? (
+        ) : dashboardQuery.data.data.articles.length === 0 ? (
           <EmptyMsg />
         ) : (
           <>
             <h4>
-              Jumlah Total Blog: {dashboardQuery.data.data["blog_total"]} blog
+              Jumlah Total Artikel: {dashboardQuery.data.data["article_total"]}{" "}
+              artikel
             </h4>
             <div className={styles.blogSection}>
-              {dashboardQuery.data.data.blogs.map((blog) => {
+              {dashboardQuery.data.data.articles.map((blog) => {
                 return <BlogListItem key={blog.id} blog={blog} />;
               })}
             </div>
           </>
         )}
-        <MoreLink href="/dashboard/blog">Lebih lanjut</MoreLink>
+        <MoreLink href="/dashboard/article">Lebih lanjut</MoreLink>
       </section>
       <section className={styles.contentSection}>
         <h2>Galeri</h2>

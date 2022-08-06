@@ -1,5 +1,5 @@
 import type { ForwardedRef } from "react";
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import { RiArrowDownSLine } from "react-icons/ri";
 import Label from "../label";
 import styles from "./Styles.module.css";

@@ -8,11 +8,13 @@ import {
   RiLogoutBoxRLine,
   RiExchangeDollarLine,
   RiUserSettingsFill,
+  RiHomeSmileLine,
 } from "react-icons/ri";
 import { useMember, memberLogout } from "@/services/member";
 import Avatar from "@/components/avatar";
 import PopUp from "@/components/popup";
 import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
+import ActiveLink from "@/layouts/activelink";
 import styles from "./Styles.module.css";
 
 const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
@@ -32,6 +34,12 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
         href: "/member",
         icon: <RiExchangeDollarLine />,
         children: <>Iuran</>,
+      },
+      {
+        id: "2",
+        href: "/member/homestay",
+        icon: <RiHomeSmileLine />,
+        children: <>Homestay</>,
       },
     ];
 
@@ -90,7 +98,7 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
           {children}
         </main>
       </div>
-      {/* {bottomNavBlockList.some((blockList) => {
+      {bottomNavBlockList.some((blockList) => {
         return router.asPath.includes(blockList);
       }) ? (
         <></>
@@ -101,18 +109,22 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
               return (
                 <LinkBox key={id} className={styles.buttonNavLink}>
                   <button className={styles.buttonNav}>
-                    <span className={styles.iconContainer}>{icon}</span>
-                    {children}
-                    <Link href={href} passHref>
+                    <ActiveLink
+                      href={href}
+                      activeClassName={styles.activeLink}
+                      passHref
+                    >
                       <LinkOverlay />
-                    </Link>
+                    </ActiveLink>
+                    <span className={styles.iconContainer}>{icon}</span>
+                    <span>{children}</span>
                   </button>
                 </LinkBox>
               );
             })}
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 };

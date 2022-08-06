@@ -21,7 +21,7 @@ const document = {
 
 const documents = [document];
 
-const blog = {
+const article = {
   id: 0,
   title: "",
   short_desc: "",
@@ -31,7 +31,7 @@ const blog = {
   created_at: "2022-01-02",
 };
 
-const blogs = [blog];
+const articles = [article];
 
 const latest_history = {
   id: 1,
@@ -54,10 +54,6 @@ const member = {
   name: "",
   wa_phone: "",
   other_phone: "",
-  homestay_name: "",
-  homestay_address: "",
-  homestay_latitude: "",
-  homestay_longitude: "",
   profile_pic_url: "",
   is_admin: "",
   is_approved: true,
@@ -206,7 +202,7 @@ export const handlers = [
       return res(
         ctx.json({
           documents,
-          blogs,
+          articles,
           latest_history,
           org_period_structures,
           images,
@@ -222,12 +218,12 @@ export const handlers = [
         ctx.json({
           member_total: members.length,
           document_total: documents.length,
-          blog_total: blogs.length,
+          blog_total: articles.length,
           position_total: positions.length,
           member_dues_total: member_dues.length,
           image_total: images.length,
           documents,
-          blogs,
+          articles,
           latest_history,
           members,
           cashflow,
@@ -296,21 +292,21 @@ export const handlers = [
     }
   ),
   rest.get(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles`,
     (req, res, ctx) => {
       return res(
         ctx.json({
           data: {
-            total: blogs.length,
+            total: articles.length,
             cursor: 0,
-            blogs,
+            articles,
           },
         })
       );
     }
   ),
   rest.get(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/:id`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/:id`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -320,7 +316,7 @@ export const handlers = [
     }
   ),
   rest.post(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/image`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/image`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -332,7 +328,7 @@ export const handlers = [
     }
   ),
   rest.post(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -342,7 +338,7 @@ export const handlers = [
     }
   ),
   rest.put(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/:id`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/:id`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -352,7 +348,7 @@ export const handlers = [
     }
   ),
   rest.delete(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/:id`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/:id`,
     (req, res, ctx) => {
       return res(
         ctx.json({
@@ -657,6 +653,7 @@ export const handlers = [
         ctx.json({
           data: {
             ...member,
+			id_card_url: "http:/localhost:5000",
             positions,
             period_id: 1,
             period: "",

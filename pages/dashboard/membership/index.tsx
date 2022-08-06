@@ -3,7 +3,15 @@ import type { MemberOut } from "@/services/member";
 import type { MemberAddFormType } from "@/layouts/memberaddform";
 import type { MemberEditFormType } from "@/layouts/membereditform";
 import { useState, useRef, Fragment } from "react";
-import { RiUserAddLine, RiSearch2Line, RiMore2Line } from "react-icons/ri";
+import { useRouter } from "next/router";
+import Link from "next/link";
+import {
+  RiUserAddLine,
+  RiSearch2Line,
+  RiMore2Line,
+  RiArrowRightLine,
+  RiHomeSmileLine,
+} from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useInfiniteMembersQuery } from "@/services/member";
@@ -11,8 +19,8 @@ import Drawer from "@/components/drawer";
 import Input from "@/components/input";
 import Button from "@/components/button";
 import IconButton from "@/components/iconbutton";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import PopUp from "@/components/popup";
+import Toast, { useToast } from "@/components/toast";
 import AdminLayout from "@/layouts/adminpage";
 import MemberAddForm from "@/layouts/memberaddform";
 import MemberEditForm from "@/layouts/membereditform";
@@ -33,15 +41,16 @@ const Member = () => {
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
 
+  const router = useRouter();
   const { toast, updateToast, props } = useToast();
+
+  const inputRef = useRef<HTMLInputElement | null>(null);
   const toastId = useRef<{ [key in FormType]: number }>({
     add: 0,
     approve: 0,
     delete: 0,
     edit: 0,
   });
-
-  const inputRef = useRef<HTMLInputElement | null>(null);
 
   const observeCallback = () => {
     if (membersQuery.hasNextPage) {
@@ -107,6 +116,7 @@ const Member = () => {
           colorScheme="green"
           leftIcon={<RiUserAddLine />}
           onClick={() => toggleDrawer()}
+          data-testid="add-btn"
         >
           Tambah
         </Button>
@@ -151,14 +161,43 @@ const Member = () => {
                         key={member.id}
                         member={member}
                         moreBtn={
-                          <IconButton
-                            className={styles.moreBtn}
-                            onClick={() => {
-                              openDrawer(member);
-                            }}
+                          <PopUp
+                            popUpPosition="bottom-right"
+                            className={styles.popup}
+                            popUpContent={
+                              <ul className={styles.addBtnOptions}>
+                                <li
+                                  onClick={() => {
+                                    openDrawer(member);
+                                  }}
+                                  className={styles.addBtnOption}
+                                  data-testid="member-detail-popup"
+                                >
+                                  <RiArrowRightLine />
+                                  Lihat Detail
+                                </li>{" "}
+                                <li>
+                                  <Link
+                                    href={{
+                                      pathname: `${router.pathname}/homestay/[id]`,
+                                      query: { id: member.id },
+                                    }}
+                                  >
+                                    <a
+                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
+                                    >
+                                      <RiHomeSmileLine />
+                                      Lihat Homestay
+                                    </a>
+                                  </Link>
+                                </li>
+                              </ul>
+                            }
                           >
-                            <RiMore2Line />
-                          </IconButton>
+                            <IconButton className={styles.moreBtn}>
+                              <RiMore2Line />
+                            </IconButton>
+                          </PopUp>
                         }
                       />
                     );

@@ -8,11 +8,10 @@ import slugify from "@sindresorhus/slugify";
 import { useMutation } from "react-query";
 import { RiCheckFill, RiCloseLine } from "react-icons/ri";
 import { getBlogMeta } from "@/lib/blogmeta";
-import { addBlog, uploadImage } from "@/services/blog";
+import { addArticle, uploadImage } from "@/services/article";
 import Button from "@/components/button";
 import LinkButton from "@/components/linkbutton";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import Toast, { useToast } from "@/components/toast";
 import AdminLayout from "@/layouts/adminpage";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";
@@ -27,9 +26,9 @@ const CreateBlog = () => {
   const addBlogMutation = useMutation<
     unknown,
     unknown,
-    Parameters<typeof addBlog>[0]
+    Parameters<typeof addArticle>[0]
   >((data) => {
-    return addBlog(data);
+    return addArticle(data);
   });
 
   const onSave = () => {

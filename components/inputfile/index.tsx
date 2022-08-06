@@ -1,5 +1,5 @@
 import type { ForwardedRef, ChangeEvent } from "react";
-import React, { forwardRef, useState, useRef, useEffect } from "react";
+import { forwardRef, useState, useRef, useEffect } from "react";
 import Label from "../label";
 import Button from "../button";
 import styles from "./Styles.module.css";

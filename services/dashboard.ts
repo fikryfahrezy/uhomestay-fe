@@ -38,7 +38,7 @@ export type DuesOut = {
   idr_amount: string;
 };
 
-export type BlogOut = {
+export type ArticleOut = {
   id: number;
   title: string;
   short_desc: string;
@@ -116,7 +116,7 @@ export type ImageOut = {
 type PrivateRes = {
   member_total: number;
   document_total: number;
-  blog_total: number;
+  article_total: number;
   position_total: number;
   member_dues_total: number;
   image_total: number;
@@ -124,7 +124,7 @@ type PrivateRes = {
   members: MemberOut[];
   cashflow: CashflowRes;
   dues: DuesOut;
-  blogs: BlogOut[];
+  articles: ArticleOut[];
   positions: PositionOut[];
   latest_history: LatestHistoryRes;
   member_dues: MembersDuesOut[];
@@ -169,7 +169,7 @@ export const usePrivateDashboardQuery = <
 
 type PublicRes = {
   documents: DocumentOut[];
-  blogs: BlogOut[];
+  articles: ArticleOut[];
   latest_history: LatestHistoryRes;
   org_period_structures: StructureRes;
   images: ImageOut[];

@@ -78,8 +78,8 @@ const LandingPage = () => {
             </a>
           </li>
           <li>
-            <a className={styles.navLink} href="#blog">
-              Blog
+            <a className={styles.navLink} href="#article">
+              Artikel
             </a>
           </li>
           <li>
@@ -172,25 +172,35 @@ const LandingPage = () => {
                     <div className={styles.avatarsContainer}>
                       {members.map(({ id, name, profile_pic_url: picUrl }) => {
                         return (
-                          <div
-                            key={id}
-                            className={`${styles.avatarContainer} ${
-                              level <= 1 ? styles.levelOne : styles.levelTwo
-                            }`}
-                          >
-                            <div className={styles.avatarImgContainer}>
-                              <Image
-                                src={
-                                  typeof picUrl === "string" && picUrl !== ""
-                                    ? picUrl
-                                    : "/images/image/person.png"
-                                }
-                                layout="fill"
-                                alt="Member Profile Picture"
-                              />
+                          <LinkBox key={id}>
+                            <div
+                              className={`${styles.avatarContainer} ${
+                                level <= 1 ? styles.levelOne : styles.levelTwo
+                              }`}
+                            >
+                              <div className={styles.avatarImgContainer}>
+                                <Image
+                                  src={
+                                    typeof picUrl === "string" && picUrl !== ""
+                                      ? picUrl
+                                      : "/images/image/person.png"
+                                  }
+                                  layout="fill"
+                                  alt="Member Profile Picture"
+                                />
+                              </div>
+                              <span className={styles.avatarName}>{name}</span>
                             </div>
-                            <span className={styles.avatarName}>{name}</span>
-                          </div>
+                            <Link
+                              href={{
+                                pathname: "./homestay/[id]",
+                                query: { id },
+                              }}
+                              passHref
+                            >
+                              <LinkOverlay />
+                            </Link>
+                          </LinkBox>
                         );
                       })}
                     </div>
@@ -261,17 +271,17 @@ const LandingPage = () => {
         </section>
         <section className={styles.section}>
           <h2 className={styles.subTitle}>
-            <a id="blog">Blog</a>
+            <a id="article">Artikel</a>
           </h2>
           <div className={styles.blogsContainer}>
             {dasboardQuery.isLoading ? (
               "Loading..."
             ) : dasboardQuery.error ? (
               <ErrMsg />
-            ) : dasboardQuery.data?.data.blogs.length === 0 ? (
+            ) : dasboardQuery.data?.data.articles.length === 0 ? (
               <EmptyMsg />
             ) : (
-              dasboardQuery.data?.data.blogs.map((blog) => {
+              dasboardQuery.data?.data.articles.map((blog) => {
                 return (
                   <LinkBox key={blog.id}>
                     <BlogListItem blog={blog} />
@@ -289,7 +299,7 @@ const LandingPage = () => {
               })
             )}
           </div>
-          <MoreLink href="/blog">Lebih banyak</MoreLink>
+          <MoreLink href="/article">Lebih banyak</MoreLink>
         </section>
         <section className={styles.section}>
           <h2 className={styles.subTitle}>

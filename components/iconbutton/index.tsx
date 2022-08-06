@@ -1,5 +1,5 @@
 import type { ForwardedRef } from "react";
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 import styles from "./Styles.module.css";
 
 type ButtonProps = JSX.IntrinsicElements["button"] & {

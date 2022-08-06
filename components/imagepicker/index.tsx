@@ -4,7 +4,7 @@ import type {
   ForwardedRef,
   ChangeEvent,
 } from "react";
-import React, { forwardRef, useState, useRef, useEffect } from "react";
+import { forwardRef, useState, useRef, useEffect } from "react";
 import Label from "../label";
 import Button from "../button";
 import styles from "./Styles.module.css";
@@ -22,7 +22,6 @@ type ImagePickerProps = DetailedHTMLProps<
   isInvalid: boolean;
   errMsg?: string;
   onErr?: (message: string) => void;
-  onPick?: (files: File[]) => void;
 };
 
 const ImagePicker = (
@@ -36,18 +35,17 @@ const ImagePicker = (
     disabled,
     errMsg,
     src = "",
-    value = "",
     label = "",
     note = "",
     isInvalid = false,
     onErr = defaultFunc,
-    onPick = defaultFunc,
     ...restProps
   }: ImagePickerProps,
-  ref: ForwardedRef<HTMLInputElement>,
+  ref: ForwardedRef<HTMLInputElement>
 ) => {
-  const srcs = src.split(", ");
   const [filesName, setFilesName] = useState("");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [imgUrl, setImgUrl] = useState("");
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const onFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -101,14 +99,25 @@ const ImagePicker = (
     }
   };
 
-  useEffect(() => {
-    if (disabled) {
-      setFilesName(String(value));
+  const onPick = (files: File[]) => {
+    if (files.length === 0) {
       return;
     }
 
-    setFilesName("");
-  }, [value, disabled]);
+    setSelectedFile(files[0]);
+  };
+
+  useEffect(() => {
+    if (!selectedFile) {
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedFile);
+    setImgUrl(objectUrl);
+
+    // free memory when ever this component is unmounted
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [selectedFile]);
 
   return (
     <>
@@ -119,67 +128,50 @@ const ImagePicker = (
       ) : (
         <></>
       )}
-      {errMsg ? <p className={styles.errorMsg}>{errMsg}</p> : <></>}
-      <div
-        style={style}
-        className={`${styles.inputContainer} ${
-          isInvalid ? styles.invalidInput : ""
-        } ${disabled ? styles.disabledInput : ""} ${
-          className ? className : ""
-        }`}
-      >
-        {value !== "" ? (
-          <span className={styles.p}>
-            {String(value)
-              .split(", ")
-              .map((v, i) => {
-                const href = srcs[i];
-                return typeof href === "string" && href !== "" ? (
-                  <a
-                    target="_blank"
-                    rel="noreferrer"
-                    key={i}
-                    href={href}
-                    className={`${styles.mr7} ${styles.link}`}
-                  >
-                    {v}
-                  </a>
-                ) : (
-                  <span key={i} className={styles.mr7}>
-                    {v}
-                  </span>
-                );
-              })}
-          </span>
-        ) : (
-          <p className={styles.p}>{filesName ? filesName : ""}</p>
-        )}
-        {disabled === true ? (
-          <></>
-        ) : (
-          <Button
-            type="button"
-            className={styles.btn}
-            onClick={() => inputFileRef.current?.click()}
+      {disabled === true ? (
+        <></>
+      ) : (
+        <>
+          {errMsg ? <p className={styles.errorMsg}>{errMsg}</p> : <></>}
+          <div
+            style={style}
+            className={`${styles.inputContainer} ${
+              isInvalid ? styles.invalidInput : ""
+            } ${disabled ? styles.disabledInput : ""} ${
+              className ? className : ""
+            }`}
           >
-            {children}
-          </Button>
-        )}
-        <span className={styles.inputWrapper}>
-          <input
-            {...restProps}
-            type="file"
-            accept="image/*"
-            ref={(e) => {
-              inputFileRef.current = e;
-              if (typeof ref === "function") {
-                return ref(e);
-              }
-            }}
-            onChange={onFileChange}
-          />
-        </span>
-      </div>
+            <p className={styles.p}>{filesName ? filesName : ""}</p>
+            <Button
+              type="button"
+              className={styles.btn}
+              onClick={() => inputFileRef.current?.click()}
+            >
+              {children}
+            </Button>
+            <span className={styles.inputWrapper}>
+              <input
+                {...restProps}
+                type="file"
+                accept="image/*"
+                multiple={false}
+                ref={(e) => {
+                  inputFileRef.current = e;
+                  if (typeof ref === "function") {
+                    return ref(e);
+                  }
+                }}
+                onChange={onFileChange}
+              />
+            </span>
+          </div>
+        </>
+      )}
+      {imgUrl ? (
+        <img src={imgUrl} className={styles.img} alt="Photo Preview" />
+      ) : (
+        <></>
+      )}
     </>
   );
 };

@@ -1,5 +1,3 @@
-import type { MapMouseEvent, EventData } from "mapbox-gl";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -8,26 +6,17 @@ import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMemberDetailQuery, updateProfile } from "@/services/member";
 import AvatarPicker from "@/components/avatarpicker";
 import Input from "@/components/input";
-import TextArea from "@/components/textarea";
 import Button from "@/components/button";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import Toast, { useToast } from "@/components/toast";
+import ImagePicker from "@/components/imagepicker";
+import Label from "@/components/label";
 import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
-const Map = dynamic(() => import("@/layouts/map"), {
-  loading: () => <p>...</p>,
-});
-
-const defLng = 107.79054317790919;
-const defLat = -7.153238933398519;
-
 const UpdateProfile = () => {
+  const [isEditIdCard, setEditIdCard] = useState(false);
   const [muid, setMuid] = useState("");
-  const [lng, setLng] = useState(defLng);
-  const [lat, setLat] = useState(defLat);
-
   const router = useRouter();
 
   const memberDetailQuery = useMemberDetailQuery(muid, {
@@ -36,6 +25,7 @@ const UpdateProfile = () => {
 
   const defaultValues = {
     profile: "",
+    id_card: "",
     username: "",
     password: "",
     name: "",
@@ -43,15 +33,12 @@ const UpdateProfile = () => {
     other_phone: "",
     position_id: 0,
     period_id: 0,
-    homestay_name: "",
-    homestay_address: "",
-    homestay_latitude: String(lat),
-    homestay_longitude: String(lng),
   };
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -65,7 +52,7 @@ const UpdateProfile = () => {
     return updateProfile(data);
   });
 
-  const onSubmit = ({ lat, lng }: { lat: number; lng: number }) =>
+  const onSubmit = () =>
     handleSubmit((data) => {
       const formData = new FormData();
       Object.entries(data).forEach(([k, v]) => {
@@ -76,9 +63,6 @@ const UpdateProfile = () => {
           formData.append(k, String(v));
         }
       });
-
-      formData.set("homestay_latitude", String(lat));
-      formData.set("homestay_longitude", String(lng));
 
       const lastId = toast({
         status: "info",
@@ -98,6 +82,7 @@ const UpdateProfile = () => {
               />
             ),
           });
+          setEditIdCard(false);
         })
         .catch((e) => {
           updateToast(lastId, {
@@ -112,13 +97,6 @@ const UpdateProfile = () => {
           });
         });
     });
-
-  const onMapClick = (e: MapMouseEvent & EventData) => {
-    const { lng, lat } = e.lngLat;
-
-    setLng(lng);
-    setLat(lat);
-  };
 
   const onCancelUpdate = () => {
     router.back();
@@ -137,6 +115,16 @@ const UpdateProfile = () => {
     });
   };
 
+  const onEditIdCard = () => {
+    setValue("id_card", "");
+    setEditIdCard(true);
+  };
+
+  const onCancelEditIdCard = (idCardUrl: string) => {
+    setValue("id_card", idCardUrl);
+    setEditIdCard(false);
+  };
+
   useEffect(() => {
     if (memberDetailQuery.data !== undefined) {
       const {
@@ -144,14 +132,14 @@ const UpdateProfile = () => {
         period,
         is_approved,
         profile_pic_url: profile,
-        homestay_latitude: lat,
-        homestay_longitude: lng,
+        id_card_url: idCard,
         ...restData
       } = memberDetailQuery.data.data;
 
-      setLng(Number(lng));
-      setLat(Number(lat));
-      reset({ profile, ...restData }, { keepDefaultValues: true });
+      reset(
+        { profile, id_card: idCard, ...restData },
+        { keepDefaultValues: true }
+      );
     }
   }, [memberDetailQuery.data, reset]);
 
@@ -165,7 +153,7 @@ const UpdateProfile = () => {
   return (
     <div className={styles.mainContainer}>
       <h2 className={styles.drawerTitle}>Ubah Profile</h2>
-      <form className={styles.drawerBody} onSubmit={onSubmit({ lat, lng })}>
+      <form className={styles.drawerBody} onSubmit={onSubmit()}>
         <div className={styles.avatarContainer}>
           {memberDetailQuery.isLoading || memberDetailQuery.isIdle ? (
             "Loading..."
@@ -251,66 +239,58 @@ const UpdateProfile = () => {
                 errMsg={errors["other_phone"] ? "Tidak boleh kosong" : ""}
               />
             </div>
-            <div className={styles.inputGroup}>
-              <Input
-                {...register("homestay_name", {
-                  required: true,
-                })}
-                autoComplete="off"
-                label="Nama Homestay:"
-                id="homestay_name"
-                required={true}
-                isInvalid={errors["homestay_name"] !== undefined}
-                errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
-              />
-            </div>
           </div>
           <div className={styles.inputGroup}>
-            <TextArea
-              {...register("homestay_address", {
-                required: true,
-              })}
-              label="Alamat Homestay:"
-              id="homestay_address"
-              required={true}
-              isInvalid={errors["homestay_address"] !== undefined}
-              errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
-            />
+            {isEditIdCard ? (
+              <ImagePicker
+                {...register("id_card")}
+                label="Foto KTP:"
+                id="id_card"
+                multiple={false}
+                onErr={() => onPickErr()}
+                isInvalid={errors["id_card"] !== undefined}
+                errMsg={errors["id_card"] ? "Tidak boleh kosong" : ""}
+                className={styles.borderBox}
+                data-testid="image-picker-input"
+              >
+                Pilih File
+              </ImagePicker>
+            ) : (
+              <>
+                <Label>Foto KTP:</Label>
+                <a
+                  target="_blank"
+                  rel="noreferrer"
+                  href={memberDetailQuery.data?.data["id_card_url"] || ""}
+                  className={styles.link}
+                >
+                  {memberDetailQuery.data?.data["id_card_url"] || ""}
+                </a>
+              </>
+            )}
           </div>
-          <Map lat={lat} lng={lng} onClick={onMapClick} />
           <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_latitude", {})}
-              autoComplete="off"
-              label="Homestay Latitude:"
-              id="homestay_latitude"
-              type="hidden"
-              value={lat}
-              required={true}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLat(val ? val : defLat);
-              }}
-              isInvalid={errors["homestay_latitude"] !== undefined}
-              errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_longitude", {})}
-              autoComplete="off"
-              label="Homestay Longitude:"
-              id="homestay_longitude"
-              type="hidden"
-              value={lng}
-              required={true}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLng(val ? val : defLng);
-              }}
-              isInvalid={errors["homestay_longitude"] !== undefined}
-              errMsg={errors["homestay_longitude"] ? "Tidak boleh kosong" : ""}
-            />
+            {isEditIdCard ? (
+              <Button
+                className={styles.formBtn}
+                type="button"
+                onClick={() =>
+                  onCancelEditIdCard(
+                    String(memberDetailQuery.data?.data["id_card_url"] || "")
+                  )
+                }
+              >
+                Batal Ubah KTP
+              </Button>
+            ) : (
+              <Button
+                className={styles.formBtn}
+                type="button"
+                onClick={() => onEditIdCard()}
+              >
+                Ubah KTP
+              </Button>
+            )}
           </div>
           <div className={styles.editableButtons}>
             <Button

@@ -1,15 +1,11 @@
-/**
- * @typedef {import("@/services/blog").BlogOut} BlogOut
- */
-
-import type { BlogOut } from "@/services/blog";
+import type { ArticleOut } from "@/services/article";
 import Image from "next/image";
 import Card from "@/components/card";
 import styles from "./Styles.module.css";
 
 type BlogListItem = {
   popUp?: JSX.Element;
-  blog: BlogOut;
+  blog: ArticleOut;
 };
 
 const BlogListItem = ({ blog, popUp }: BlogListItem) => {
@@ -26,7 +22,7 @@ const BlogListItem = ({ blog, popUp }: BlogListItem) => {
           blog.title ? (
             blog.title.slice(0, 45) + (blog.title.length > 44 ? "..." : "")
           ) : (
-            <em>Blog tidak berjudul</em>
+            <em>Artikel tidak berjudul</em>
           )
         }
         bannerElement={

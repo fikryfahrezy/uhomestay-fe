@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import { useState, useEffect } from "react";
 import { RiCloseLine } from "react-icons/ri";
 import { addImage } from "@/services/images";
 import { UniversalPortal } from "@/lib/react-portal-universal";
@@ -33,9 +32,6 @@ const GalleryAddModal = ({
   onError = defaultFunc,
   onLoading = defaultFunc,
 }: GalleryAddModalProps) => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imgUrl, setImgUrl] = useState("");
-
   const defaultValues = {
     description: "",
     file: [],
@@ -44,7 +40,6 @@ const GalleryAddModal = ({
     register,
     handleSubmit,
     reset,
-    getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -84,29 +79,9 @@ const GalleryAddModal = ({
     onCancel();
   };
 
-  const onPick = (files: File[]) => {
-    if (files.length === 0) {
-      return;
-    }
-
-    setSelectedFile(files[0]);
-  };
-
   const onPickErr = () => {
     onError("add", "Error tipe file", "File bukan bertipe gambar");
   };
-
-  useEffect(() => {
-    if (!selectedFile) {
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(selectedFile);
-    setImgUrl(objectUrl);
-
-    // free memory when ever this component is unmounted
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [selectedFile]);
 
   return isOpen ? (
     <UniversalPortal selector="#modal">
@@ -121,15 +96,8 @@ const GalleryAddModal = ({
                 })}
                 label="File foto:"
                 id="file"
-                multiple={false}
                 required={true}
-                value={
-                  getValues().file.length === 0
-                    ? ""
-                    : (getValues().file as File[])[0].name
-                }
                 onErr={() => onPickErr()}
-                onPick={(files) => onPick(files)}
                 isInvalid={errors.file !== undefined}
                 errMsg={errors.file ? "Tidak boleh kosong" : ""}
                 className={styles.borderBox}
@@ -145,13 +113,6 @@ const GalleryAddModal = ({
                 id="description"
                 className={styles.borderBox}
               />
-            </div>
-            <div className={styles.inputGroup}>
-              {imgUrl ? (
-                <img src={imgUrl} className={styles.img} alt="Photo Preview" />
-              ) : (
-                <></>
-              )}
             </div>
             <div className={styles.buttonContainer}>
               <Button

@@ -20,7 +20,7 @@ import {
   KEY_ESCAPE_COMMAND,
   KEY_TAB_COMMAND,
 } from "lexical";
-import React, {
+import {
   startTransition,
   useCallback,
   useEffect,

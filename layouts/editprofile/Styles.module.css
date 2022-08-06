@@ -53,6 +53,12 @@
   flex: 1;
 }
 
+.link {
+  display: block;
+  margin-right: 7px;
+  text-decoration: underline;
+}
+
 .editableButtons {
   display: grid;
   width: fit-content;

@@ -44,6 +44,7 @@ const MemberDuesEditForm = ({
     register,
     handleSubmit,
     reset,
+	getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -187,8 +188,20 @@ const MemberDuesEditForm = ({
               id="file"
               required={true}
               multiple={false}
-              value={isEditable ? "" : prevData["prove_file_url"]}
-              src={isEditable ? "" : prevData["prove_file_url"]}
+              value={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData["prove_file_url"]
+                    : (getValues().file as File[])[0].name
+                  : prevData["prove_file_url"]
+              }
+              src={
+                isEditable
+                  ? getValues().file.length === 0
+                    ? prevData["prove_file_url"]
+                    : ""
+                  : prevData["prove_file_url"]
+              }
               disabled={!isEditable}
               isInvalid={errors.file !== undefined}
               errMsg={errors.file ? "Tidak boleh kosong" : ""}

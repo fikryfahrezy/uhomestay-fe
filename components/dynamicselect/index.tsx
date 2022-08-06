@@ -5,7 +5,7 @@ import type {
   HTMLAttributes,
   FormEvent,
 } from "react";
-import React, { useState, useRef, useEffect, forwardRef, memo } from "react";
+import { useState, useRef, useEffect, forwardRef, memo } from "react";
 import { RiAddLine, RiCloseLine } from "react-icons/ri";
 import IconButton from "../iconbutton";
 import Label from "../label";

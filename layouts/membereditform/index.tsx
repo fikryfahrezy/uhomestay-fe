@@ -1,6 +1,4 @@
-import type { MapMouseEvent, EventData } from "mapbox-gl";
-import type { MemberOut, MemberPosition } from "@/services/member";
-import dynamic from "next/dynamic";
+import type { MemberOut } from "@/services/member";
 import { useState, useMemo, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
@@ -14,27 +12,18 @@ import {
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
 import Button from "@/components/button";
-import TextArea from "@/components/textarea";
 import Input from "@/components/input";
 import Checkbox from "@/components/checkbox";
 import Select from "@/components/select";
 import DynamicSelect from "@/components/dynamicselect";
 import AvatarPicker from "@/components/avatarpicker";
+import ImagePicker from "@/components/imagepicker";
+import Label from "@/components/label";
 import Modal from "@/layouts/modal";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 export type MemberEditFormType = "edit" | "delete" | "approve";
-
-const Map = dynamic(() => import("@/layouts/map"), {
-  loading: () => <p>...</p>,
-});
-
-const defLng = 107.79054317790919;
-const defLat = -7.153238933398519;
-
-const limLng = 180;
-const limLat = 90;
 
 const defaultFunc = () => {};
 
@@ -59,29 +48,17 @@ const MemberEditForm = ({
   onError = defaultFunc,
   onLoading = defaultFunc,
 }: MemberEditFormProps) => {
-  const prevLng = Number(prevData["homestay_longitude"]);
-  const prevLat = Number(prevData["homestay_latitude"]);
-
-  const [lng, setLng] = useState(
-    !isNaN(prevLng) && prevLng >= -1 * limLng && prevLng <= limLng
-      ? prevLng
-      : defLng
-  );
-  const [lat, setLat] = useState(
-    !isNaN(prevLat) && prevLat >= -1 * limLat && prevLat <= limLat
-      ? prevLat
-      : defLat
-  );
-
   const [isEditable, setEditable] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [isEditOrg, setEditOrg] = useState(false);
+  const [isEditIdCard, setEditIdCard] = useState(false);
   const [positionCache, setPositionCache] = useState<Record<number, number>>(
     {}
   );
 
   const defaultValues = {
     profile: "",
+    id_card: "",
     username: "",
     password: "",
     name: "",
@@ -89,10 +66,6 @@ const MemberEditForm = ({
     other_phone: "",
     position_id: "",
     period_id: "",
-    homestay_name: "",
-    homestay_address: "",
-    homestay_latitude: String(lat),
-    homestay_longitude: String(lng),
     is_admin: false,
   };
   const {
@@ -183,11 +156,7 @@ const MemberEditForm = ({
       });
   };
 
-  const onSubmit = (
-    id: string,
-    position: Record<number, number>,
-    { lat, lng }: { lat: number; lng: number }
-  ) =>
+  const onSubmit = (id: string, position: Record<number, number>) =>
     handleSubmit((data) => {
       const { position_id: posId, ...restData } = data;
       const formData = new FormData();
@@ -205,9 +174,6 @@ const MemberEditForm = ({
         formData.append("position_ids", String(v));
       });
 
-      formData.set("homestay_latitude", String(lat));
-      formData.set("homestay_longitude", String(lng));
-
       onLoading("edit", "Loading mengubah anggota");
 
       editMemberMutation
@@ -222,13 +188,6 @@ const MemberEditForm = ({
 
   const onSetEditable = () => {
     setEditable(true);
-  };
-
-  const onMapClick = (e: MapMouseEvent & EventData) => {
-    const { lng, lat } = e.lngLat;
-
-    setLng(lng);
-    setLat(lat);
   };
 
   const onConfirmDelete = () => {
@@ -283,6 +242,16 @@ const MemberEditForm = ({
     onError("edit", "Error tipe file", "File bukan bertipe gambar");
   };
 
+  const onEditIdCard = () => {
+    setValue("id_card", "");
+    setEditIdCard(true);
+  };
+
+  const onCancelEditIdCard = (idCardUrl: string) => {
+    setValue("id_card", idCardUrl);
+    setEditIdCard(false);
+  };
+
   useEffect(() => {
     if (memberDetailQuery.data !== undefined) {
       const {
@@ -292,12 +261,14 @@ const MemberEditForm = ({
         is_approved: isApproved,
         profile_pic_url: profile,
         period_id: perId,
+        id_card_url: idCard,
         ...restData
       } = memberDetailQuery.data.data;
 
       reset(
         {
           profile,
+          id_card: idCard,
           position_id: positions.reduce(
             (prevValue, { id }) => `${prevValue}${id}, `,
             ""
@@ -332,7 +303,7 @@ const MemberEditForm = ({
       ) : (
         <form
           className={styles.drawerBody}
-          onSubmit={onSubmit(prevData.id, positionCache, { lat, lng })}
+          onSubmit={onSubmit(prevData.id, positionCache)}
         >
           <div className={styles.drawerContent}>
             <AvatarPicker
@@ -604,70 +575,58 @@ const MemberEditForm = ({
               )}
             </div>
             <div className={styles.inputGroup}>
-              <Input
-                {...register("homestay_name", {
-                  required: true,
-                })}
-                autoComplete="off"
-                label="Nama Homestay:"
-                id="homestay_name"
-                required={true}
-                readOnly={!isEditable}
-                isInvalid={errors["homestay_name"] !== undefined}
-                errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
-              />
+              {isEditIdCard && isEditable ? (
+                <ImagePicker
+                  {...register("id_card")}
+                  label="Foto KTP:"
+                  id="id_card"
+                  multiple={false}
+                  onErr={() => onPickErr()}
+                  isInvalid={errors["id_card"] !== undefined}
+                  errMsg={errors["id_card"] ? "Tidak boleh kosong" : ""}
+                  className={styles.borderBox}
+                  data-testid="image-picker-input"
+                >
+                  Pilih File
+                </ImagePicker>
+              ) : (
+                <>
+                  <Label disabled={!isEditable}>Foto KTP:</Label>
+                  <a
+                    target="_blank"
+                    rel="noreferrer"
+                    href={memberDetailQuery.data?.data["id_card_url"] || ""}
+                    className={styles.link}
+                  >
+                    {memberDetailQuery.data?.data["id_card_url"] || ""}
+                  </a>
+                </>
+              )}
             </div>
             <div className={styles.inputGroup}>
-              <TextArea
-                {...register("homestay_address", {
-                  required: true,
-                })}
-                label="Alamat Homestay:"
-                id="homestay_address"
-                required={true}
-                readOnly={!isEditable}
-                isInvalid={errors["homestay_address"] !== undefined}
-                errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
-              />
-            </div>
-            <Map lat={lat} lng={lng} onClick={onMapClick} />
-            <div className={styles.inputGroup}>
-              <Input
-                {...register("homestay_latitude", {})}
-                autoComplete="off"
-                label="Homestay Latitude:"
-                id="homestay_latitude"
-                type="hidden"
-                value={lat}
-                required={true}
-                readOnly={!isEditable}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setLat(val ? val : defLat);
-                }}
-                isInvalid={errors["homestay_latitude"] !== undefined}
-                errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
-              />
-            </div>
-            <div className={styles.inputGroup}>
-              <Input
-                {...register("homestay_longitude", {})}
-                autoComplete="off"
-                label="Homestay Longitude:"
-                id="homestay_longitude"
-                type="hidden"
-                value={lng}
-                required={true}
-                readOnly={!isEditable}
-                onChange={(e) => {
-                  const val = Number(e.target.value);
-                  setLng(val ? val : defLng);
-                }}
-                isInvalid={errors["homestay_longitude"] !== undefined}
-                errMsg={
-                  errors["homestay_longitude"] ? "Tidak boleh kosong" : ""
-                }
-              />
+              {isEditIdCard ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() =>
+                    onCancelEditIdCard(
+                      String(memberDetailQuery.data?.data["id_card_url"] || "")
+                    )
+                  }
+                >
+                  Batal Ubah KTP
+                </Button>
+              ) : isEditable ? (
+                <Button
+                  className={styles.formBtn}
+                  type="button"
+                  onClick={() => onEditIdCard()}
+                >
+                  Ubah KTP
+                </Button>
+              ) : (
+                <></>
+              )}
             </div>
             <div className={styles.inputGroup}>
               <Checkbox
@@ -701,6 +660,7 @@ const MemberEditForm = ({
                   type="button"
                   className={styles.formBtn}
                   onClick={() => onSetEditable()}
+                  data-testid="member-edit-btn"
                 >
                   Ubah
                 </Button>
@@ -709,6 +669,7 @@ const MemberEditForm = ({
                   type="button"
                   className={styles.formBtn}
                   onClick={() => onConfirmDelete()}
+                  data-testid="member-remove-btn"
                 >
                   Hapus
                 </Button>
@@ -720,6 +681,7 @@ const MemberEditForm = ({
                   colorScheme="green"
                   type="submit"
                   className={styles.formBtn}
+                  data-testid="member-editable-btn"
                 >
                   Ubah
                 </Button>

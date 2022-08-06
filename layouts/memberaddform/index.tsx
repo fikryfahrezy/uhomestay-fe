@@ -1,5 +1,4 @@
 import type { MapMouseEvent, EventData } from "mapbox-gl";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
@@ -11,20 +10,13 @@ import AvatarPicker from "@/components/avatarpicker";
 import Select from "@/components/select";
 import Checkbox from "@/components/checkbox";
 import Input from "@/components/input";
-import TextArea from "@/components/textarea";
 import DynamicSelect from "@/components/dynamicselect";
+import ImagePicker from "@/components/imagepicker";
 import Button from "@/components/button";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 
 export type MemberAddFormType = "add";
-
-const Map = dynamic(() => import("@/layouts/map"), {
-  loading: () => <p>...</p>,
-});
-
-const defLng = 107.79054317790919;
-const defLat = -7.153238933398519;
 
 const defaultFunc = () => {};
 
@@ -47,14 +39,13 @@ const MemberAddForm = ({
   onError = defaultFunc,
   onLoading = defaultFunc,
 }: MemberAddFormProps) => {
-  const [lng, setLng] = useState(107.79054317790919);
-  const [lat, setLat] = useState(-7.153238933398519);
   const [positionCache, setPositionCache] = useState<Record<number, number>>(
     {}
   );
 
   const defaultValues = {
     profile: [],
+    id_card: [],
     username: "",
     password: "",
     name: "",
@@ -62,17 +53,12 @@ const MemberAddForm = ({
     other_phone: "",
     position_id: "",
     period_id: "",
-    homestay_name: "",
-    homestay_address: "",
-    homestay_latitude: String(lat),
-    homestay_longitude: String(lng),
     is_admin: false,
   };
   const {
     register,
     handleSubmit,
     reset,
-    getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -87,10 +73,7 @@ const MemberAddForm = ({
     return addMember(data);
   });
 
-  const onSubmit = (
-    position: Record<number, number>,
-    { lat, lng }: { lat: number; lng: number }
-  ) =>
+  const onSubmit = (position: Record<number, number>) =>
     handleSubmit((data) => {
       const { position_id: posId, ...restData } = data;
       const formData = new FormData();
@@ -107,9 +90,6 @@ const MemberAddForm = ({
       Object.entries(position).forEach(([_, v]) => {
         formData.append("position_ids", String(v));
       });
-
-      formData.set("homestay_latitude", String(lat));
-      formData.set("homestay_longitude", String(lng));
 
       onLoading("add", "Loading menambahkan anggota");
 
@@ -128,13 +108,6 @@ const MemberAddForm = ({
   const onClose = () => {
     reset(defaultValues, { keepDefaultValues: true });
     onCancel();
-  };
-
-  const onMapClick = (e: MapMouseEvent & EventData) => {
-    const { lng, lat } = e.lngLat;
-
-    setLng(lng);
-    setLat(lat);
   };
 
   const onSelectPosition = (currentValue: number, prevValue: number) => {
@@ -164,10 +137,7 @@ const MemberAddForm = ({
   return (
     <>
       <h2 className={styles.drawerTitle}>Tambah Anggota</h2>
-      <form
-        className={styles.drawerBody}
-        onSubmit={onSubmit(positionCache, { lat, lng })}
-      >
+      <form className={styles.drawerBody} onSubmit={onSubmit(positionCache)}>
         <div className={styles.drawerContent}>
           <AvatarPicker
             {...register("profile")}
@@ -175,11 +145,6 @@ const MemberAddForm = ({
             defaultSrc={"/images/image/person.png"}
             className={styles.avatarPicker}
             onErr={() => onPickErr()}
-            value={
-              getValues().profile.length === 0
-                ? ""
-                : (getValues().profile as File[])[0].name
-            }
           />
           <div className={styles.inputGroup}>
             <Input
@@ -348,62 +313,19 @@ const MemberAddForm = ({
             )}
           </div>
           <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_name", {
-                required: true,
-              })}
-              autoComplete="off"
-              label="Nama Homestay:"
-              id="homestay_name"
-              required={true}
-              isInvalid={errors["homestay_name"] !== undefined}
-              errMsg={errors["homestay_name"] ? "Tidak boleh kosong" : ""}
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <TextArea
-              {...register("homestay_address", {
-                required: true,
-              })}
-              label="Alamat Homestay:"
-              id="homestay_address"
-              required={true}
-              isInvalid={errors["homestay_address"] !== undefined}
-              errMsg={errors["homestay_address"] ? "Tidak boleh kosong" : ""}
-            />
-          </div>
-          <Map lat={lat} lng={lng} onClick={onMapClick} />
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_latitude", {})}
-              autoComplete="off"
-              label="Homestay Latitude:"
-              id="homestay_latitude"
-              type="hidden"
-              required={true}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLat(val ? val : defLat);
-              }}
-              isInvalid={errors["homestay_latitude"] !== undefined}
-              errMsg={errors["homestay_latitude"] ? "Tidak boleh kosong" : ""}
-            />
-          </div>
-          <div className={styles.inputGroup}>
-            <Input
-              {...register("homestay_longitude", {})}
-              autoComplete="off"
-              label="Homestay Longitude:"
-              id="homestay_longitude"
-              type="hidden"
-              required={true}
-              onChange={(e) => {
-                const val = Number(e.target.value);
-                setLng(val ? val : defLng);
-              }}
-              isInvalid={errors["homestay_longitude"] !== undefined}
-              errMsg={errors["homestay_longitude"] ? "Tidak boleh kosong" : ""}
-            />
+            <ImagePicker
+              {...register("id_card")}
+              label="Foto KTP:"
+              id="id_card"
+              multiple={false}
+              onErr={() => onPickErr()}
+              isInvalid={errors["id_card"] !== undefined}
+              errMsg={errors["id_card"] ? "Tidak boleh kosong" : ""}
+              className={styles.borderBox}
+              data-testid="image-picker-input"
+            >
+              Pilih File
+            </ImagePicker>
           </div>
           <div className={styles.inputGroup}>
             <Checkbox
@@ -417,7 +339,12 @@ const MemberAddForm = ({
           </div>
         </div>
         <div>
-          <Button colorScheme="green" type="submit" className={styles.formBtn}>
+          <Button
+            colorScheme="green"
+            type="submit"
+            className={styles.formBtn}
+            data-testid="submit-member-btn"
+          >
             Tambah
           </Button>
           <Button

@@ -60,6 +60,7 @@
   padding-left: 50px;
   padding-top: 50px;
   padding-right: 50px;
+  padding-bottom: 100px;
   background-color: #e5e5e5;
   overflow: auto;
   flex: 1;
@@ -98,21 +99,25 @@
   flex: 1;
 }
 
-.iconContainer {
-  font-size: 24px;
-}
-
 .buttonNav {
   display: flex;
   height: 100%;
   width: 100%;
   padding-top: 10px;
   padding-bottom: 10px;
-  color: #50ac97;
+  color: #696969;
   background-color: transparent;
   font-size: 18px;
   border: none;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+}
+
+.iconContainer {
+  font-size: 24px;
+}
+
+.buttonNav .activeLink ~ * {
+  color: #50ac97;
 }

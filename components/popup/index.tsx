@@ -1,4 +1,4 @@
-import React, { useState, cloneElement, useRef } from "react";
+import { useState, cloneElement, useRef } from "react";
 import styles from "./Styles.module.css";
 
 type PopUpProps = JSX.IntrinsicElements["div"] & {

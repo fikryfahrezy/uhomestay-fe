@@ -12,12 +12,11 @@ import {
 } from "react-icons/ri";
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
-import { useBlogsQuery, removeBlog } from "@/services/blog";
+import { useArticlesQuery, removeArticle } from "@/services/article";
 import PopUp from "@/components/popup";
 import LinkButton from "@/components/linkbutton";
 import IconButton from "@/components/iconbutton";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import Toast, { useToast } from "@/components/toast";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import AdminLayout from "@/layouts/adminpage";
@@ -30,7 +29,7 @@ const Blog = () => {
   const [blogId, setBlogId] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const blogsQuery = useBlogsQuery("", {
+  const blogsQuery = useArticlesQuery("", {
     getPreviousPageParam: (firstPage) => firstPage.data.cursor || undefined,
     getNextPageParam: (lastPage) => lastPage.data.cursor || undefined,
   });
@@ -41,9 +40,9 @@ const Blog = () => {
   const removeBlogMutation = useMutation<
     unknown,
     unknown,
-    Parameters<typeof removeBlog>[0]
+    Parameters<typeof removeArticle>[0]
   >((id) => {
-    return removeBlog(id);
+    return removeArticle(id);
   });
 
   const observeCallback = () => {
@@ -113,23 +112,23 @@ const Blog = () => {
           Buat
         </LinkButton>
       </Link>
-      <h1 className={styles.pageTitle}>Blog</h1>
+      <h1 className={styles.pageTitle}>Artikel</h1>
       {blogsQuery.isLoading ? (
         "Loading..."
       ) : blogsQuery.error ? (
         <ErrMsg />
-      ) : blogsQuery.data?.pages[0].data.blogs.length === 0 ? (
+      ) : blogsQuery.data?.pages[0].data.articles.length === 0 ? (
         <EmptyMsg />
       ) : (
         <>
           <h3>
-            Jumlah Total Blog: {blogsQuery.data?.pages[0].data.total} blog
+            Jumlah Total Artikel: {blogsQuery.data?.pages[0].data.total} artikel
           </h3>
           <div className={styles.contentContainer}>
             {blogsQuery.data?.pages.map((page) => {
               return (
                 <Fragment key={page.data.cursor}>
-                  {page.data.blogs.map((blog) => {
+                  {page.data.articles.map((blog) => {
                     return (
                       <BlogListItem
                         key={blog.id}
@@ -147,9 +146,7 @@ const Blog = () => {
                                       query: { id: blog.id },
                                     }}
                                   >
-                                    <a
-                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
-                                    >
+                                    <a className={styles.addBtnOption}>
                                       <RiArrowRightLine />
                                       Lihat Detail
                                     </a>
@@ -162,9 +159,7 @@ const Blog = () => {
                                       query: { id: blog.id },
                                     }}
                                   >
-                                    <a
-                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
-                                    >
+                                    <a className={styles.addBtnOption}>
                                       <RiFileSettingsLine />
                                       Ubah
                                     </a>

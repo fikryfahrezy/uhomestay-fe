@@ -247,7 +247,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
         isLink: true,
         element: (
           <ActiveLink
-            href="/dashboard/blog"
+            href="/dashboard/article"
             activeClassName={styles.activeLink}
             passHref
           >
@@ -255,7 +255,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
               className={styles.sideLink}
               leftIcon={<RiDoubleQuotesL />}
             >
-              <span className={styles.sideLinkText}>Blog</span>
+              <span className={styles.sideLinkText}>Artikel</span>
             </LinkButton>
           </ActiveLink>
         ),

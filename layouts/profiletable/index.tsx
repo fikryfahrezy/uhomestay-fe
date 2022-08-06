@@ -37,16 +37,6 @@ const ProfileTable = ({ data }: ProfileTableProps) => {
           <td>:</td>
           <td>{data.period}</td>
         </tr>
-        <tr>
-          <td>Nama Homestay</td>
-          <td>:</td>
-          <td>{data["homestay_name"]}</td>
-        </tr>
-        <tr>
-          <td>Alamat Homestay</td>
-          <td>:</td>
-          <td>{data["homestay_address"]}</td>
-        </tr>
       </tbody>
     </table>
   );

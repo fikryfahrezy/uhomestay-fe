@@ -2,7 +2,7 @@ import type { UseQueryOptions, UseInfiniteQueryOptions } from "react-query";
 import { useQuery, useInfiniteQuery } from "react-query";
 import fetchJson, { FetchError } from "@/lib/fetchJson";
 
-export type BlogOut = {
+export type ArticleOut = {
   id: number;
   title: string;
   short_desc: string;
@@ -12,23 +12,23 @@ export type BlogOut = {
   created_at: string;
 };
 
-type UseBlogsQueryData = {
+type UseArticlesQueryData = {
   data: {
     total: number;
     cursor: number;
-    blogs: BlogOut[];
+    articles: ArticleOut[];
   };
 };
 
-export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
+export const useArticlesQuery = <D = UseArticlesQueryData, E = FetchError>(
   q: string,
   option?: UseInfiniteQueryOptions<D, E>
 ) => {
   const query = useInfiniteQuery<D, E>(
-    ["blogsQuery", q],
+    ["articlesQuery", q],
     async ({ pageParam = 0 }) => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs?q=${q}&cursor=${pageParam}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles?q=${q}&cursor=${pageParam}`
       ).then((res) => {
         return res;
       });
@@ -41,7 +41,7 @@ export const useBlogsQuery = <D = UseBlogsQueryData, E = FetchError>(
   return query;
 };
 
-export type BlogRes = {
+export type ArticleRes = {
   id: number;
   title: string;
   short_desc: string;
@@ -52,19 +52,19 @@ export type BlogRes = {
   created_at: string;
 };
 
-type UseFindBlobData = {
-  data: BlogRes;
+type UseFindArticleData = {
+  data: ArticleRes;
 };
 
-export const useFindBlog = <D = UseFindBlobData, E = FetchError>(
+export const useFindArticle = <D = UseFindArticleData, E = FetchError>(
   id: number,
   option?: UseQueryOptions<D, E>
 ) => {
   const query = useQuery<D, E>(
-    ["findBlog", id],
+    ["findArticle", id],
     async () => {
       const fetched = fetchJson<D>(
-        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`
+        `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/${id}`
       ).then((res) => {
         return res;
       });
@@ -84,7 +84,7 @@ export type UploadImgIn = {
 export const uploadImage = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson<{ data: { url: string } }>(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/image`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/image`,
     {
       method: "POST",
       body: data,
@@ -99,7 +99,7 @@ export const uploadImage = async (data: FormData) => {
   return fetched;
 };
 
-export type AddBlogIn = {
+export type AddArticleIn = {
   title: string;
   short_desc: string;
   thumbnail_url: string;
@@ -108,10 +108,10 @@ export type AddBlogIn = {
   content_text: string;
 };
 
-export const addBlog = async (data: AddBlogIn) => {
+export const addArticle = async (data: AddArticleIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -127,7 +127,7 @@ export const addBlog = async (data: AddBlogIn) => {
   return fetched;
 };
 
-export type EditBlogIn = {
+export type EditArticleIn = {
   title: string;
   short_desc: string;
   thumbnail_url: string;
@@ -135,10 +135,10 @@ export type EditBlogIn = {
   content_text: string;
 };
 
-export const editBlog = async (id: number, data: EditBlogIn) => {
+export const editArticle = async (id: number, data: EditArticleIn) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -154,10 +154,10 @@ export const editBlog = async (id: number, data: EditBlogIn) => {
   return fetched;
 };
 
-export const removeBlog = (id: number) => {
+export const removeArticle = (id: number) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson(
-    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/blogs/${id}`,
+    `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/articles/${id}`,
     {
       method: "DELETE",
       headers: {

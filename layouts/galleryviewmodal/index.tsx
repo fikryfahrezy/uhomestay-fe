@@ -1,5 +1,4 @@
 import type { ImageOut } from "@/services/images";
-import Image from "next/image";
 import { RiCloseLine } from "react-icons/ri";
 import { UniversalPortal } from "@/lib/react-portal-universal";
 import IconButton from "@/components/iconbutton";
@@ -12,6 +11,7 @@ type GalleryViewModalProps = {
   isOpen: boolean;
   onCancel: () => void;
   removeBtn?: JSX.Element;
+  withDescription?: boolean;
 };
 
 const GalleryViewModal = ({
@@ -19,6 +19,7 @@ const GalleryViewModal = ({
   removeBtn,
   isOpen = false,
   onCancel = defaultFunc,
+  withDescription = true,
 }: GalleryViewModalProps) => {
   const { description, url } = prevData;
 
@@ -30,19 +31,26 @@ const GalleryViewModal = ({
     <UniversalPortal selector="#modal">
       <div className={styles.modal}>
         <div className={styles.modalBody}>
-          <p>
-            <strong>Deskripsi:</strong>
-          </p>
-          <p className={styles.bannerDescription}>{description || "-"}</p>
+          {withDescription ? (
+            <>
+              <p>
+                <strong>Deskripsi:</strong>
+              </p>
+              <p className={styles.bannerDescription}>{description || "-"}</p>
+            </>
+          ) : (
+            <></>
+          )}
           <div className={styles.bannerContainer}>
-            <Image
-              layout="fill"
-              alt="Photo"
-              objectFit="contain"
-              priority={true}
-              src={url ? url : "/images/image/login-bg.svg"}
-              className={styles.bannerImg}
-            />
+            {isOpen ? (
+              <img
+                alt="Photo"
+                src={url ? url : "/images/image/login-bg.svg"}
+                className={styles.bannerImg}
+              />
+            ) : (
+              <></>
+            )}
           </div>
           <div className={styles.buttonContainer}>
             {removeBtn ? removeBtn : <></>}

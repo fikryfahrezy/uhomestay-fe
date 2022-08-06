@@ -41,10 +41,6 @@
   gap: 1ch;
   cursor: pointer;
   white-space: nowrap;
-}
-
-.optionLink {
-  color: #50ac97;
   text-decoration: none;
 }
 

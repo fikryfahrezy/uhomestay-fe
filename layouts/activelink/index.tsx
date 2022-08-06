@@ -1,9 +1,9 @@
 // import type { DetailedReactHTMLElement, MouseEventHandler } from "react";
 import type { LinkProps } from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, cloneElement } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import React, { Children } from "react";
+import { Children } from "react";
 
 /**
  * Ref:
@@ -62,7 +62,7 @@ const ActiveLink = ({
 
   return (
     <Link {...props}>
-      {React.cloneElement(child, {
+      {cloneElement(child, {
         className: className ? className : null,
       })}
     </Link>

@@ -1,10 +1,10 @@
 import "@testing-library/jest-dom";
 import userEvent from "@testing-library/user-event";
 import { render, screen, waitFor } from "./test-utils";
-import Blog from "@/pages/dashboard/blog";
-import BlogView from "@/pages/dashboard/blog/view/[id]";
-import BlogEdit from "@/pages/dashboard/blog/edit/[id]";
-import BlogCreate from "@/pages/dashboard/blog/create";
+import Article from "@/pages/dashboard/article";
+import ArticleView from "@/pages/dashboard/article/view/[id]";
+import ArticleEdit from "@/pages/dashboard/article/edit/[id]";
+import ArticleCreate from "@/pages/dashboard/article/create";
 
 let user: ReturnType<typeof userEvent.setup>;
 
@@ -12,24 +12,24 @@ beforeAll(() => {
   user = userEvent.setup();
 });
 
-test("Render history title", () => {
-  render(<Blog />);
+test("Render title", () => {
+  render(<Article />);
 
-  const heading = screen.getByText("Blog");
+  const heading = screen.getByText("Artikel");
 
   expect(heading).toBeInTheDocument();
 });
 
-test("Render blog item", async () => {
-  render(<Blog />);
+test("Render article item", async () => {
+  render(<Article />);
 
   const blogItem = await screen.findByTestId("blog-container");
 
   expect(blogItem).toBeInTheDocument();
 });
 
-test("Render show blog edit popup", async () => {
-  render(<Blog />);
+test("Render show article edit popup", async () => {
+  render(<Article />);
 
   const blogItem = await screen.findByTestId("blog-container");
   expect(blogItem).toBeInTheDocument();
@@ -44,8 +44,8 @@ test("Render show blog edit popup", async () => {
   expect(detailBtn).toBeVisible();
 });
 
-test("Render show blog edit popup", async () => {
-  render(<Blog />);
+test("Render show article edit popup", async () => {
+  render(<Article />);
 
   const blogItem = await screen.findByTestId("blog-container");
   expect(blogItem).toBeInTheDocument();
@@ -60,8 +60,8 @@ test("Render show blog edit popup", async () => {
   expect(editBtn).toBeVisible();
 });
 
-test("Remove blog", async () => {
-  render(<Blog />);
+test("Remove article", async () => {
+  render(<Article />);
 
   const blogItem = await screen.findByTestId("blog-container");
   expect(blogItem).toBeInTheDocument();
@@ -85,15 +85,15 @@ test("Remove blog", async () => {
   });
 });
 
-test("View blog", async () => {
-  render(<BlogView />);
+test("View article", async () => {
+  render(<ArticleView />);
 
   const leditorRead = await screen.findByTestId("lexical-editor-blog-read");
   expect(leditorRead).toBeInTheDocument();
 });
 
-test("Remove blog from detail", async () => {
-  render(<BlogView />);
+test("Remove article from detail", async () => {
+  render(<ArticleView />);
 
   const leditorRead = await screen.findByTestId("lexical-editor-blog-read");
   expect(leditorRead).toBeInTheDocument();
@@ -107,8 +107,8 @@ test("Remove blog from detail", async () => {
   await user.click(popModlConf);
 });
 
-test("Edit blog", async () => {
-  render(<BlogEdit />);
+test("Edit article", async () => {
+  render(<ArticleEdit />);
 
   const leditorWrite = await screen.findByTestId("lexical-editor-blog-write");
   expect(leditorWrite).toBeInTheDocument();
@@ -118,8 +118,8 @@ test("Edit blog", async () => {
   await user.click(editBtn);
 });
 
-test("Create blog", async () => {
-  render(<BlogCreate />);
+test("Create article", async () => {
+  render(<ArticleCreate />);
 
   const leditorWrite = await screen.findByTestId("lexical-editor-blog-write");
   expect(leditorWrite).toBeInTheDocument();

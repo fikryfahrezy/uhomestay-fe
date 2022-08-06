@@ -7,11 +7,10 @@ import { useRouter } from "next/router";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMutation } from "react-query";
 import { getBlogMeta } from "@/lib/blogmeta";
-import { editBlog, useFindBlog, uploadImage } from "@/services/blog";
+import { editArticle, useFindArticle, uploadImage } from "@/services/article";
 import Button from "@/components/button";
 import LinkButton from "@/components/linkbutton";
-import Toast from "@/components/toast";
-import useToast from "@/components/toast/useToast";
+import Toast, { useToast } from "@/components/toast";
 import AdminLayout from "@/layouts/adminpage";
 import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
@@ -22,7 +21,7 @@ const Editor = dynamic(() => import("@/layouts/blogeditor/write"));
 const EditBlog = () => {
   const router = useRouter();
   const { id } = router.query;
-  const blog = useFindBlog(Number(id), {
+  const blog = useFindArticle(Number(id), {
     enabled: !!id,
     retry: false,
   });
@@ -33,11 +32,11 @@ const EditBlog = () => {
     unknown,
     unknown,
     {
-      id: Parameters<typeof editBlog>[0];
-      data: Parameters<typeof editBlog>[1];
+      id: Parameters<typeof editArticle>[0];
+      data: Parameters<typeof editArticle>[1];
     }
   >(({ id, data }) => {
-    return editBlog(id, data);
+    return editArticle(id, data);
   });
 
   const onSave = (id: number) => {

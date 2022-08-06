@@ -12,10 +12,6 @@ export type MemberOut = {
   name: string;
   wa_phone: string;
   other_phone: string;
-  homestay_name: string;
-  homestay_address: string;
-  homestay_latitude: string;
-  homestay_longitude: string;
   profile_pic_url: string;
   is_admin: boolean;
   is_approved: boolean;
@@ -86,11 +82,8 @@ export type MemberDetailRes = {
   username: string;
   wa_phone: string;
   other_phone: string;
-  homestay_name: string;
-  homestay_address: string;
-  homestay_latitude: string;
-  homestay_longitude: string;
   profile_pic_url: string;
+  id_card_url: string;
   is_admin: boolean;
   is_approved: boolean;
   period_id: number;
@@ -132,14 +125,11 @@ export type AddMemberIn = {
   password: string;
   wa_phone: string;
   other_phone: string;
-  homestay_name: string;
-  homestay_address: string;
-  homestay_latitude: string;
-  homestay_longitude: string;
   is_admin: boolean;
   postion_id: number;
   period_id: number;
-  file: FileList;
+  profile: FileList;
+  id_card: FileList;
 };
 
 export const addMember = async (data: FormData) => {
@@ -170,23 +160,23 @@ export type RegisterIn = {
   homestay_address: string;
   homestay_latitude: string;
   homestay_longitude: string;
+  homestay_photo: FileList;
+  profile: FileList;
+  id_card: FileList;
 };
 
-export const registerMember = async (data: RegisterIn) => {
+export const registerMember = async (data: FormData) => {
   const token = window.localStorage.getItem("ajwt");
   const fetched = fetchJson<{ data: { token: string } }>(
     `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/register`,
     {
       method: "POST",
-      body: JSON.stringify(data),
+      body: data,
       headers: {
-        "Content-Type": "application/json",
         authorization: `Bearer ${token ? token : ""}`,
       },
     }
-  ).then((res) => {
-    // window.localStorage.setItem("mjwt", res.data.token);
-  });
+  );
 
   return fetched;
 };
@@ -197,14 +187,11 @@ export type EditMemberIn = {
   password: string;
   wa_phone: string;
   other_phone: string;
-  homestay_name: string;
-  homestay_address: string;
-  homestay_latitude: string;
-  homestay_longitude: string;
   is_admin: boolean;
   postion_id: number;
   period_id: number;
-  file: FileList;
+  profile: FileList;
+  id_card: FileList;
 };
 
 export const editMember = async (id: string, data: FormData) => {
@@ -390,17 +377,14 @@ export const useAdmin = ({ redirectTo = "", redirectIfFound = false } = {}) => {
   return memberQuery;
 };
 
-export type UpdateMemberIn = {
+export type UpdateProfileIn = {
   name: string;
   username: string;
   password: string;
   wa_phone: string;
   other_phone: string;
-  homestay_name: string;
-  homestay_address: string;
-  homestay_latitude: string;
-  homestay_longitude: string;
-  file: FileList;
+  profile: FileList;
+  id_card: FileList;
 };
 
 export const updateProfile = async (data: FormData) => {

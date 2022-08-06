@@ -1,6 +1,6 @@
 import type { HTMLAttributes } from "react";
 import type { LinkTreeProps } from "./linktree";
-import React, { useState } from "react";
+import { useState } from "react";
 import { RiMenuLine } from "react-icons/ri";
 import ModalBackdrop from "../modalbackdrop";
 import IconButton from "../iconbutton";

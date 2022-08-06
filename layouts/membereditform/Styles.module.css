@@ -21,6 +21,12 @@
   margin-bottom: 15px;
 }
 
+.link {
+  display: block;
+  margin-right: 7px;
+  text-decoration: underline;
+}
+
 .formBtn {
   width: 100%;
   margin-bottom: 10px;
