@@ -8,11 +8,9 @@
  */
 
 .ContentEditable__root {
-  min-height: 150px;
   border: 0;
   resize: none;
   cursor: text;
-  font-size: 15px;
   display: block;
   position: relative;
   tab-size: 1;

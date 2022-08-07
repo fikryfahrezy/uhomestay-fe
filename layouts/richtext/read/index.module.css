@@ -40,7 +40,10 @@
   margin: 20px auto;
   border-radius: 2px;
   max-width: 1000px;
+  min-height: 150px;
+  font-size: 15px;
   color: #000;
+  background: #fff;
   position: relative;
   line-height: 20px;
   font-weight: 400;

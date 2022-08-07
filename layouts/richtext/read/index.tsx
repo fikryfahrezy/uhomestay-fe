@@ -17,7 +17,11 @@ import PlaygroundNodes from "./nodes/PlaygroundNodes";
 import PlaygroundEditorTheme from "./themes/PlaygroundEditorTheme";
 import styles from "./index.module.css";
 
-function App({ editorStateJSON, placeholder }: EditorProps) {
+function App({
+  editorStateJSON,
+  placeholder,
+  className,
+}: EditorProps & { className?: string }) {
   const initialConfig = {
     namespace: "PlaygroundEditor",
     nodes: [...PlaygroundNodes],
@@ -31,7 +35,11 @@ function App({ editorStateJSON, placeholder }: EditorProps) {
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <SharedHistoryContext>
-        <div className={`editor-shell ${styles["editor-shell"]}`}>
+        <div
+          className={`editor-shell ${styles["editor-shell"]} ${
+            className ? className : ""
+          }`}
+        >
           <Editor editorStateJSON={editorStateJSON} placeholder={placeholder} />
         </div>
       </SharedHistoryContext>

@@ -1,3 +1,11 @@
+/* .pt50 {
+  padding-top: 50px;
+}
+
+.pb50 {
+  padding-bottom: 50px;
+}
+
 .page {
   min-height: 100vh;
 }
@@ -10,15 +18,13 @@
 .nav {
   position: fixed;
   display: flex;
-  padding: 10px 0;
+  padding: 10px;
   top: 0;
   right: 0;
   left: 0;
-  flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
+  background: #fff;
   transition: transform 0.2s linear;
   z-index: 2;
 }
@@ -33,12 +39,15 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  font-size: 18px;
   gap: 2.5ch;
   list-style: none;
 }
 
-.nav ul {
-  font-size: 18px;
+@media screen and (max-width: 768px) {
+  .ul {
+    display: none;
+  }
 }
 
 .navLink {
@@ -46,9 +55,69 @@
   text-decoration: none;
 }
 
+.actionBtn {
+  display: grid;
+  width: fit-content;
+  margin-left: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 768px) {
+  .actionBtn {
+    display: none;
+  }
+}
+
+.loginBtn,
+.registerBtn {
+  width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 5px;
+  border: solid 1px #2a6877;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loginBtn:hover,
+.registerBtn:hover {
+  filter: brightness(95%);
+}
+
+.loginBtn {
+  color: #2a6877;
+  background-color: #fff;
+}
+.registerBtn {
+  color: #fff;
+  background-color: #2a6877;
+}
+
+.menuFold {
+  display: flex;
+  font-size: 35px;
+  background-color: transparent;
+  border-color: transparent;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .menuFold {
+    display: none;
+  }
+}
+
+
 .header {
   position: relative;
   height: 100vh;
+  background-size: cover;
+  background-position: center center;
+  background-image: url("/images/image/jembatan-cukang-monteng.jpeg");
 }
 
 .titleContainer {
@@ -58,8 +127,6 @@
   top: 35%;
   right: 10%;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(20px);
   z-index: 1;
 }
 
@@ -79,12 +146,11 @@
     left: 0;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(4px);
   }
 }
 
 .title {
-  color: #444444;
+  color: #fff;
   font-size: 4.5rem;
 }
 
@@ -94,28 +160,20 @@
   }
 }
 
-.contentContainer {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 25px 50px;
+.thumbnailCitation {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 10px;
+  font-size: 16px;
+  background-color: rgba(105, 105, 105, 0.5);
+  color: #fff;
 }
 
-@media screen and (max-width: 768px) {
-  .contentContainer {
-    padding: 25px;
-  }
-}
 
-.section {
-  display: flex;
-  margin-bottom: 25px;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-}
-
-.welcomeSection {
-  margin-bottom: 100px;
+.orgPeriodSection {
+  background-color: #2a6877;
 }
 
 .subTitle {
@@ -135,17 +193,9 @@
 
 .periodTitle {
   position: relative;
-  display: flex;
   margin-bottom: 25px;
   margin-top: 25px;
-  flex-direction: row;
   gap: 1ch;
-}
-
-@media screen and (max-width: 768px) {
-  .periodTitle {
-    flex-direction: column;
-  }
 }
 
 .periodTitle::after {
@@ -171,13 +221,15 @@
 .periodSubTitle {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 22px;
+  color: #fff;
+  font-size: 35px;
   text-align: center;
 }
 
-.heading3 {
-  text-align: center;
+.positionName {
+  color: #fff;
   margin-bottom: 15px;
+  text-align: center;
 }
 
 .avatarsContainer {
@@ -204,6 +256,7 @@
 }
 
 .avatarName {
+  color: #fff;
   text-align: center;
 }
 
@@ -241,6 +294,581 @@
   align-items: flex-start;
 }
 
-.documentLink {
+
+*/
+
+.main {
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  perspective: 2px;
+}
+
+.main,
+.main * {
+  box-sizing: border-box;
+}
+
+.nav {
+  position: fixed;
+  display: flex;
+  padding: 10px;
+  top: 0;
+  right: 0;
+  left: 0;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  transition: transform 0.2s linear;
+  z-index: 2;
+}
+
+.hidingNav {
+  transform: translateY(-100%);
+}
+
+.ul {
+  display: flex;
+  padding: 0;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  font-size: 18px;
+  gap: 2.5ch;
+  list-style: none;
+}
+
+@media screen and (max-width: 768px) {
+  .ul {
+    display: none;
+  }
+}
+
+.navLink {
+  color: #111;
+  text-decoration: none;
+}
+
+.actionBtn {
+  display: grid;
+  width: fit-content;
+  margin-left: auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1ch;
+}
+
+@media screen and (max-width: 768px) {
+  .actionBtn {
+    display: none;
+  }
+}
+
+.loginBtn,
+.registerBtn {
   width: 100%;
+  padding-right: 10px;
+  padding-left: 10px;
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 5px;
+  border: solid 1px #2a6877;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.loginBtn:hover,
+.registerBtn:hover {
+  filter: brightness(95%);
+}
+
+.loginBtn {
+  color: #2a6877;
+  background-color: #fff;
+}
+.registerBtn {
+  color: #fff;
+  background-color: #2a6877;
+}
+
+.menuFold {
+  display: flex;
+  font-size: 35px;
+  background-color: transparent;
+  border-color: transparent;
+  justify-content: center;
+  align-items: center;
+}
+
+@media screen and (min-width: 768px) {
+  .menuFold {
+    display: none;
+  }
+}
+
+.section {
+  transform-style: preserve-3d;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.noparallax {
+  z-index: 999;
+}
+
+.parallax::after {
+  content: " ";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  transform: translateZ(-1px) scale(1.5);
+  background-size: 100%;
+  z-index: -1;
+}
+
+.header {
+  position: relative;
+  height: 100vh;
+}
+
+.header::after {
+  background-size: cover;
+  background-position: center center;
+  background-image: url("/images/image/jembatan-cukang-monteng.jpeg");
+}
+
+.titleContainer {
+  position: absolute;
+  max-width: 800px;
+  padding: 15px;
+  top: 35%;
+  right: 10%;
+  border-radius: 10px;
+  z-index: 1;
+}
+
+@media screen and (max-width: 1366px) {
+  .titleContainer {
+    max-width: 500px;
+  }
+}
+
+@media screen and (max-width: 768px) and (max-height: 1023px) {
+  .titleContainer {
+    display: flex;
+    width: 100%;
+    max-width: unset;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.title {
+  color: #fff;
+  font-size: 4.5rem;
+}
+
+@media screen and (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+}
+
+.thumbnailCitation {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 10px;
+  font-size: 16px;
+  background-color: rgba(105, 105, 105, 0.5);
+  color: #fff;
+}
+
+.sectionBody {
+  display: flex;
+  max-width: 1280px;
+  margin: 0 auto;
+  margin-bottom: 25px;
+  padding: 25px 50px;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+  .sectionBody {
+    padding: 25px;
+  }
+}
+
+.periodTitle {
+  position: relative;
+  margin-bottom: 25px;
+  margin-top: 25px;
+  gap: 1ch;
+}
+
+.periodTitle::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 35%;
+  right: 35%;
+  height: 5px;
+  background-color: #2a6877;
+}
+
+.welcomeSection {
+  background-color: #fff;
+}
+
+.welcomeSectionTitle {
+  margin-bottom: 50px;
+}
+
+.welcomeParagraph {
+  margin-top: 0;
+  font-size: 20px;
+  text-align: center;
+}
+
+.orgPeriodSection {
+  background-color: #2a6877;
+}
+
+.periodSubTitle {
+  margin-top: 0;
+  margin-bottom: 0;
+  color: #fff;
+  font-size: 35px;
+  text-align: center;
+}
+
+.pt50 {
+  padding-top: 50px;
+}
+
+.pb50 {
+  padding-bottom: 50px;
+}
+
+.positionName {
+  color: #fff;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.avatarsContainer {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 3ch;
+}
+
+.avatarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 2ch;
+}
+
+.levelOne {
+  width: 200px;
+  margin-bottom: 25px;
+}
+
+.levelTwo {
+  width: 100px;
+  margin-bottom: 25px;
+}
+
+.avatarImgContainer {
+  position: relative;
+  width: 100%;
+  border-radius: 50%;
+  overflow: hidden;
+  aspect-ratio: 1;
+}
+
+.avatarName {
+  color: #fff;
+  text-align: center;
+}
+
+.goalSection {
+  position: relative;
+  min-height: 100vh;
+}
+
+.goalSection::after {
+  background-size: cover;
+  background-position: center center;
+  background-image: url("/images/image/homestay-grid.jpg");
+}
+
+@media screen and (max-width: 500px) {
+  .goalSection::after {
+    background-image: url("/images/image/coffee-garden-homestay.jpg");
+  }
+}
+
+.goalBody {
+  align-items: flex-start;
+  background: linear-gradient(105.24deg, #2a6877 0%, #50ac97 100%);
+  border-radius: 15px;
+  gap: 3ch;
+}
+
+@media screen and (min-width: 500px) {
+  .goalBody {
+    flex-direction: row;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .goalBody {
+    margin-top: 100px;
+  }
+}
+
+.goalImagContainer {
+  position: relative;
+  width: 100%;
+  align-self: stretch;
+}
+
+@media screen and (max-width: 500px) {
+  .goalImagContainer {
+    height: 250px;
+  }
+}
+
+.missionsContainer {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  flex-direction: column;
+}
+
+@media screen and (max-width: 768px) {
+  .missionsContainer {
+    flex-direction: column;
+  }
+}
+
+.missionContainer {
+  margin: 0 25px;
+}
+
+@media screen and (max-width: 768px) {
+  .missionContainer {
+    margin: 0;
+  }
+}
+
+.goalTitle {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #fff;
+  font-size: 36px;
+}
+
+.goalContent {
+  color: #fff !important;
+  font-size: 20px !important;
+  min-height: max-content !important;
+  background-color: transparent !important;
+}
+
+.richTextPlaceholder {
+  font-size: 15px;
+  color: #999;
+  overflow: hidden;
+  position: absolute;
+  text-overflow: ellipsis;
+  top: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  user-select: none;
+  white-space: nowrap;
+  display: inline-block;
+  pointer-events: none;
+}
+
+.historySection {
+  background-color: #fff;
+}
+
+.historyBody {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: flex-start;
+  gap: 2.5ch;
+}
+
+@media screen and (max-width: 500px) {
+  .historyBody {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.historyTitle {
+  font-size: 60px;
+  color: #2a6877;
+  margin-bottom: 10px;
+}
+
+.historyContent {
+  font-size: 18px !important;
+}
+
+.contentSection {
+  min-height: 150vh;
+  padding-bottom: 300px;
+  background: rgba(255, 255, 255, 0.75);
+  flex-direction: column;
+}
+
+.contentSection::after {
+  background-size: cover;
+  background-position: center center;
+  background-image: url("/images/image/homestay-bu-ida.jpg");
+}
+
+.contentBody {
+  display: flex;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 15ch;
+  flex-direction: row;
+}
+
+@media screen and (max-width: 768px) {
+  .contentBody {
+    gap: 2ch;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .contentBody {
+    flex-direction: column;
+  }
+}
+
+.contentWrapper {
+  width: 100%;
+}
+
+.contentHeader {
+  display: flex;
+  margin-bottom: 25px;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+@media screen and (max-width: 500px) {
+  .contentHeader {
+    flex-direction: column;
+  }
+}
+
+.contentTitle {
+  margin-bottom: 10px;
+  font-size: 60px;
+  color: #2a6877;
+}
+
+.contentContainer {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1ch;
+}
+
+@media screen and (max-width: 768px) {
+  .contentContainer {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.documentBody {
+  width: 100%;
+  background-color: #2a6877;
+  justify-content: normal;
+  align-items: normal;
+}
+
+.documentTitle {
+  margin-bottom: 10px;
+  font-size: 60px;
+  color: #fff;
+}
+
+.documentLink *,
+.documentAnchor * {
+  color: #fff;
+}
+
+.documentLink {
+  color: #fff;
+  width: 100%;
+}
+
+.mapSection {
+  min-height: 80vh;
+}
+
+.mapSection::after {
+  background-size: cover;
+  background-position: top center;
+  background-image: url("/images/image/umaran-homestay.jpg");
+}
+
+.mapBody {
+  width: 100%;
+  height: 75vh;
+}
+
+.drawer {
+  max-width: 100%;
+}
+
+.drawerUl {
+  display: flex;
+  padding: 0;
+  list-style: none;
+  flex-direction: column;
+  gap: 2.5ch;
+}
+
+.drawerNavLink {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.drawerContainer {
+  display: flex;
+  height: 100%;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.drawerActionBtn {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1ch;
 }
