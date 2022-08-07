@@ -26,25 +26,15 @@
 }
 
 .contentContainer {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-direction: column;
+  padding-left: 10px;
+  padding-right: 10px;
   gap: 1ch;
 }
 
-@media screen and (max-width: 768px) {
-  .contentContainer {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media screen and (max-width: 500px) {
-  .contentContainer {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 .cardWrapper {
-  width: max-content;
+  width: 100%;
   cursor: pointer;
   justify-self: center;
   align-self: center;

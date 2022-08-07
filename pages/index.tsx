@@ -47,12 +47,18 @@ const LandingPage = () => {
       children: "Dokumen",
     },
   ]);
+  const mainRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    prevScrollPos.current = window.scrollY;
+    if (mainRef.current === null) {
+      return;
+    }
+
+    const mainElement = mainRef.current;
+    prevScrollPos.current = mainElement.scrollTop;
 
     const onScroll = () => {
-      const currScrollPos = window.scrollY;
+      const currScrollPos = mainElement.scrollTop;
       if (prevScrollPos.current > currScrollPos) {
         setNavHiding(false);
       } else {
@@ -62,15 +68,15 @@ const LandingPage = () => {
       prevScrollPos.current = currScrollPos;
     };
 
-    window.addEventListener("scroll", onScroll);
+    mainElement.addEventListener("scroll", onScroll);
     return () => {
-      window.removeEventListener("scroll", onScroll);
+      mainElement.removeEventListener("scroll", onScroll);
     };
   }, []);
 
   return (
     <>
-      <main className={styles.main}>
+      <main ref={mainRef} className={styles.main}>
         <nav
           className={`${styles.nav} ${
             isNavHiding === true ? styles.hidingNav : ""
@@ -461,17 +467,17 @@ const LandingPage = () => {
           <div>
             <div className={styles.drawerActionBtn}>
               <Link href="/login/admin">
-                <a>
+                <a className={styles.drawerActionLink}>
                   <button className={styles.loginBtn}>Admin</button>
                 </a>
               </Link>
               <Link href="/login/member">
-                <a>
+                <a className={styles.drawerActionLink}>
                   <button className={styles.loginBtn}>Anggota</button>
                 </a>
               </Link>
               <Link href="/register">
-                <a>
+                <a className={styles.drawerActionLink}>
                   <button className={styles.registerBtn}>Register</button>
                 </a>
               </Link>

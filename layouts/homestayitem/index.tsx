@@ -1,5 +1,5 @@
 import type { MemberHomestaysRes } from "@/services/member-homestay";
-import BlogListItem from "@/layouts/bloglistitem";
+import Image from "next/image";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};
@@ -13,25 +13,29 @@ const GalleryItem = ({
   homestayData,
   onClick = defaultFunc,
 }: HomestayItemProps) => {
-  const { id, name, thumbnail_url: url } = homestayData;
+  const { name, address, thumbnail_url: url } = homestayData;
 
   return (
     <div
-      className={styles.cardContent}
+      className={styles.cardContainer}
       onClick={() => onClick(homestayData)}
       data-testid="homestay-card-container"
     >
-      <BlogListItem
-        blog={{
-          id,
-          title: name,
-          thumbnail_url: url,
-          content: "",
-          created_at: "",
-          short_desc: "",
-          slug: "",
-        }}
-      />
+      <div className={styles.cardContent}>
+        <div className={styles.bannerContainer}>
+          <Image
+            src={url ? url : "/images/image/login-bg.svg"}
+            priority={true}
+            layout="fill"
+            objectFit="cover"
+            alt="Homestay Thumbnail"
+          />
+        </div>
+        <div className={styles.cardBody}>
+          <h3 className={styles.bannerTitle}>{name}</h3>
+          <p className={styles.bannerDescription}>{address}</p>
+        </div>
+      </div>
     </div>
   );
 };

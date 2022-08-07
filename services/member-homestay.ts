@@ -126,6 +126,7 @@ export const editHomestay = async (
 export type MemberHomestaysRes = {
   id: number;
   name: string;
+  address: string;
   thumbnail_url: string;
 };
 

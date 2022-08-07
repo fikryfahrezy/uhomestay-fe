@@ -25,6 +25,8 @@
   display: block;
   margin-right: 7px;
   text-decoration: underline;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .formBtn {
