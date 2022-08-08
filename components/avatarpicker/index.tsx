@@ -12,6 +12,7 @@ type AvatarPickerProps = JSX.IntrinsicElements["input"] & {
   defaultSrc: string;
   text: string;
   onErr?: (message: string) => void;
+  onRemove?: () => void;
 };
 
 const AvatarPicker = (
@@ -24,6 +25,7 @@ const AvatarPicker = (
     src = "",
     text = "",
     onErr = defaultFunc,
+    onRemove = defaultFunc,
     ...restProps
   }: AvatarPickerProps,
   ref: ForwardedRef<HTMLInputElement>
@@ -120,7 +122,10 @@ const AvatarPicker = (
           type="button"
           leftIcon={<RiCloseLine />}
           className={`${styles.editBtn} ${styles.active}`}
-          onClick={() => setImgUrl("")}
+          onClick={() => {
+            setImgUrl("");
+            onRemove();
+          }}
         >
           <span className={styles.btnText}>{text}</span>
         </Button>
@@ -131,7 +136,12 @@ const AvatarPicker = (
           className={`${styles.editBtn} ${
             disabled ? styles.editBtnDisabled : ""
           }`}
-          onClick={() => inputFileRef.current?.click()}
+          onClick={() => {
+            if (inputFileRef.current !== null) {
+              inputFileRef.current.click();
+              inputFileRef.current.value = "";
+            }
+          }}
         >
           <span className={styles.btnText}>{text}</span>
         </Button>

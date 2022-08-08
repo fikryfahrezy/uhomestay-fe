@@ -39,6 +39,7 @@ const UpdateProfile = () => {
     handleSubmit,
     reset,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -165,6 +166,7 @@ const UpdateProfile = () => {
               text="Ubah"
               defaultSrc={"/images/image/person.png"}
               onErr={() => onPickErr()}
+              onRemove={() => resetField("profile")}
               className={styles.avatarPicker}
               src={memberDetailQuery.data.data["profile_pic_url"]}
             />

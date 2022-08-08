@@ -59,6 +59,7 @@ const MemberAddForm = ({
     register,
     handleSubmit,
     reset,
+    resetField,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -145,6 +146,7 @@ const MemberAddForm = ({
             defaultSrc={"/images/image/person.png"}
             className={styles.avatarPicker}
             onErr={() => onPickErr()}
+            onRemove={() => resetField("profile")}
           />
           <div className={styles.inputGroup}>
             <Input

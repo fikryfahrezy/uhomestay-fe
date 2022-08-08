@@ -43,6 +43,7 @@ const Register = () => {
   const {
     register,
     handleSubmit,
+    resetField,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -152,6 +153,7 @@ const Register = () => {
                     defaultSrc={"/images/image/person.png"}
                     className={styles.avatarPicker}
                     onErr={() => onPickErr()}
+                    onRemove={() => resetField("profile")}
                   />
                 </div>
               </div>

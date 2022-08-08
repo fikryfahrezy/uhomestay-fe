@@ -73,6 +73,7 @@ const MemberEditForm = ({
     handleSubmit,
     reset,
     setValue,
+    resetField,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -313,6 +314,7 @@ const MemberEditForm = ({
               className={styles.avatarPicker}
               disabled={!isEditable}
               onErr={() => onPickErr()}
+              onRemove={() => resetField("profile")}
               src={prevData["profile_pic_url"]}
             />
             <div className={styles.inputGroup}>
