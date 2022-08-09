@@ -33,7 +33,7 @@ const HomestayViewModal = ({
 }: HomestayViewProps) => {
   const [lng, setLng] = useState(107.79054317790919);
   const [lat, setLat] = useState(-7.153238933398519);
-  const [imageIds] = useState<SelectProp[]>([]);
+  const [imageIds, setImageIds] = useState<SelectProp[]>([]);
 
   const memberHomestay = useFindHomestay(prevData.id, prevData.uid, {
     enabled: !!prevData.uid && isOpen,
@@ -57,6 +57,7 @@ const HomestayViewModal = ({
       const { address, name, latitude, longitude, images } =
         memberHomestay.data.data;
 
+      setImageIds(images.map(({ id, url }) => ({ key: id, value: url })));
       setLng(Number(longitude));
       setLat(Number(latitude));
       reset({ name, address }, { keepDefaultValues: true });
@@ -80,14 +81,12 @@ const HomestayViewModal = ({
                   autoComplete="off"
                   label="Nama Homestay:"
                   id="name"
-                  required={true}
                   readOnly={true}
                 />
               </div>
               <div className={styles.inputGroup}>
                 <TextArea
                   {...register("address")}
-                  required={true}
                   label="Alamat:"
                   id="address"
                   className={styles.borderBox}
@@ -100,7 +99,6 @@ const HomestayViewModal = ({
                   required={true}
                   label="Foto-foto homestay:"
                   id="image_ids"
-                  disabled={true}
                   selects={imageIds}
                 />
               </div>

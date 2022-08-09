@@ -53,7 +53,7 @@ const EditBlog = () => {
       const lastId = toast({
         status: "info",
         duration: 999999,
-        render: () => <ToastComponent title="Loading mengubah blog" />,
+        render: () => <ToastComponent title="Loading mengubah artikel" />,
       });
 
       editBlogMutation
@@ -66,7 +66,7 @@ const EditBlog = () => {
             status: "error",
             render: () => (
               <ToastComponent
-                title="Error mengubah blog"
+                title="Error mengubah artikel"
                 message={e.message}
                 data-testid="toast-modal"
               />

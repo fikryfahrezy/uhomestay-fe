@@ -58,7 +58,7 @@ const CreateBlog = () => {
     const lastId = toast({
       status: "info",
       duration: 999999,
-      render: () => <ToastComponent title="Loading membuat blog" />,
+      render: () => <ToastComponent title="Loading membuat artikel" />,
     });
 
     addBlogMutation
@@ -71,7 +71,7 @@ const CreateBlog = () => {
           status: "error",
           render: () => (
             <ToastComponent
-              title="Error membuat blog"
+              title="Error membuat artikel"
               message={e.message}
               data-testid="toast-modal"
             />

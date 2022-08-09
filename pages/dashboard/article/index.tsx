@@ -55,7 +55,7 @@ const Blog = () => {
     const lastId = toast({
       status: "info",
       duration: 999999,
-      render: () => <ToastComponent title="Loading menghapus blog" />,
+      render: () => <ToastComponent title="Loading menghapus artikel" />,
     });
 
     removeBlogMutation
@@ -68,7 +68,7 @@ const Blog = () => {
           render: () => (
             <ToastComponent
               title="
-				Sukses menghapus blog"
+				Sukses menghapus artikel"
             />
           ),
         });
@@ -79,7 +79,7 @@ const Blog = () => {
           status: "error",
           render: () => (
             <ToastComponent
-              title="Error menghapus blog"
+              title="Error menghapus artikel"
               message={e.message}
               data-testid="toast-modal"
             />
