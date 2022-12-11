@@ -70,7 +70,7 @@ const Blog = () => {
                         <BlogListItem blog={blog} />
                         <Link
                           href={{
-                            pathname: "./blog/view/[id]",
+                            pathname: "./article/view/[id]",
                             query: { id: blog.id },
                           }}
                           passHref
