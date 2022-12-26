@@ -96,7 +96,7 @@ const HomestayViewModal = ({
               <div className={styles.inputGroup}>
                 <DynamicImageSelect
                   {...register("image_ids")}
-                  required={true}
+                  disabled={true}
                   label="Foto-foto homestay:"
                   id="image_ids"
                   selects={imageIds}
