@@ -4,9 +4,7 @@ import { useMutation } from "react-query";
 import { RiCloseLine } from "react-icons/ri";
 import { uploadHomestayImage } from "@/services/member-homestay";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import ImagePicker from "@/components/imagepicker";
+import { Button, IconButton, ImagePicker } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 export type HomestayImgModalType = "upload" | "removeimage";

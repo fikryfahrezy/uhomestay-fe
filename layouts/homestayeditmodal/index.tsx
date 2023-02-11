@@ -3,7 +3,7 @@ import type { HomestayAddModalType } from "@/layouts/homestayviewmodal";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { removeHomestay } from "@/services/member-homestay";
-import Button from "@/components/button";
+import { Button } from "cmnjg-sb";
 import HomestayViewModal from "@/layouts/homestayviewmodal";
 import Modal from "@/layouts/modal";
 

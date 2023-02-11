@@ -1,9 +1,7 @@
 import { MemberDuesOut } from "@/services/member-dues";
 import { RiTimeLine } from "react-icons/ri";
 import { DUES_STATUS } from "@/services/member-dues";
-import Input from "@/components/input";
-import InputFile from "@/components/inputfile";
-import Checkbox from "@/components/checkbox";
+import { InputFile, Checkbox, Input } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 type MemberDuesDetailProps = {

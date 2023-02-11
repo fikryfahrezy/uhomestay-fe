@@ -3,9 +3,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { payDues } from "@/services/member-dues";
-import Button from "@/components/button";
-import Input from "@/components/input";
-import InputFile from "@/components/inputfile";
+import { Button, Input, InputFile } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 export type MemberDuesPayType = "pay";

@@ -1,6 +1,6 @@
 import type { ArticleOut } from "@/services/article";
 import Image from "next/image";
-import Card from "@/components/card";
+import { Card } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 type BlogListItem = {

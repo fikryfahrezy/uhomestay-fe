@@ -1,9 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "react-query";
 import { usePositionLevelsQuery, addPosition } from "@/services/position";
-import Button from "@/components/button";
-import Input from "@/components/input";
-import Select from "@/components/select";
+import { Button, Input, Select } from "cmnjg-sb";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 

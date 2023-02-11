@@ -11,9 +11,7 @@ import {
   RiHomeSmileLine,
 } from "react-icons/ri";
 import { useMember, memberLogout } from "@/services/member";
-import Avatar from "@/components/avatar";
-import PopUp from "@/components/popup";
-import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
+import { Avatar, PopUp, LinkBox, LinkOverlay } from "cmnjg-sb";
 import ActiveLink from "@/layouts/activelink";
 import styles from "./Styles.module.css";
 

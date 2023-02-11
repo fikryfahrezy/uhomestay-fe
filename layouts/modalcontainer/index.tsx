@@ -1,6 +1,6 @@
 import type { DetailedHTMLProps, HTMLAttributes } from "react";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import ModalBackdrop from "@/components/modalbackdrop";
+import { ModalBackdrop } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};

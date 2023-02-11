@@ -11,10 +11,7 @@ import {
   DUES_STATUS,
 } from "@/services/member-dues";
 import { useMemberDetailQuery } from "@/services/member";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Toast, { useToast } from "@/components/toast";
-import LinkButton from "@/components/linkbutton";
+import { IconButton, Drawer, LinkButton, Toast, useToast } from "cmnjg-sb";
 import MemberDuesPayForm from "@/layouts/memberduespayform";
 import MemberDuesDetail from "@/layouts/memberduesdetail";
 import MemberLayout from "@/layouts/memberpage";

@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { editDues, paidDues, DUES_STATUS } from "@/services/member-dues";
-import Button from "@/components/button";
-import Input from "@/components/input";
-import InputFile from "@/components/inputfile";
+import { InputFile, Button, Input } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 export type MemberDuesEditFormType = "edit" | "approve";

@@ -11,14 +11,7 @@ import {
 } from "@/services/member";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
-import Button from "@/components/button";
-import Input from "@/components/input";
-import Checkbox from "@/components/checkbox";
-import Select from "@/components/select";
-import DynamicSelect from "@/components/dynamicselect";
-import AvatarPicker from "@/components/avatarpicker";
-import ImagePicker from "@/components/imagepicker";
-import Label from "@/components/label";
+import { Button, Input, Checkbox, Select, DynamicSelect, AvatarPicker, ImagePicker, Label } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";

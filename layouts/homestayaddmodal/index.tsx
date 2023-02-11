@@ -7,12 +7,7 @@ import { useMutation } from "react-query";
 import { RiCloseLine } from "react-icons/ri";
 import { UniversalPortal } from "@/lib/react-portal-universal";
 import { addHomestay, removeHomestayImage } from "@/services/member-homestay";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Input from "@/components/input";
-import TextArea from "@/components/textarea";
-import Label from "@/components/label";
-import DynamicImageSelect from "@/components/dynamicsimageselect";
+import { Button, IconButton, Input, TextArea, Label, DynamicImageSelect } from "cmnjg-sb";
 import HomestayImageUpload from "@/layouts/homestayimgmodal";
 import styles from "./Styles.module.css";
 

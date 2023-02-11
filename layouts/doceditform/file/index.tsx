@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { editFileDocument, removeDocument } from "@/services/document";
-import Button from "@/components/button";
-import InputFile from "@/components/inputfile";
-import Checkbox from "@/components/checkbox";
+import { Checkbox, Button, InputFile } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import styles from "./Styles.module.css";
 

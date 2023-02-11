@@ -1,16 +1,12 @@
 import type { MemberHomestaysRes } from "@/services/member-homestay";
-import type { SelectProp } from "@/components/dynamicsimageselect";
+import type { SelectProp } from "cmnjg-sb";
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import dynamic from "next/dynamic";
 import { useFindHomestay } from "@/services/member-homestay";
 import { RiCloseLine } from "react-icons/ri";
 import { UniversalPortal } from "@/lib/react-portal-universal";
-import IconButton from "@/components/iconbutton";
-import DynamicImageSelect from "@/components/dynamicsimageselect";
-import Input from "@/components/input";
-import TextArea from "@/components/textarea";
-import Label from "@/components/label";
+import { IconButton, DynamicImageSelect, Input, TextArea, Label } from "cmnjg-sb";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 

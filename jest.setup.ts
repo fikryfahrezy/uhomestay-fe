@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 /**
  * Ref:
  * https://github.com/mswjs/examples/blob/master/examples/with-jest/jest.setup.js

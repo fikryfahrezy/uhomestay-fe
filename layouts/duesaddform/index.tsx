@@ -2,8 +2,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { yyyyMm } from "@/lib/fmt";
 import { addDues } from "@/services/dues";
-import Input from "@/components/input";
-import Button from "@/components/button";
+import { Input, Button } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 export type DuesAddFormType = "add";

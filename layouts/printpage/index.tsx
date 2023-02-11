@@ -1,7 +1,6 @@
 import Router from "next/router";
 import { RiPrinterLine, RiArrowLeftSLine } from "react-icons/ri";
-import IconButton from "@/components/iconbutton";
-import Button from "@/components/button";
+import { IconButton, Button } from "cmnjg-sb";
 import { useAdmin } from "@/services/member";
 import styles from "./Styles.module.css";
 

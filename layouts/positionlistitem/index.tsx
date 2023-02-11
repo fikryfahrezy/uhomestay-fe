@@ -1,5 +1,5 @@
 import type { PositionOut } from "@/services/position";
-import Chip from "@/components/chip";
+import { Chip } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 type PositionListProps = {

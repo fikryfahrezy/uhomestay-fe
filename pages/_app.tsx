@@ -60,7 +60,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayout) => {
         <meta charSet="utf-8" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Hydrate state={pageProps.dehydratedState}>
+        <Hydrate state={(pageProps as any).dehydratedState}>
           {getLayout(<Component {...pageProps} />)}
           <div id="modal" />
           <div id="lexical-portal" />

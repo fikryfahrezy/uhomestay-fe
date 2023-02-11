@@ -1,6 +1,6 @@
 import type { StructurePositonOut } from "@/services/period";
 import { useRef } from "react";
-import DynamicSelect from "@/components/dynamicselect";
+import { DynamicSelect } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 type OrgStructAddFormProps = {

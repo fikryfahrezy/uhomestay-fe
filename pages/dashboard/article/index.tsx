@@ -13,10 +13,7 @@ import {
 import { debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useArticlesQuery, removeArticle } from "@/services/article";
-import PopUp from "@/components/popup";
-import LinkButton from "@/components/linkbutton";
-import IconButton from "@/components/iconbutton";
-import Toast, { useToast } from "@/components/toast";
+import { PopUp, LinkButton, IconButton, Toast, useToast } from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ToastComponent from "@/layouts/toastcomponent";
 import AdminLayout from "@/layouts/adminpage";

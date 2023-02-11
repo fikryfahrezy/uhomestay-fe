@@ -4,7 +4,7 @@ import { RiSearch2Line } from "react-icons/ri";
 import { throttle, debounce } from "@/lib/perf";
 import Observe from "@/lib/use-observer";
 import { useArticlesQuery } from "@/services/article";
-import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
+import { LinkBox, LinkOverlay } from "cmnjg-sb";
 import PageNav from "@/layouts/pagenav";
 import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";

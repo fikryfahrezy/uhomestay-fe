@@ -1,3 +1,4 @@
+// @ts-nocheck
 import "@testing-library/jest-dom";
 import { render, screen } from "./test-utils";
 import LandingPage from "@/pages/index";

@@ -22,12 +22,7 @@ import {
   useDocumentsQuery,
   useDocumentChildsQuery,
 } from "@/services/document";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Input from "@/components/input";
-import Popup from "@/components/popup";
-import Toast, { useToast } from "@/components/toast";
+import { Button, Toast, useToast, IconButton, Drawer, Input, PopUp } from "cmnjg-sb";
 import AdminLayout from "@/layouts/adminpage";
 import DocFileAddForm from "@/layouts/docaddform/file";
 import DocFileEditForm from "@/layouts/doceditform/file";
@@ -47,7 +42,7 @@ type FormType =
 
 const Organization = () => {
   const [open, setOpen] = useState(false);
-  const [docType, setDocType] = useState(DOC_TYPE.FILE);
+  const [docType, setDocType] = useState<string>(DOC_TYPE.FILE);
   const [tempData, setTempData] = useState<DocumentOut | null>(null);
   const [q, setQ] = useState("");
 
@@ -213,7 +208,7 @@ const Organization = () => {
     <>
       <h1 className={styles.pageTitle}>Dokumen</h1>
       <div className={styles.headerContainer}>
-        <Popup
+        <PopUp
           popUpContent={
             <ul className={styles.addBtnOptions}>
               <li
@@ -242,7 +237,7 @@ const Organization = () => {
           >
             Tambah
           </Button>
-        </Popup>
+        </PopUp>
         <div className={styles.form}>
           <Input
             ref={inputRef}

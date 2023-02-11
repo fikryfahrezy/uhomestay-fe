@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import { LinkBox, LinkOverlay } from "@/components/linkoverlay";
+import { LinkBox, LinkOverlay } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
 const PageNav = ({ className }: JSX.IntrinsicElements["div"]) => {

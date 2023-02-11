@@ -1,9 +1,7 @@
 import type { ForwardedRef, HTMLAttributes, FormEvent } from "react";
 import { useState, useRef, useEffect, forwardRef, memo } from "react";
 import { RiAddLine } from "react-icons/ri";
-import IconButton from "@/components/iconbutton";
-import Label from "@/components/label";
-import Button from "@/components/button";
+import { Button, IconButton, Label } from "cmnjg-sb";
 import GalleryListItem from "@/layouts/gallerylistitem";
 import styles from "./Styles.module.css";
 

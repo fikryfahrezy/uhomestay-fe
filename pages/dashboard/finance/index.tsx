@@ -19,11 +19,7 @@ import {
   useCashflowStatsQuery,
 } from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
-import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
-import Drawer from "@/components/drawer";
-import Toast, { useToast } from "@/components/toast";
-import LinkButton from "@/components/linkbutton";
+import { Button, LinkButton, Toast, useToast, IconButton, Drawer } from "cmnjg-sb";
 import AdminLayout from "@/layouts/adminpage";
 import CashflowAddForm from "@/layouts/cashflowaddform";
 import CashflowEditForm from "@/layouts/cashfloweditform";

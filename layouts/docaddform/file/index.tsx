@@ -1,9 +1,7 @@
 import { useRouter } from "next/router";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
-import Button from "@/components/button";
-import InputFile from "@/components/inputfile";
-import Checkbox from "@/components/checkbox";
+import { Checkbox, Button, InputFile } from "cmnjg-sb";
 import { addFileDocument } from "@/services/document";
 import styles from "./Styles.module.css";
 
