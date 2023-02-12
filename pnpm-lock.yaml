@@ -27,7 +27,7 @@ specifiers:
   '@types/react': ^18.0.12
   '@types/react-dom': ^18.0.5
   cheerio: ^1.0.0-rc.10
-  cmnjg-sb: ^0.1.24
+  cmnjg-sb: ^0.1.25
   dotenv: ^16.0.1
   eslint: ^8.17.0
   eslint-config-next: ^12.1.6
@@ -76,7 +76,7 @@ dependencies:
   '@popperjs/core': 2.11.6
   '@sindresorhus/slugify': 2.2.0
   cheerio: 1.0.0-rc.12
-  cmnjg-sb: 0.1.24_y6frtolhhwhkuiig4muqpqgvhe
+  cmnjg-sb: 0.1.25_y6frtolhhwhkuiig4muqpqgvhe
   iron-session: 6.3.1_next@12.3.4
   jsonwebtoken: 8.5.1
   lexical: 0.2.9
@@ -2551,8 +2551,8 @@ packages:
     engines: {node: '>=0.8'}
     dev: true
 
-  /cmnjg-sb/0.1.24_y6frtolhhwhkuiig4muqpqgvhe:
-    resolution: {integrity: sha512-X7pa/T6dzHWEIxngplibZFHN4Mj2aslo/jCXjIrgXGjo1lvhcMD4lwn6crzmaUZ2wcRgyM+V75NFW4W52Cuxnw==}
+  /cmnjg-sb/0.1.25_y6frtolhhwhkuiig4muqpqgvhe:
+    resolution: {integrity: sha512-tpALO250Z/12nptMrpMp+gjvCDNFKkmTJ9hqOtSiaEHxOKNoL2eGzhlTRen1oVT/i+mATjGpG+5GfdpWrDIXhQ==}
     peerDependencies:
       '@chakra-ui/system': ^2.0.0
       '@emotion/react': ^11.0.0
