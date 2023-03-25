@@ -2,7 +2,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 import { RiMenuFoldLine } from "react-icons/ri";
 import Link from "next/link";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useDashboardQuery } from "@/services/dashboard";
 import { LinkBox, LinkOverlay, Drawer } from "cmnjg-sb";
 import EmptyMsg from "@/layouts/emptymsg";

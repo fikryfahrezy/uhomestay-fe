@@ -3,7 +3,7 @@ import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import {
   RiLogoutBoxRLine,
   RiExchangeDollarLine,

@@ -1,5 +1,5 @@
 import type { ReactElement } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useRouter } from "next/router";
 import { idrCurrency, idrNumToWord } from "@/lib/fmt";
 import { useMemberDetailQuery } from "@/services/member";

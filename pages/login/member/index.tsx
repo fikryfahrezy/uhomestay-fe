@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { useMutation } from "react-query";
 import { memberLogin, useMember } from "@/services/member";

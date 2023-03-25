@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { useMutation } from "react-query";
 import { adminLogin, useAdmin } from "@/services/member";
 import { Input, Button, Toast, useToast } from "cmnjg-sb";

@@ -1,4 +1,4 @@
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { LinkBox, LinkOverlay } from "cmnjg-sb";
 import styles from "./Styles.module.css";

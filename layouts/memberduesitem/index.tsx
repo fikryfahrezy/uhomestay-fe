@@ -1,5 +1,5 @@
 import type { MembersDuesOut } from "@/services/member-dues";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { DUES_STATUS } from "@/services/member-dues";
 import { Badge } from "cmnjg-sb";
 import styles from "./Styles.module.css";

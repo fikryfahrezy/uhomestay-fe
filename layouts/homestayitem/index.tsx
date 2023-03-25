@@ -1,5 +1,5 @@
 import type { MemberHomestaysRes } from "@/services/member-homestay";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import styles from "./Styles.module.css";
 
 const defaultFunc = () => {};

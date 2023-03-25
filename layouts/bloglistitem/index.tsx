@@ -1,5 +1,5 @@
 import type { ArticleOut } from "@/services/article";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import { Card } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 

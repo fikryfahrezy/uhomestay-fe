@@ -1,7 +1,7 @@
 import type { MouseEvent } from "react";
 import type { LinkTreeProps } from "cmnjg-sb";
 import { useMemo } from "react";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useMutation } from "react-query";

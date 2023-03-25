@@ -1,5 +1,5 @@
 import type { MemberDetailRes } from "@/services/member";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import ProfileTable from "@/layouts/profiletable";
 import styles from "./Styles.module.css";
 
