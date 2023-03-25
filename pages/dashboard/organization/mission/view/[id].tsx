@@ -26,6 +26,7 @@ const ViewMission = () => {
           query: { id },
         }}
         passHref
+        legacyBehavior
       >
         <LinkButton
           colorScheme="green"

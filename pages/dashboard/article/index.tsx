@@ -100,7 +100,7 @@ const Blog = () => {
 
   return (
     <>
-      <Link href={`${router.pathname}/create`} passHref>
+      <Link href={`${router.pathname}/create`} passHref legacyBehavior>
         <LinkButton
           colorScheme="green"
           leftIcon={<RiDraftLine />}
@@ -142,11 +142,10 @@ const Blog = () => {
                                       pathname: `${router.pathname}/view/[id]`,
                                       query: { id: blog.id },
                                     }}
+                                    className={styles.addBtnOption}
                                   >
-                                    <a className={styles.addBtnOption}>
-                                      <RiArrowRightLine />
-                                      Lihat Detail
-                                    </a>
+                                    <RiArrowRightLine />
+                                    Lihat Detail
                                   </Link>
                                 </li>
                                 <li data-testid="blog-edit-popup">
@@ -155,11 +154,10 @@ const Blog = () => {
                                       pathname: `${router.pathname}/edit/[id]`,
                                       query: { id: blog.id },
                                     }}
+                                    className={styles.addBtnOption}
                                   >
-                                    <a className={styles.addBtnOption}>
-                                      <RiFileSettingsLine />
-                                      Ubah
-                                    </a>
+                                    <RiFileSettingsLine />
+                                    Ubah
                                   </Link>
                                 </li>
                                 <li

@@ -185,13 +185,10 @@ const Member = () => {
                                       pathname: `${router.pathname}/homestay/[id]`,
                                       query: { id: member.id },
                                     }}
+                                    className={`${styles.addBtnOption} ${styles.optionLink}`}
                                   >
-                                    <a
-                                      className={`${styles.addBtnOption} ${styles.optionLink}`}
-                                    >
-                                      <RiHomeSmileLine />
-                                      Lihat Homestay
-                                    </a>
+                                    <RiHomeSmileLine />
+                                    Lihat Homestay
                                   </Link>
                                 </li>
                               </ul>

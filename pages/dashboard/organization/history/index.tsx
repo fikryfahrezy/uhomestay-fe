@@ -17,7 +17,7 @@ const History = () => {
 
   return (
     <>
-      <Link href={`${router.pathname}/write`} passHref>
+      <Link href={`${router.pathname}/write`} passHref legacyBehavior>
         <LinkButton
           colorScheme="green"
           leftIcon={<RiFileEditLine />}

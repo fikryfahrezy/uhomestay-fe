@@ -13,7 +13,7 @@ const PageNav = ({ className }: JSX.IntrinsicElements["div"]) => {
           height={42}
           alt="Website Logo"
         />
-        <Link href="/" passHref>
+        <Link href="/" passHref legacyBehavior>
           <LinkOverlay />
         </Link>
       </LinkBox>

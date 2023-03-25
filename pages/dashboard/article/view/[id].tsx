@@ -79,6 +79,7 @@ const ViewBlog = () => {
             query: { id },
           }}
           passHref
+          legacyBehavior
         >
           <LinkButton
             colorScheme="green"

@@ -94,7 +94,7 @@ const CreateBlog = () => {
         >
           Buat
         </Button>
-        <Link href={`${router.pathname}/../`} passHref>
+        <Link href={`${router.pathname}/../`} passHref legacyBehavior>
           <LinkButton
             colorScheme="red"
             leftIcon={<RiCloseLine />}

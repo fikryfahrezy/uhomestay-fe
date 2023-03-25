@@ -113,6 +113,7 @@ const MemberDues = () => {
                 query: { id },
               }}
               passHref
+              legacyBehavior
             >
               <LinkButton
                 leftIcon={<RiPrinterLine />}

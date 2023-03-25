@@ -74,6 +74,7 @@ const Blog = () => {
                             query: { id: blog.id },
                           }}
                           passHref
+                          legacyBehavior
                         >
                           <LinkOverlay />
                         </Link>

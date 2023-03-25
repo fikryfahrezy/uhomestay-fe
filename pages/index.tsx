@@ -101,19 +101,13 @@ const LandingPage = () => {
           <div>
             <div className={styles.actionBtn}>
               <Link href="/login/admin">
-                <a>
-                  <button className={styles.loginBtn}>Admin</button>
-                </a>
+                <button className={styles.loginBtn}>Admin</button>
               </Link>
               <Link href="/login/member">
-                <a>
-                  <button className={styles.loginBtn}>Anggota</button>
-                </a>
+                <button className={styles.loginBtn}>Anggota</button>
               </Link>
               <Link href="/register">
-                <a>
-                  <button className={styles.registerBtn}>Register</button>
-                </a>
+                <button className={styles.registerBtn}>Register</button>
               </Link>
             </div>
             <button
@@ -239,6 +233,7 @@ const LandingPage = () => {
                                       query: { id },
                                     }}
                                     passHref
+                                    legacyBehavior
                                   >
                                     <LinkOverlay />
                                   </Link>
@@ -382,6 +377,7 @@ const LandingPage = () => {
                             query: { id: blog.id },
                           }}
                           passHref
+                          legacyBehavior
                         >
                           <LinkOverlay />
                         </Link>
@@ -465,20 +461,14 @@ const LandingPage = () => {
           </ul>
           <div>
             <div className={styles.drawerActionBtn}>
-              <Link href="/login/admin">
-                <a className={styles.drawerActionLink}>
-                  <button className={styles.loginBtn}>Admin</button>
-                </a>
+              <Link href="/login/admin" className={styles.drawerActionLink}>
+                <button className={styles.loginBtn}>Admin</button>
               </Link>
-              <Link href="/login/member">
-                <a className={styles.drawerActionLink}>
-                  <button className={styles.loginBtn}>Anggota</button>
-                </a>
+              <Link href="/login/member" className={styles.drawerActionLink}>
+                <button className={styles.loginBtn}>Anggota</button>
               </Link>
-              <Link href="/register">
-                <a className={styles.drawerActionLink}>
-                  <button className={styles.registerBtn}>Register</button>
-                </a>
+              <Link href="/register" className={styles.drawerActionLink}>
+                <button className={styles.registerBtn}>Register</button>
               </Link>
             </div>
           </div>

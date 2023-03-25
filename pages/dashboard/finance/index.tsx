@@ -144,7 +144,7 @@ const Finance = () => {
         >
           Buat Transaksi
         </Button>
-        <Link href={`${router.pathname}/print`} passHref>
+        <Link href={`${router.pathname}/print`} passHref legacyBehavior>
           <LinkButton leftIcon={<RiPrinterLine />} className={styles.printBtn}>
             Cetak
           </LinkButton>

@@ -77,6 +77,7 @@ const Mission = () => {
                                   query: { id },
                                 }}
                                 passHref
+                                legacyBehavior
                               >
                                 <LinkOverlay />
                               </Link>

@@ -118,8 +118,8 @@ const Login = () => {
                 Login
               </Button>
             </form>
-            <Link href="/register">
-              <a className={styles.link}>Daftar</a>
+            <Link href="/register" className={styles.link}>
+              Daftar
             </Link>
           </div>
         </div>

@@ -96,6 +96,7 @@ const EditBlog = () => {
             query: { id },
           }}
           passHref
+          legacyBehavior
         >
           <LinkButton
             colorScheme="red"

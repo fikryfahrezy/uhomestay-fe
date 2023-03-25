@@ -138,8 +138,8 @@ const Register = () => {
       <main className={styles.pageContainer}>
         <PageNav className={styles.navContainer} />
         <div className={styles.container}>
-          <Link href="/">
-            <a className={`${styles.link} ${styles.leftLink}`}>Kembali</a>
+          <Link href="/" className={`${styles.link} ${styles.leftLink}`}>
+            Kembali
           </Link>
           <h1>Daftar Menjadi Anggota</h1>
           <form onSubmit={onSubmit({ lat, lng })}>
@@ -349,8 +349,8 @@ const Register = () => {
               </Button>
             </div>
           </form>
-          <Link href="/login/member">
-            <a className={styles.link}>Masuk</a>
+          <Link href="/login/member" className={styles.link}>
+            Masuk
           </Link>
         </div>
       </main>

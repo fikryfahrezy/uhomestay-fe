@@ -9,10 +9,8 @@ type MoreLinkProps = LinkProps & {
 
 const MoreLink = ({ children, ...restProps }: MoreLinkProps) => {
   return (
-    <Link {...restProps}>
-      <a className={styles.moreLink}>
-        {children} <RiArrowRightLine />
-      </a>
+    <Link {...restProps} className={styles.moreLink}>
+      {children} <RiArrowRightLine />
     </Link>
   );
 };

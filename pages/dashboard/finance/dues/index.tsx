@@ -92,6 +92,7 @@ const ModalDatePicker = ({
             },
           }}
           passHref
+          legacyBehavior
         >
           <LinkButton leftIcon={<RiPrinterLine />}>Cetak</LinkButton>
         </Link>
@@ -342,6 +343,7 @@ const Dues = () => {
                               query: { id: val["member_id"] },
                             }}
                             passHref
+                            legacyBehavior
                           >
                             <LinkButton
                               colorScheme="green"

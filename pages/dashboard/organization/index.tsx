@@ -266,8 +266,8 @@ const Organization = () => {
         </div>
       </div>
       <div className={styles.histories}>
-        <Link href={router.pathname}>
-          <a className={styles.history}>Folder Utama</a>
+        <Link href={router.pathname} className={styles.history}>
+          Folder Utama
         </Link>
         {documentParent ? (
           <>
@@ -281,8 +281,9 @@ const Organization = () => {
                 pathname: router.pathname,
                 search: `dir_id=${documentParent.id}`,
               }}
+              className={styles.history}
             >
-              <a className={styles.history}>{documentParent.name}</a>
+              {documentParent.name}
             </Link>
           </>
         ) : (
@@ -330,8 +331,9 @@ const Organization = () => {
                           pathname: router.pathname,
                           query: { dir_id: id },
                         }}
+                        className={styles.documentLink}
                       >
-                        <a className={styles.documentLink}>{child}</a>
+                        {child}
                       </Link>
                     ) : (
                       <a

@@ -102,6 +102,7 @@ const CreateMission = () => {
             query: { id },
           }}
           passHref
+          legacyBehavior
         >
           <LinkButton
             colorScheme="red"

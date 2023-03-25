@@ -57,25 +57,24 @@ const MemberPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
     <div className={styles.layoutContainer}>
       <nav className={styles.nav}>
         <Link href="/">
-          <a>
-            <Image
-              src="/images/image/logo.png"
-              width={329}
-              height={42}
-              alt="Website Logo"
-            />
-          </a>
+          <Image
+            src="/images/image/logo.png"
+            width={329}
+            height={42}
+            alt="Website Logo"
+          />
         </Link>
         <PopUp
           popUpPosition="bottom-right"
           popUpContent={
             <ul className={styles.addBtnOptions}>
               <li>
-                <Link href="/member/editprofile">
-                  <a className={`${styles.addBtnOption} ${styles.optionLink}`}>
-                    <RiUserSettingsFill />
-                    Update Profile
-                  </a>
+                <Link
+                  href="/member/editprofile"
+                  className={`${styles.addBtnOption} ${styles.optionLink}`}
+                >
+                  <RiUserSettingsFill />
+                  Update Profile
                 </Link>
               </li>
               <li
