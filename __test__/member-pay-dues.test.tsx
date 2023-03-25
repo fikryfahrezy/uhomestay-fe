@@ -42,9 +42,7 @@ test("Member successfully paydues", async () => {
   await user.click(payBtn);
 
   await waitFor(() => {
-    expect(
-      screen.queryByText("Tidak boleh kosong")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Tidak boleh kosong")).not.toBeInTheDocument();
   });
 });
 

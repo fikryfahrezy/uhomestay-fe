@@ -6,7 +6,15 @@ import { idDate } from "@/lib/fmt";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
 import { addMember } from "@/services/member";
-import { AvatarPicker, Select, Checkbox, Input, DynamicSelect, ImagePicker, Button } from "cmnjg-sb";
+import {
+  AvatarPicker,
+  Select,
+  Checkbox,
+  Input,
+  DynamicSelect,
+  ImagePicker,
+  Button,
+} from "cmnjg-sb";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
 

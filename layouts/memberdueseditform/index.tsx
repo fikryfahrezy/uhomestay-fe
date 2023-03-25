@@ -42,7 +42,7 @@ const MemberDuesEditForm = ({
     register,
     handleSubmit,
     reset,
-	getValues,
+    getValues,
     formState: { errors },
   } = useForm({ defaultValues });
 
@@ -108,7 +108,11 @@ const MemberDuesEditForm = ({
         onReset("approve", "Sukses menyetujui pembayaran iuran anggota");
       })
       .catch((e) => {
-        onError("approve", "Error menyetujui pembayaran iuran anggota", e.message);
+        onError(
+          "approve",
+          "Error menyetujui pembayaran iuran anggota",
+          e.message
+        );
       });
   };
 

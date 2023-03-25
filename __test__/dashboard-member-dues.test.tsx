@@ -53,9 +53,7 @@ test("Edit member dues success", async () => {
   await user.click(editBtn);
 
   await waitFor(() => {
-    expect(
-      screen.queryByText("Tidak boleh kosong")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Tidak boleh kosong")).not.toBeInTheDocument();
   });
 });
 
@@ -72,8 +70,6 @@ test("Approve member dues payment success", async () => {
   await user.click(editBtn);
 
   await waitFor(() => {
-    expect(
-      screen.queryByText("Tidak boleh kosong")
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText("Tidak boleh kosong")).not.toBeInTheDocument();
   });
 });

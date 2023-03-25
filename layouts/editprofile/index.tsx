@@ -4,7 +4,15 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { RiCloseLine, RiCheckFill } from "react-icons/ri";
 import { useMemberDetailQuery, updateProfile } from "@/services/member";
-import { AvatarPicker, Input, Button, Toast, useToast, ImagePicker, Label } from "cmnjg-sb";
+import {
+  AvatarPicker,
+  Input,
+  Button,
+  Toast,
+  useToast,
+  ImagePicker,
+  Label,
+} from "cmnjg-sb";
 import ToastComponent from "@/layouts/toastcomponent";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";

@@ -6,7 +6,6 @@
  *
  */
 
-
 import { ListItemNode, ListNode } from "@lexical/list";
 import { OverflowNode } from "@lexical/overflow";
 import { HeadingNode } from "@lexical/rich-text";

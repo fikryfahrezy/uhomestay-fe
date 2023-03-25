@@ -19,7 +19,14 @@ import {
   useCashflowStatsQuery,
 } from "@/services/cashflow";
 import { CASHFLOW_TYPE } from "@/services/cashflow";
-import { Button, LinkButton, Toast, useToast, IconButton, Drawer } from "cmnjg-sb";
+import {
+  Button,
+  LinkButton,
+  Toast,
+  useToast,
+  IconButton,
+  Drawer,
+} from "cmnjg-sb";
 import AdminLayout from "@/layouts/adminpage";
 import CashflowAddForm from "@/layouts/cashflowaddform";
 import CashflowEditForm from "@/layouts/cashfloweditform";
@@ -45,7 +52,7 @@ const Finance = () => {
   const [open, setOpen] = useState(false);
 
   const [cashflowStatus, setCashflowStatus] = useState<
-    typeof CASHFLOW_TYPE[keyof typeof CASHFLOW_TYPE]
+    (typeof CASHFLOW_TYPE)[keyof typeof CASHFLOW_TYPE]
   >(CASHFLOW_TYPE.INCOME);
   const [tempData, setTempData] = useState<CashflowOut | null>(null);
 

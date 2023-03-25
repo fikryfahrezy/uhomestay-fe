@@ -5,7 +5,16 @@ import { useState, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { registerMember } from "@/services/member";
-import { Button, TextArea, Input, Toast, useToast, AvatarPicker, ImagePicker, Label } from "cmnjg-sb";
+import {
+  Button,
+  TextArea,
+  Input,
+  Toast,
+  useToast,
+  AvatarPicker,
+  ImagePicker,
+  Label,
+} from "cmnjg-sb";
 import PageNav from "@/layouts/pagenav";
 import ToastComponent from "@/layouts/toastcomponent";
 import styles from "./Styles.module.css";

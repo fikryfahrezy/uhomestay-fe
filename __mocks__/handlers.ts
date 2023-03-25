@@ -653,7 +653,7 @@ export const handlers = [
         ctx.json({
           data: {
             ...member,
-			id_card_url: "http:/localhost:5000",
+            id_card_url: "http:/localhost:5000",
             positions,
             period_id: 1,
             period: "",

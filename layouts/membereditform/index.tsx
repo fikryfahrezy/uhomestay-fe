@@ -11,7 +11,16 @@ import {
 } from "@/services/member";
 import { useFindActivePeriod } from "@/services/period";
 import { usePositionsQuery } from "@/services/position";
-import { Button, Input, Checkbox, Select, DynamicSelect, AvatarPicker, ImagePicker, Label } from "cmnjg-sb";
+import {
+  Button,
+  Input,
+  Checkbox,
+  Select,
+  DynamicSelect,
+  AvatarPicker,
+  ImagePicker,
+  Label,
+} from "cmnjg-sb";
 import Modal from "@/layouts/modal";
 import ErrMsg from "@/layouts/errmsg";
 import styles from "./Styles.module.css";
