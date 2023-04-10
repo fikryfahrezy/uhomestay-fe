@@ -5,7 +5,7 @@ import type { AppProps } from "next/app";
 import { useState } from "react";
 import Head from "next/head";
 import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
-import { prepareClientPortals } from "@/lib/react-portal-universal";
+import { prepareClientPortals } from "cmnjg-sb";
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode;

@@ -56,7 +56,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
         element: (
           <LinkButton
             className={styles.sideLink}
-            colorScheme={router.asPath.includes("membership") ? "green" : ""}
+            colorScheme={router.asPath.includes("membership") ? "green" : undefined}
           >
             <span className={styles.sideLinkText}>Keanggotaan</span>
           </LinkButton>
@@ -126,7 +126,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
         element: (
           <LinkButton
             className={styles.sideLink}
-            colorScheme={router.asPath.includes("organization") ? "green" : ""}
+            colorScheme={router.asPath.includes("organization") ? "green" : undefined}
           >
             Keorganisasian
           </LinkButton>
@@ -194,7 +194,7 @@ const AdminPage = ({ children, className }: JSX.IntrinsicElements["div"]) => {
         element: (
           <LinkButton
             className={styles.sideLink}
-            colorScheme={router.asPath.includes("finance") ? "green" : ""}
+            colorScheme={router.asPath.includes("finance") ? "green" : undefined}
           >
             Keuangan
           </LinkButton>

@@ -8,7 +8,7 @@ import dynamic from "next/dynamic";
 import { useMutation } from "react-query";
 import { useFindHomestay, editHomestay } from "@/services/member-homestay";
 import { RiCloseLine } from "react-icons/ri";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import {
   Button,
   IconButton,

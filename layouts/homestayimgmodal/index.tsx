@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { RiCloseLine } from "react-icons/ri";
 import { uploadHomestayImage } from "@/services/member-homestay";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import { Button, IconButton, ImagePicker } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 

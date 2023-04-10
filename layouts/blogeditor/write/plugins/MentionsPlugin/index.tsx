@@ -27,7 +27,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import useLayoutEffect from "../../shared/useLayoutEffect";
 
 import { $createMentionNode, MentionNode } from "../../nodes/MentionNode";

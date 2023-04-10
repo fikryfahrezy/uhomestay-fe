@@ -1,6 +1,6 @@
 import type { ImageOut } from "@/services/images";
 import { RiCloseLine } from "react-icons/ri";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import { IconButton } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 

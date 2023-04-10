@@ -8,7 +8,7 @@
 
 import * as React from "react";
 import { useEffect, useRef, useState } from "react";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 
 import styles from "./Styles.module.css";
 

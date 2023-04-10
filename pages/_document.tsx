@@ -9,7 +9,7 @@ import Document, {
   NextScript,
   DocumentContext,
 } from "next/document";
-import { ServerPortal } from "@/lib/react-portal-universal/server";
+import { ServerPortal } from "cmnjg-sb";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {

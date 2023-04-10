@@ -5,7 +5,7 @@ import dynamic from "next/dynamic";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 import { RiCloseLine } from "react-icons/ri";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import { addHomestay, removeHomestayImage } from "@/services/member-homestay";
 import {
   Button,

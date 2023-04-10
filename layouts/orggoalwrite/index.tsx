@@ -2,7 +2,7 @@ import { useRef } from "react";
 import dynamic from "next/dynamic";
 import { RiCheckFill } from "react-icons/ri";
 import { getPlainText } from "@/lib/blogmeta";
-import { UniversalPortal } from "@/lib/react-portal-universal";
+import { UniversalPortal } from "cmnjg-sb";
 import { Button } from "cmnjg-sb";
 import styles from "./Styles.module.css";
 
