@@ -12,12 +12,6 @@ import fetchJson, { FetchError } from "@/lib/fetchJson";
 export default withIronSessionApiRoute(loginRoute, sessionOptions);
 
 async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
-  const isUat = process.env.ENVI === "uat";
-  if (!isUat) {
-    res.json({});
-    return;
-  }
-
   const { identifier } = await req.body;
 
   if (!identifier) {
@@ -29,7 +23,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const {
       data: { token },
     } = await fetchJson<{ data: { token: string } }>(
-      `${process.env.MAIN_API_HOST_URL}/api/v1/get-admin-jwt/${identifier}`,
+      `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/get-admin-jwt/${identifier}`,
       {
         method: "PATCH",
       }

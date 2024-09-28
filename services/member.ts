@@ -452,12 +452,6 @@ export const useUser = ({
     // if user data not yet there (fetch in progress, logged in or not) then don't do anything yet
     if (!newRedirectTo || !data) return;
 
-    const isUat = process.env.NEXT_PUBLIC_ENVI === "uat";
-    if (!isUat) {
-      Router.push("/");
-      return;
-    }
-
     const user = data.prop;
 
     if (user.isAdmin) {

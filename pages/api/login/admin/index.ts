@@ -23,7 +23,7 @@ async function loginRoute(req: NextApiRequest, res: NextApiResponse) {
     const {
       data: { token },
     } = await fetchJson<{ data: { token: string } }>(
-      `${process.env.MAIN_API_HOST_URL}/api/v1/login/admins`,
+      `${process.env.NEXT_PUBLIC_MAIN_API_HOST_URL}/api/v1/login/admins`,
       {
         method: "POST",
         body: JSON.stringify({
