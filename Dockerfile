@@ -29,7 +29,7 @@ WORKDIR /app
 ENV NODE_ENV=production
 
 RUN addgroup --gid 1001 --system nodejs
-RUN adduser --system nextjs -uid 1001
+RUN adduser --system nextjs --uid 1001
 
 COPY --from=builder /app/public ./public
 
