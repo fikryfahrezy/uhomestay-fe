@@ -103,7 +103,7 @@ importers:
         version: 13.5.39
     devDependencies:
       '@testing-library/jest-dom':
-        specifier: ^6.6.3
+        specifier: 6.6.3
         version: 6.6.3
       '@testing-library/react':
         specifier: 13.3.0
