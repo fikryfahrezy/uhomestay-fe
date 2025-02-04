@@ -2,7 +2,7 @@
  * Ref:
  * https://github.com/mswjs/examples/blob/master/examples/with-jest/src/mocks/handlers.js
  */
-import { rest } from "msw";
+import { RequestHandler, rest } from "msw";
 
 const user = {
   token: "blablabla",
@@ -183,7 +183,7 @@ const image = {
 
 const images = [image];
 
-export const handlers = [
+export const handlers: RequestHandler[] = [
   rest.post("/api/login/member", (req, res, ctx) => {
     return res(ctx.json(user));
   }),
@@ -653,7 +653,7 @@ export const handlers = [
         ctx.json({
           data: {
             ...member,
-			id_card_url: "http:/localhost:5000",
+            id_card_url: "http:/localhost:5000",
             positions,
             period_id: 1,
             period: "",
