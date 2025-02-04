@@ -1,42 +1,42 @@
-import type { ReactElement, MouseEvent } from "react";
-import type { DocumentOut } from "@/services/document";
-import type { DocFileAddFormType } from "@/layouts/docaddform/file";
-import type { DocFileEditFormType } from "@/layouts/doceditform/file";
-import type { DocDirAddFormType } from "@/layouts/docaddform/dir";
-import type { DocDirEditFormType } from "@/layouts/doceditform/dir";
-import { useRouter } from "next/router";
-import { useState, useMemo, useRef, Fragment } from "react";
-import Link from "next/link";
-import {
-  RiFileUploadFill,
-  RiSearch2Line,
-  RiFileLine,
-  RiFolderLine,
-  RiMore2Line,
-  RiArrowDropRightLine,
-} from "react-icons/ri";
-import Observe from "@/lib/use-observer";
-import { throttle, debounce } from "@/lib/perf";
-import {
-  DOC_TYPE,
-  useDocumentsQuery,
-  useDocumentChildsQuery,
-} from "@/services/document";
 import Button from "@/components/button";
-import IconButton from "@/components/iconbutton";
 import Drawer from "@/components/drawer";
+import IconButton from "@/components/iconbutton";
 import Input from "@/components/input";
 import Popup from "@/components/popup";
 import Toast, { useToast } from "@/components/toast";
 import AdminLayout from "@/layouts/adminpage";
-import DocFileAddForm from "@/layouts/docaddform/file";
-import DocFileEditForm from "@/layouts/doceditform/file";
+import type { DocDirAddFormType } from "@/layouts/docaddform/dir";
 import DocDirAddForm from "@/layouts/docaddform/dir";
+import type { DocFileAddFormType } from "@/layouts/docaddform/file";
+import DocFileAddForm from "@/layouts/docaddform/file";
+import type { DocDirEditFormType } from "@/layouts/doceditform/dir";
 import DocDirEditForm from "@/layouts/doceditform/dir";
-import EmptyMsg from "@/layouts/emptymsg";
+import type { DocFileEditFormType } from "@/layouts/doceditform/file";
+import DocFileEditForm from "@/layouts/doceditform/file";
 import DocListItem from "@/layouts/doclistitem";
+import EmptyMsg from "@/layouts/emptymsg";
 import ErrMsg from "@/layouts/errmsg";
 import ToastComponent from "@/layouts/toastcomponent";
+import { debounce, throttle } from "@/lib/perf";
+import Observe from "@/lib/use-observer";
+import type { DocumentOut } from "@/services/document";
+import {
+  DOC_TYPE,
+  useDocumentChildsQuery,
+  useDocumentsQuery,
+} from "@/services/document";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import type { MouseEvent, ReactElement } from "react";
+import { Fragment, useMemo, useRef, useState } from "react";
+import {
+  RiArrowDropRightLine,
+  RiFileLine,
+  RiFileUploadFill,
+  RiFolderLine,
+  RiMore2Line,
+  RiSearch2Line,
+} from "react-icons/ri";
 import styles from "./Styles.module.css";
 
 type FormType =
@@ -47,7 +47,9 @@ type FormType =
 
 const Organization = () => {
   const [open, setOpen] = useState(false);
-  const [docType, setDocType] = useState(DOC_TYPE.FILE);
+  const [docType, setDocType] = useState<
+    typeof DOC_TYPE.FILE[keyof typeof DOC_TYPE.FILE]
+  >(DOC_TYPE.FILE);
   const [tempData, setTempData] = useState<DocumentOut | null>(null);
   const [q, setQ] = useState("");
 

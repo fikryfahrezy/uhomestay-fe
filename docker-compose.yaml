@@ -1,6 +1,5 @@
 services:
   uhomestay-fe:
-    image: uhomestay-fe
     build:
       context: .
       dockerfile: Dockerfile
